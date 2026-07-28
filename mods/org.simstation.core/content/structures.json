@@ -4,27 +4,376 @@
     {
       "id": "org.simstation.core:structure/floor",
       "kind": "structure",
+      "schema": 2,
       "name_key": "structure.floor",
+      "native_component": "turf-floor-family",
+      "interaction_profile": "goon-floor-v1",
       "material_cost": 2,
       "work_milliticks": 1200,
-      "sprite": "org.simstation.goon:sprite/icons/turf/floors-dmi/floor--3684c9d3c0-o01"
+      "sprites": {
+        "floor": "floor",
+        "plating": "plating",
+        "reinforced_floor": "reinforced_floor"
+      },
+      "source": {
+        "repository": "goonstation/goonstation",
+        "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+        "type_path": "/turf/simulated/floor",
+        "files": [
+          "code/turf/floors.dm"
+        ]
+      },
+      "actions": [
+        {
+          "id": "inspect",
+          "handler": "common.inspect",
+          "source_symbol": "/turf/simulated/floor/get_desc",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "npc",
+            "turf"
+          ]
+        },
+        {
+          "id": "place-floor",
+          "handler": "floor.place",
+          "source_symbol": "/turf/simulated/floor/attackby",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "tools_any": [
+              "floor_tile"
+            ],
+            "unoccupied": true
+          },
+          "parameters": {},
+          "tags": [
+            "npc",
+            "turf"
+          ]
+        },
+        {
+          "id": "pry-floor",
+          "handler": "floor.pry",
+          "source_symbol": "/turf/simulated/floor/proc/pry_tile",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "tools_any": [
+              "crowbar"
+            ],
+            "unoccupied": true
+          },
+          "parameters": {},
+          "tags": [
+            "npc",
+            "turf"
+          ]
+        },
+        {
+          "id": "reinforce-floor",
+          "handler": "floor.reinforce",
+          "source_symbol": "/turf/simulated/floor/proc/reinforce",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 30,
+          "requires": {
+            "tools_any": [
+              "rods"
+            ],
+            "unoccupied": true
+          },
+          "parameters": {},
+          "tags": [
+            "construction",
+            "npc",
+            "turf"
+          ]
+        },
+        {
+          "id": "remove-floor-reinforcement",
+          "handler": "floor.remove-reinforcement",
+          "source_symbol": "/turf/simulated/floor/proc/remove_reinforcement",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 30,
+          "requires": {
+            "tools_any": [
+              "welder",
+              "wrench"
+            ],
+            "unoccupied": true
+          },
+          "parameters": {},
+          "tags": [
+            "construction",
+            "npc",
+            "turf"
+          ]
+        }
+      ],
+      "fidelity": {
+        "profile": "goon-near-1",
+        "ledger": [
+          {
+            "feature": "floor-state-chain",
+            "status": "engine-adapted",
+            "source": "/turf/simulated/floor/attackby",
+            "note": "Deterministic floor, plating, and reinforced-floor transitions retain upstream tool gates."
+          },
+          {
+            "feature": "underfloor-object-reveal",
+            "status": "deferred",
+            "source": "/turf/simulated/floor/proc/pry_tile",
+            "note": "Cable and pipe visibility does not yet follow upstream floor removal overlays."
+          }
+        ]
+      }
     },
     {
       "id": "org.simstation.core:structure/wall",
       "kind": "structure",
+      "schema": 2,
       "name_key": "structure.wall",
+      "native_component": "turf-wall-family",
+      "interaction_profile": "goon-wall-v1",
       "material_cost": 3,
       "work_milliticks": 1800,
-      "sprite": "org.simstation.goon:sprite/icons/turf/walls-dmi/riveted--b2df855a7c-o01"
+      "sprites": {
+        "reinforced_wall": "reinforced_wall",
+        "wall": "wall"
+      },
+      "source": {
+        "repository": "goonstation/goonstation",
+        "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+        "type_path": "/turf/simulated/wall",
+        "files": [
+          "code/turf/walls.dm"
+        ]
+      },
+      "actions": [
+        {
+          "id": "dismantle-wall",
+          "handler": "wall.dismantle",
+          "source_symbol": "/turf/simulated/wall/proc/weld_action",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 100,
+          "requires": {
+            "tools_any": [
+              "welder"
+            ],
+            "unoccupied": true
+          },
+          "parameters": {},
+          "tags": [
+            "construction",
+            "npc",
+            "turf"
+          ]
+        },
+        {
+          "id": "inspect",
+          "handler": "common.inspect",
+          "source_symbol": "/turf/simulated/wall/get_desc",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "npc",
+            "turf"
+          ]
+        },
+        {
+          "id": "repair-wall",
+          "handler": "wall.repair",
+          "source_symbol": "/turf/simulated/wall/attackby",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 20,
+          "requires": {
+            "tools_any": [
+              "metal_sheet",
+              "welder"
+            ]
+          },
+          "parameters": {},
+          "tags": [
+            "maintenance",
+            "npc",
+            "turf"
+          ]
+        }
+      ],
+      "fidelity": {
+        "profile": "goon-near-1",
+        "ledger": [
+          {
+            "feature": "damage-repair-dismantle",
+            "status": "engine-adapted",
+            "source": "/turf/simulated/wall/attackby",
+            "note": "Typed health, repair, topology invalidation, and standard-wall welding are deterministic."
+          },
+          {
+            "feature": "reinforced-wall-tool-chain",
+            "status": "deferred",
+            "source": "/turf/simulated/wall/r_wall/attackby",
+            "note": "The upstream multi-stage snip, screw, weld, pry, and wrench sequence remains scheduled."
+          }
+        ]
+      }
     },
     {
       "id": "org.simstation.core:structure/door",
       "kind": "structure",
+      "schema": 2,
       "name_key": "structure.door",
+      "native_component": "airlock",
+      "interaction_profile": "goon-airlock-v1",
       "material_cost": 5,
       "work_milliticks": 2400,
-      "closed_sprite": "org.simstation.goon:sprite/icons/obj/doors/doorclassic-dmi/door_closed--553558f5ff-o01",
-      "open_sprite": "org.simstation.goon:sprite/icons/obj/doors/doorclassic-dmi/door_open--5fe7ebb3c8-o01"
+      "sprites": {
+        "door_closed": "door_closed",
+        "door_open": "door_open"
+      },
+      "source": {
+        "repository": "goonstation/goonstation",
+        "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+        "type_path": "/obj/machinery/door/airlock",
+        "files": [
+          "code/obj/machinery/door/airlock.dm",
+          "code/obj/machinery/door/door_parent.dm"
+        ]
+      },
+      "actions": [
+        {
+          "id": "close-door",
+          "handler": "airlock.close",
+          "source_symbol": "/obj/machinery/door/proc/close",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "airlock",
+            "npc",
+            "structure"
+          ]
+        },
+        {
+          "id": "inspect",
+          "handler": "common.inspect",
+          "source_symbol": "/obj/machinery/door/get_desc",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "airlock",
+            "npc",
+            "structure"
+          ]
+        },
+        {
+          "id": "open-door",
+          "handler": "airlock.open",
+          "source_symbol": "/obj/machinery/door/proc/open",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "airlock",
+            "npc",
+            "structure"
+          ]
+        },
+        {
+          "id": "pry-door",
+          "handler": "airlock.pry",
+          "source_symbol": "/obj/machinery/door/airlock/proc/unpowered_open_close",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "tools_any": [
+              "crowbar"
+            ]
+          },
+          "parameters": {},
+          "tags": [
+            "airlock",
+            "npc",
+            "structure"
+          ]
+        },
+        {
+          "id": "toggle-door-panel",
+          "handler": "airlock.toggle-panel",
+          "source_symbol": "/obj/machinery/door/airlock/attackby",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "tools_any": [
+              "screwdriver"
+            ]
+          },
+          "parameters": {},
+          "tags": [
+            "airlock",
+            "npc",
+            "structure"
+          ]
+        },
+        {
+          "id": "weld-door",
+          "handler": "airlock.weld",
+          "source_symbol": "/obj/machinery/door/airlock/proc/weld_action",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 20,
+          "requires": {
+            "tools_any": [
+              "welder"
+            ]
+          },
+          "parameters": {},
+          "tags": [
+            "airlock",
+            "npc",
+            "structure"
+          ]
+        }
+      ],
+      "fidelity": {
+        "profile": "goon-near-1",
+        "ledger": [
+          {
+            "feature": "open-close-access-power",
+            "status": "engine-adapted",
+            "source": "/obj/machinery/door/proc/open",
+            "note": "Power, access, welded, bolted, panel, pry, and auto-close state is deterministic."
+          },
+          {
+            "feature": "airlock-wire-harness",
+            "status": "deferred",
+            "source": "/obj/machinery/door/airlock/attackby",
+            "note": "The upstream ten-wire hacking and electrification system remains scheduled."
+          }
+        ]
+      }
     }
   ]
 }

@@ -25,11 +25,46 @@ Constants.TILE = {
   FLOOR = 1,
 }
 
+-- Native turf semantics retain the interaction-relevant distinction that the
+-- legacy gas grid deliberately collapses into SPACE/FLOOR.  Keep these dense
+-- integer values stable: they are serialized in saves and hashed in replays.
+Constants.TURF = {
+  SPACE = 0,
+  PLATING = 1,
+  FLOOR = 2,
+  REINFORCED_FLOOR = 3,
+}
+
 Constants.STRUCTURE = {
   EMPTY = 0,
   WALL = 1,
   DOOR_CLOSED = 2,
   DOOR_OPEN = 3,
+}
+
+Constants.WALL = {
+  NONE = 0,
+  STANDARD = 1,
+  REINFORCED = 2,
+}
+
+-- A tile may contain several source objects (for example a window and grille).
+-- Arithmetic bit tests are used instead of a Lua-version-specific bit library
+-- so the same saves and behavior work under LuaJIT and stock Lua runtimes.
+Constants.FEATURE = {
+  WINDOW = 1,
+  GRILLE = 2,
+  TABLE = 4,
+  CHAIR = 8,
+  LIGHT = 16,
+  STORAGE = 32,
+  CRATE = 64,
+  LATTICE = 128,
+  CATWALK = 256,
+  PIPE = 512,
+  DISPOSAL = 1024,
+  SIGN = 2048,
+  DECAL = 4096,
 }
 
 Constants.BLUEPRINT = {

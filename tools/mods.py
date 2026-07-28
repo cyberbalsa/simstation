@@ -386,6 +386,11 @@ def validate_scenario(definition: dict, path: str, index: int) -> None:
             "pressurized",
             "area",
             "access",
+            "turf_kind",
+            "wall_kind",
+            "features",
+            "source_turfs",
+            "source_objects",
         }:
             raise ModError(f"{prefix}: palette {palette_index} must be an object")
         key = cell.get("key")
@@ -401,13 +406,90 @@ def validate_scenario(definition: dict, path: str, index: int) -> None:
             "door_open",
         }:
             raise ModError(f"{prefix}: invalid palette structure")
+        tile = cell["tile"]
+        turf_kind = cell.get("turf_kind")
+        if turf_kind is not None and (
+            turf_kind
+            not in {"space", "plating", "floor", "reinforced_floor"}
+            or (tile == "space") != (turf_kind == "space")
+        ):
+            raise ModError(f"{prefix}: palette turf kind must agree with tile")
+        structure = cell.get("structure", "empty")
+        wall_kind = cell.get("wall_kind")
+        if wall_kind is not None and (
+            wall_kind not in {"standard", "reinforced"}
+            or structure != "wall"
+        ):
+            raise ModError(f"{prefix}: palette wall kind requires a wall")
+        allowed_features = {
+            "window",
+            "grille",
+            "table",
+            "chair",
+            "light",
+            "storage",
+            "crate",
+            "lattice",
+            "catwalk",
+            "pipe",
+            "disposal",
+            "sign",
+            "decal",
+        }
+        features = cell.get("features", [])
+        if (
+            not isinstance(features, list)
+            or any(
+                not isinstance(feature, str)
+                or feature not in allowed_features
+                for feature in features
+            )
+            or features != sorted(set(features))
+        ):
+            raise ModError(
+                f"{prefix}: palette features must be sorted and unique"
+            )
+        feature_set = set(features)
+        if "window" in feature_set and structure not in {
+            "wall",
+            "door_closed",
+            "door_open",
+        }:
+            raise ModError(
+                f"{prefix}: palette window feature requires a boundary"
+            )
+        if "crate" in feature_set and "storage" not in feature_set:
+            raise ModError(f"{prefix}: palette crate feature requires storage")
+        for source_key, source_root in (
+            ("source_turfs", "/turf"),
+            ("source_objects", "/obj"),
+        ):
+            values = cell.get(source_key, [])
+            if (
+                not isinstance(values, list)
+                or len(values) > 64
+                or any(
+                    not isinstance(value, str)
+                    or not value
+                    or len(value) > 1024
+                    or not (
+                        value == source_root
+                        or value.startswith(source_root + "/")
+                    )
+                    for value in values
+                )
+                or values != sorted(set(values))
+            ):
+                raise ModError(
+                    f"{prefix}: palette {source_key} must be sorted unique "
+                    f"{source_root} paths"
+                )
         for flag in ("cable", "pressurized"):
             if flag in cell and not isinstance(cell[flag], bool):
                 raise ModError(f"{prefix}: palette {flag} must be boolean")
         area_id = cell.get("area", 0)
         if not exact_integer(area_id) or not 0 <= area_id <= len(areas):
             raise ModError(f"{prefix}: invalid palette area")
-        structure = cell.get("structure", "empty")
         if "access" in cell and (
             not isinstance(cell["access"], str)
             or not cell["access"]
@@ -415,7 +497,20 @@ def validate_scenario(definition: dict, path: str, index: int) -> None:
         ):
             raise ModError(f"{prefix}: palette access requires a door")
         semantic = json.dumps(
-            {field: value for field, value in cell.items() if field != "key"},
+            {
+                "access": cell.get("access", ""),
+                "area": area_id,
+                "cable": cell.get("cable", False),
+                "features": features,
+                "pressurized": cell.get("pressurized", False),
+                "source_objects": cell.get("source_objects", []),
+                "source_turfs": cell.get("source_turfs", []),
+                "structure": structure,
+                "tile": tile,
+                "turf_kind": turf_kind
+                or ("space" if tile == "space" else "floor"),
+                "wall_kind": wall_kind or "",
+            },
             sort_keys=True,
             separators=(",", ":"),
         )
@@ -477,10 +572,23 @@ def validate_scenario(definition: dict, path: str, index: int) -> None:
         return x, y
 
     def passable(cell: dict) -> bool:
-        return cell["tile"] == "floor" and cell.get("structure", "empty") not in {
-            "wall",
-            "door_closed",
-        }
+        dense_features = {"grille", "table", "storage", "crate"}
+        return (
+            cell["tile"] == "floor"
+            and cell.get("structure", "empty")
+            not in {"wall", "door_closed"}
+            and not dense_features.intersection(cell.get("features", []))
+        )
+
+    def fixture_anchorable(cell: dict) -> bool:
+        # Upstream wall-mounted and over-table machines legitimately share a
+        # source turf with dense furniture. They remain adjacent-interaction
+        # targets even though actors and spawn points cannot occupy that turf.
+        return (
+            cell["tile"] == "floor"
+            and cell.get("structure", "empty")
+            not in {"wall", "door_closed"}
+        )
 
     def touches_cable(x: int, y: int) -> bool:
         for candidate_x, candidate_y in (
@@ -592,7 +700,7 @@ def validate_scenario(definition: dict, path: str, index: int) -> None:
         fixture_ids.add(fixture_id)
         last_fixture_id = fixture_id
         x, y = position(fixture, f"fixture {record_index}")
-        if not passable(cell_at(x, y)):
+        if not fixture_anchorable(cell_at(x, y)):
             raise ModError(f"{prefix}: invalid fixture anchor at {x},{y}")
         if fixture["kind"] == "apc":
             if cell_at(x, y).get("area", 0) == 0 or not touches_cable(x, y):
@@ -1055,6 +1163,239 @@ def validate_machine(definition: dict, path: str, index: int) -> None:
         ledger_features.add(record["feature"])
 
 
+def validate_structure(definition: dict, path: str, index: int) -> None:
+    prefix = f"{path}/definitions/{index}"
+    allowed = {
+        "actions",
+        "fidelity",
+        "id",
+        "interaction_profile",
+        "kind",
+        "material_cost",
+        "name_key",
+        "native_component",
+        "replaces",
+        "schema",
+        "source",
+        "sprites",
+        "work_milliticks",
+    }
+    unknown = sorted(set(definition) - allowed)
+    if unknown:
+        raise ModError(f"{prefix}: unknown structure keys: {', '.join(unknown)}")
+    if definition.get("kind") != "structure" or definition.get("schema") != 2:
+        raise ModError(
+            f"{prefix}: structure definitions require kind=structure/schema=2"
+        )
+    content_id_kind(definition.get("id"), "structure", f"{prefix}/id")
+    if (
+        not isinstance(definition.get("name_key"), str)
+        or not definition["name_key"]
+        or not isinstance(definition.get("native_component"), str)
+        or not re.fullmatch(
+            r"[a-z][a-z0-9_-]*",
+            definition["native_component"],
+        )
+        or not isinstance(definition.get("interaction_profile"), str)
+        or not re.fullmatch(
+            r"[a-z0-9][a-z0-9.-]*-v[1-9]\d*",
+            definition["interaction_profile"],
+        )
+        or not exact_integer(definition.get("material_cost"))
+        or not 0 <= definition["material_cost"] <= 1_000_000
+        or not exact_integer(definition.get("work_milliticks"))
+        or not 0 <= definition["work_milliticks"] <= 1_000_000_000
+    ):
+        raise ModError(f"{prefix}: invalid structure identity")
+
+    sprites = definition.get("sprites")
+    if (
+        not isinstance(sprites, dict)
+        or not sprites
+        or not all(
+            isinstance(state, str)
+            and re.fullmatch(r"[a-z][a-z0-9_]*", state)
+            and isinstance(alias, str)
+            and re.fullmatch(r"[a-z][a-z0-9_]*", alias)
+            for state, alias in sprites.items()
+        )
+    ):
+        raise ModError(f"{prefix}: invalid structure sprites")
+
+    source = definition.get("source")
+    if (
+        not isinstance(source, dict)
+        or set(source) - {"commit", "files", "repository", "type_path"}
+        or source.get("repository") != "goonstation/goonstation"
+        or not re.fullmatch(r"[0-9a-f]{40}", str(source.get("commit", "")))
+        or not isinstance(source.get("type_path"), str)
+        or not source["type_path"].startswith("/")
+        or not isinstance(source.get("files"), list)
+        or not source["files"]
+        or source["files"] != sorted(set(source["files"]))
+        or not all(
+            isinstance(file, str)
+            and file
+            and not file.startswith("/")
+            and ".." not in PurePosixPath(file).parts
+            for file in source["files"]
+        )
+    ):
+        raise ModError(f"{prefix}: invalid structure source provenance")
+
+    actions = definition.get("actions")
+    if not isinstance(actions, list) or not actions or len(actions) > 128:
+        raise ModError(f"{prefix}: invalid structure actions")
+    action_ids: set[str] = set()
+    ordered_action_ids: list[str] = []
+    allowed_requirement_keys = {
+        "access_any",
+        "allow_remote",
+        "power",
+        "tools_all",
+        "tools_any",
+        "unoccupied",
+    }
+    for action_index, action in enumerate(actions, 1):
+        if (
+            not isinstance(action, dict)
+            or set(action)
+            - {
+                "duration_ds",
+                "handler",
+                "id",
+                "implemented",
+                "parameters",
+                "range",
+                "requires",
+                "source_symbol",
+                "tags",
+            }
+            or not isinstance(action.get("id"), str)
+            or not re.fullmatch(r"[a-z][a-z0-9-]*", action["id"])
+            or action["id"] in action_ids
+            or not isinstance(action.get("handler"), str)
+            or not re.fullmatch(r"[a-z][a-z0-9_.-]*", action["handler"])
+            or not isinstance(action.get("source_symbol"), str)
+            or not action["source_symbol"].startswith("/")
+            or not isinstance(action.get("implemented"), bool)
+            or action.get("range") not in {"adjacent", "none", "remote-or-adjacent"}
+            or not exact_integer(action.get("duration_ds"))
+            or not 0 <= action["duration_ds"] <= 10_000_000
+        ):
+            raise ModError(f"{prefix}: invalid structure action {action_index}")
+        action_ids.add(action["id"])
+        ordered_action_ids.append(action["id"])
+
+        requirements = action.get("requires", {})
+        if (
+            not isinstance(requirements, dict)
+            or set(requirements) - allowed_requirement_keys
+        ):
+            raise ModError(
+                f"{prefix}: invalid structure action requirements {action_index}"
+            )
+        for boolean_key in ("allow_remote", "power", "unoccupied"):
+            if boolean_key in requirements and not isinstance(
+                requirements[boolean_key],
+                bool,
+            ):
+                raise ModError(
+                    f"{prefix}: invalid {boolean_key} requirement {action_index}"
+                )
+        for list_key in ("access_any", "tools_all", "tools_any"):
+            values = requirements.get(list_key, [])
+            if (
+                not isinstance(values, list)
+                or values != sorted(set(values))
+                or not all(isinstance(value, str) and value for value in values)
+            ):
+                raise ModError(
+                    f"{prefix}: invalid {list_key} requirement {action_index}"
+                )
+
+        parameters = action.get("parameters", {})
+        if not isinstance(parameters, dict):
+            raise ModError(
+                f"{prefix}: invalid structure action parameters {action_index}"
+            )
+        for parameter_name, parameter in parameters.items():
+            if (
+                not re.fullmatch(r"[a-z][a-z0-9_]*", str(parameter_name))
+                or not isinstance(parameter, dict)
+                or set(parameter) - {"maximum", "minimum", "type", "values"}
+                or parameter.get("type")
+                not in {"boolean", "content-id", "enum", "integer"}
+            ):
+                raise ModError(
+                    f"{prefix}: invalid structure action parameter {action_index}"
+                )
+            if parameter["type"] == "integer" and (
+                not exact_integer(parameter.get("minimum"))
+                or not exact_integer(parameter.get("maximum"))
+                or parameter["minimum"] > parameter["maximum"]
+            ):
+                raise ModError(
+                    f"{prefix}: invalid structure integer parameter {action_index}"
+                )
+            if parameter["type"] == "enum":
+                values = parameter.get("values")
+                if (
+                    not isinstance(values, list)
+                    or not values
+                    or values != sorted(set(values), key=str)
+                    or not all(isinstance(value, (str, int)) for value in values)
+                ):
+                    raise ModError(
+                        f"{prefix}: invalid structure enum parameter {action_index}"
+                    )
+
+        action_tags = action.get("tags", [])
+        if (
+            not isinstance(action_tags, list)
+            or action_tags != sorted(set(action_tags))
+            or not all(isinstance(tag, str) and tag for tag in action_tags)
+        ):
+            raise ModError(
+                f"{prefix}: invalid structure action tags {action_index}"
+            )
+    if ordered_action_ids != sorted(ordered_action_ids):
+        raise ModError(f"{prefix}: structure actions must be sorted by ID")
+
+    fidelity = definition.get("fidelity")
+    if (
+        not isinstance(fidelity, dict)
+        or set(fidelity) - {"ledger", "profile"}
+        or fidelity.get("profile") != "goon-near-1"
+        or not isinstance(fidelity.get("ledger"), list)
+        or not fidelity["ledger"]
+    ):
+        raise ModError(f"{prefix}: invalid structure fidelity ledger")
+    ledger_features: set[str] = set()
+    for ledger_index, record in enumerate(fidelity["ledger"], 1):
+        if (
+            not isinstance(record, dict)
+            or set(record) - {"feature", "note", "source", "status"}
+            or not isinstance(record.get("feature"), str)
+            or not record["feature"]
+            or record["feature"] in ledger_features
+            or record.get("status")
+            not in {
+                "deferred",
+                "deterministic-equivalent",
+                "engine-adapted",
+                "exact",
+                "intentional-fix",
+                "not-applicable",
+            }
+            or not isinstance(record.get("source"), str)
+            or not record["source"].startswith("/")
+            or ("note" in record and not isinstance(record["note"], str))
+        ):
+            raise ModError(f"{prefix}: invalid structure fidelity {ledger_index}")
+        ledger_features.add(record["feature"])
+
+
 def validate_content(manifest: dict, files: dict[str, bytes]) -> dict:
     names = sorted(files)
     selected_by_field: dict[str, list[str]] = {
@@ -1113,6 +1454,8 @@ def validate_content(manifest: dict, files: dict[str, bytes]) -> dict:
                 validate_scenario(definition, path, index)
             elif match.group("kind") == "machine":
                 validate_machine(definition, path, index)
+            elif match.group("kind") == "structure":
+                validate_structure(definition, path, index)
             definitions += 1
     return {
         "content_files": sorted(set(selected_by_field["content"])),

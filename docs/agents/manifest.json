@@ -106,6 +106,22 @@
       ]
     },
     {
+      "canonical_task": "/root/machine_fidelity_tests",
+      "display_name": null,
+      "archive": "tile-interaction-tests.md",
+      "last_observed_status": "completed test task; reported compatibility blocker subsequently resolved by parent integration",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "observable work record with initial red baseline, passing interaction tests, and a separately recorded post-handoff audit resolution",
+      "topics": [
+        "tile interaction tests",
+        "structure interaction profiles",
+        "NPC affordances and denial codes",
+        "construction and damage transitions",
+        "native turf and object import classification",
+        "Atlas source-path fixtures"
+      ]
+    },
+    {
       "canonical_task": "/root/machine_docs_renderer",
       "display_name": null,
       "archive": "machine-docs-renderer.md",
@@ -119,6 +135,41 @@
         "typed NPC affordances",
         "modding hooks and fidelity ledger",
         "department-sorted machine module ownership"
+      ]
+    },
+    {
+      "canonical_task": "/root/machine_docs_renderer",
+      "display_name": null,
+      "archive": "tile-interaction-docs.md",
+      "last_observed_status": "completed, including landed renderer follow-up",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible work report with source findings, coordination summary, renderer follow-up, handoff state, validation results, and separately identified parent viewport/painter corrections",
+      "topics": [
+        "Goon world-interaction fidelity",
+        "click and held-item precedence",
+        "NPC physical affordances",
+        "construction and deconstruction state graphs",
+        "doors, windows, grilles, tables, and lights",
+        "damage and derived breaches",
+        "directions, variants, planes, and rendering",
+        "DPI-scaled camera and 7:5 viewport",
+        "exact, adapted, and deferred ledger"
+      ]
+    },
+    {
+      "canonical_task": "/root/pixel_viewport_audit",
+      "display_name": null,
+      "archive": "pixel-viewport-audit.md",
+      "last_observed_status": "audit completed; parent implementation reviewed and targeted validation passed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "observable work record with pinned upstream evidence, coordination messages, implementation review, and validation results",
+      "topics": [
+        "Goonstation 32x32 pixel ratio",
+        "21x15 native widescreen viewport",
+        "DPI-scaled LÖVE coordinates",
+        "whole-cell letterboxing and scissor",
+        "discrete pixel-art zoom",
+        "shared render and pointer transform"
       ]
     },
     {
@@ -328,6 +379,22 @@
         "map and asset provenance",
         "mod authoring documentation",
         "agent archive indexing"
+      ]
+    },
+    {
+      "canonical_task": "/root/archive_machine_research",
+      "display_name": null,
+      "archive": "tile-source-coverage.md",
+      "last_observed_status": "source audit, importer implementation, generated Atlas update, documentation, and focused validation completed; parent traversal integration recorded separately",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible work report with a separately identified parent lattice/catwalk traversal integration",
+      "topics": [
+        "Goonstation turf and structure source audit",
+        "native palette classifications",
+        "tile feature provenance",
+        "Atlas source coverage",
+        "scenario palette validation",
+        "lattice and catwalk traversal"
       ]
     }
   ]

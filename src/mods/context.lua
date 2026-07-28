@@ -1,5 +1,6 @@
 local Stable = require("src.core.stable")
 local Machine = require("src.core.machine")
+local Interaction = require("src.core.interaction")
 local Json = require("src.vendor.json")
 
 local Context = {}
@@ -117,6 +118,28 @@ function Context:machine_actions(machine_id, actor_id)
   return Machine.affordances(self.simulation, machine, actor)
 end
 
+function Context:tile_actions(map_id, x, y, actor_id)
+  local world = self.simulation.world
+  if map_id ~= nil and map_id ~= world.map_id then
+    return nil
+  end
+  local index = world:index(x, y)
+  if not index then
+    return nil
+  end
+  local actor = actor_id ~= nil
+      and crew_by_id(self.simulation, actor_id)
+    or nil
+  if actor_id ~= nil and not actor then
+    return nil
+  end
+  return Interaction.affordances(
+    self.simulation,
+    { kind = "tile", index = index },
+    actor
+  )
+end
+
 function Context:query_tile(map_id, x, y)
   local world = self.simulation.world
   if map_id ~= nil and map_id ~= world.map_id then
@@ -130,7 +153,12 @@ function Context:query_tile(map_id, x, y)
     x = x,
     y = y,
     tile = world.tile[index],
+    turf_kind = world.turf_kind[index],
     structure = world.structure[index],
+    wall_kind = world.wall_kind[index],
+    features = world:feature_ids(index),
+    structure_health = world.structure_health[index],
+    structure_max_health = world.structure_max_health[index],
     pressure_dkpa = world:pressure_dkpa(index),
     powered = world.powered[index],
     fire = world.fire[index],

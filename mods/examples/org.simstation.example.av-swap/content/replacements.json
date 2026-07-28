@@ -4,11 +4,138 @@
     {
       "id": "org.simstation.core:structure/floor",
       "kind": "structure",
+      "schema": 2,
       "replaces": "org.simstation.core:structure/floor",
       "name_key": "structure.floor",
+      "native_component": "turf-floor-family",
+      "interaction_profile": "goon-floor-v1",
       "material_cost": 2,
       "work_milliticks": 1200,
-      "sprite": "org.simstation.goon:sprite/icons/turf/floors-dmi/white--528cef87d0-o01"
+      "sprites": {
+        "floor": "floor_white",
+        "plating": "plating",
+        "reinforced_floor": "reinforced_floor"
+      },
+      "source": {
+        "repository": "goonstation/goonstation",
+        "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+        "type_path": "/turf/simulated/floor",
+        "files": [
+          "code/turf/floors.dm"
+        ]
+      },
+      "actions": [
+        {
+          "id": "inspect",
+          "handler": "common.inspect",
+          "source_symbol": "/turf/simulated/floor/get_desc",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "npc",
+            "turf"
+          ]
+        },
+        {
+          "id": "place-floor",
+          "handler": "floor.place",
+          "source_symbol": "/turf/simulated/floor/attackby",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "tools_any": [
+              "floor_tile"
+            ],
+            "unoccupied": true
+          },
+          "parameters": {},
+          "tags": [
+            "npc",
+            "turf"
+          ]
+        },
+        {
+          "id": "pry-floor",
+          "handler": "floor.pry",
+          "source_symbol": "/turf/simulated/floor/proc/pry_tile",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "tools_any": [
+              "crowbar"
+            ],
+            "unoccupied": true
+          },
+          "parameters": {},
+          "tags": [
+            "npc",
+            "turf"
+          ]
+        },
+        {
+          "id": "reinforce-floor",
+          "handler": "floor.reinforce",
+          "source_symbol": "/turf/simulated/floor/proc/reinforce",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 30,
+          "requires": {
+            "tools_any": [
+              "rods"
+            ],
+            "unoccupied": true
+          },
+          "parameters": {},
+          "tags": [
+            "construction",
+            "npc",
+            "turf"
+          ]
+        },
+        {
+          "id": "remove-floor-reinforcement",
+          "handler": "floor.remove-reinforcement",
+          "source_symbol": "/turf/simulated/floor/proc/remove_reinforcement",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 30,
+          "requires": {
+            "tools_any": [
+              "welder",
+              "wrench"
+            ],
+            "unoccupied": true
+          },
+          "parameters": {},
+          "tags": [
+            "construction",
+            "npc",
+            "turf"
+          ]
+        }
+      ],
+      "fidelity": {
+        "profile": "goon-near-1",
+        "ledger": [
+          {
+            "feature": "floor-state-chain",
+            "status": "engine-adapted",
+            "source": "/turf/simulated/floor/attackby",
+            "note": "The example preserves the complete interaction contract while replacing only the finished-floor presentation alias."
+          },
+          {
+            "feature": "underfloor-object-reveal",
+            "status": "deferred",
+            "source": "/turf/simulated/floor/proc/pry_tile",
+            "note": "Cable and pipe visibility does not yet follow upstream floor removal overlays."
+          }
+        ]
+      }
     }
   ]
 }

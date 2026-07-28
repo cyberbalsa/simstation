@@ -12,5 +12,8 @@
   "item.steel-sheet": "Steel Sheet",
   "item.cable-coil": "Cable Coil",
   "item.circuit": "Circuit",
-  "item.control-assembly": "Control Assembly"
+  "item.control-assembly": "Control Assembly",
+  "structure.floor": "Floor",
+  "structure.wall": "Wall",
+  "structure.door": "Airlock"
 }

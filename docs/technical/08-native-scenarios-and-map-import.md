@@ -15,11 +15,14 @@ current playable-station milestone. It is:
   state.
 
 This format deliberately covers the physical substrate already implemented:
-space/floor, empty/wall/door structure, cable presence, initial pressure,
-areas, a bounded set of fixture adapters linked to namespaced machine
-definitions, crew spawn markers, and meteor targets. Pipes, windows, multi-tile
-footprints, remote planes, item placement, and decorations require a later
-versioned extension. Existing fields must not be silently reinterpreted.
+space/floor, native floor/plating/reinforced-floor class, standard/reinforced
+walls, empty/wall/door structure, reviewed tile features, cable presence,
+initial pressure, areas, a bounded set of fixture adapters linked to namespaced
+machine definitions, crew spawn markers, and meteor targets. A feature records
+source presence and the movement/gas distinction already modeled; it does not
+claim full upstream behavior. Pipe/disposal topology, multi-tile footprints,
+remote planes, item placement, and dynamic decoration state require later
+versioned contracts. Existing fields must not be silently reinterpreted.
 
 The current implementation is in `src/core/scenario.lua`. Package validation
 begins in `tools/mods.py`, and `src/mods/loader.lua` loads files selected by a
@@ -50,14 +53,17 @@ into the 192×192 milestone station. For example, `maps/cogmap.dmm` contains:
 Those measurements make Cogmap useful layout evidence, not a runtime template.
 The first checked-in candidate instead uses a 192×192 crop of the smaller
 `maps/atlas.dmm`. Its generated
-`org.simstation.core:scenario/goon-atlas` contains 408 palette entries, 2,405
+`org.simstation.core:scenario/goon-atlas` contains 1,596 palette entries, 4,443
 runs, 92 areas, 134 selected fixtures, 85 spawn markers, and 64 sampled meteor
 targets. Atlas still supplies broad department coverage while its full source
 has 7,436 object placements rather than Cogmap's 22,544.
 
 The selected source rectangle is `(61,61)` through `(252,252)` on Z level 1.
-It contains 7,433 object placements: 2,734 are represented by the current
-tile/door/cable/fixture/spawn adapters and 4,699 are recorded as unsupported.
+It contains 7,433 object placements: 5,028 are represented by the current
+tile/feature/door/cable/fixture/spawn adapters and 2,405 are recorded as
+unsupported. Exact reviewed source paths remain in sorted `source_turfs` and
+`source_objects` lists. The compiled palette is 452 records below the 2,048
+record limit.
 The source-preserving machine pass retains every selected machine adapter,
 including multiple machine atoms on one source tile, with no fixture-collision
 or invalid-anchor omission. One duplicate spawn is still recorded explicitly
@@ -72,8 +78,10 @@ The analyzer records type paths, override names, and only override values that
 its non-executing literal reader can prove are strings, booleans, or exact
 integers. The `compile` command applies the versioned
 `goon-type-path-adapter-v1` profile to a bounded crop. It currently recognizes
-a deliberately small set of turfs, doors/windows, cables, areas, job landmarks,
-and fixture path families. A fixture preserves safe values in
+a reviewed set of turf classes, walls, doors/windows/grilles, furniture,
+lights, storage, lattices/catwalks, decals/signs, atmosphere and disposal
+pipes, cables, areas, job landmarks, and fixture path families. A fixture
+preserves safe values in
 `source_overrides`; its referenced machine definition separately allowlists
 which names may initialize authoritative state. DM expressions remain opaque
 and cannot become behavior. Decorative or unsupported atoms are either mapped
@@ -216,36 +224,44 @@ records Cogmap as research input.
         "palette": [
           {
             "key": "space",
-            "tile": "space"
+            "tile": "space",
+            "turf_kind": "space"
           },
           {
             "key": "engineering-floor",
             "tile": "floor",
+            "turf_kind": "floor",
             "structure": "empty",
             "cable": true,
             "pressurized": true,
-            "area": 1
+            "area": 1,
+            "source_turfs": ["/turf/simulated/floor"]
           },
           {
             "key": "hull-wall",
             "tile": "floor",
             "structure": "wall",
+            "wall_kind": "standard",
             "cable": false,
             "pressurized": false,
-            "area": 0
+            "area": 0,
+            "source_turfs": ["/turf/simulated/wall/auto"]
           },
           {
             "key": "public-airlock",
             "tile": "floor",
+            "turf_kind": "plating",
             "structure": "door_closed",
             "cable": true,
             "pressurized": true,
             "area": 1,
-            "access": "public"
+            "access": "public",
+            "source_objects": ["/obj/machinery/door/airlock"]
           },
           {
             "key": "cargo-floor",
             "tile": "floor",
+            "turf_kind": "floor",
             "structure": "empty",
             "cable": true,
             "pressurized": true,
@@ -379,15 +395,27 @@ Palette entries are closed records:
 |---|---:|---|
 | `key` | yes | unique diagnostic key, maximum 240 bytes |
 | `tile` | yes | `space` or `floor` |
+| `turf_kind` | no | `space`, `plating`, `floor`, or `reinforced_floor`; defaults from `tile` and must agree with it |
 | `structure` | no | `empty`, `wall`, `door_closed`, or `door_open`; default `empty` |
+| `wall_kind` | no | `standard` or `reinforced`; legal only for `structure = wall`, whose runtime default is `standard` |
+| `features` | no | sorted unique subset of `window`, `grille`, `table`, `chair`, `light`, `storage`, `crate`, `lattice`, `catwalk`, `pipe`, `disposal`, `sign`, and `decal` |
 | `cable` | no | cable occupies this cell; default `false` |
 | `pressurized` | no | seed standard O2/N2 and temperature on a non-wall floor; default `false` |
 | `area` | no | contiguous numeric area ID, or `0` for none; default `0` |
 | `access` | no | required credential for a door; default is owning area access, then `public` |
+| `source_turfs` | no | sorted unique absolute `/turf` type paths retained as provenance |
+| `source_objects` | no | sorted unique reviewed `/obj` type paths retained as provenance |
 
 Palette data is an initial condition, not a frozen tile classification.
 Construction, damage, doors, atmosphere, and utilities mutate the expanded
-world. Palette keys and runs do not enter a save.
+world. Palette keys, runs, and source-path lists do not enter a save. Native
+turf/wall/feature values do enter the expanded world and its snapshots.
+
+Feature compatibility is closed. A `window` must share a wall or door boundary;
+this permits source-faithful shutter-plus-window layers. A `crate` also carries
+`storage`. Grilles, tables, storage objects, and crates block actor/spawn
+occupancy while allowing a source-layered machine fixture to retain the same
+coordinate as dense furniture.
 
 ## Areas
 
@@ -427,7 +455,10 @@ scalar `source_overrides`; the generated Atlas fixture set carries explicit
 definitions. Fixtures sort by ID before runtime entity allocation. Multiple
 independently addressable fixtures may share a tile when the source map layers
 multiple atoms there; no fixture is flattened or discarded. Every anchor must
-be a passable floor and satisfy kind-specific preconditions:
+be a floor without a wall or closed door and satisfy kind-specific
+preconditions. Dense furniture still blocks actors and spawn points, but it
+does not invalidate a wall-mounted or over-table fixture recorded on the same
+source turf:
 
 - generators and APCs must touch the authored cable graph;
 - an APC must occupy a nonzero area;
@@ -610,7 +641,12 @@ missing from the first contract draft:
 3. Doors inherit area access unless a palette door overrides it. Powered crew
    with matching credentials may open them; open doors close on a deterministic
    timer. APCs and generators validate against areas/cables, atmosphere devices
-   require gas cells, and fixtures/spawns require passable anchors.
+   require gas cells, fixtures require non-boundary floor anchors, and spawns
+   require actor-passable anchors. Dense feature occupancy participates in the
+   latter without discarding source-layered machine fixtures. Lattice and
+   catwalk features provide a walkable surface over legacy `tile=space`
+   without becoming atmosphere cells; an intact colocated grille still blocks
+   actors while remaining gas-permeable.
 4. Atlas begins with 134 adapted machines: 81 APCs, six SMES units, one TEG
    generator, two TEG circulators, three passive vents, one vent pump, three
    portable scrubbers, 20 manufacturers, seven portable reclaimers, two
@@ -630,11 +666,12 @@ missing from the first contract draft:
    targets, nested identity, and the runtime safety boundary.
 7. The compiler pins commit/blob/SHA-256, flips source Y explicitly, emits
    canonical palette runs and namespaced nested IDs, preserves safe literal
-   overrides without executing DM, and records unsupported objects, placement
-   omissions, fixture collisions, and duplicate spawns. Empty placement and
-   collision lists prove that the selected Atlas machine set is no longer
-   lossy. All 570 pinned maps parse; four source irregularities remain visible
-   in the inventory report instead of being normalized silently.
+   overrides and reviewed source paths without executing DM, and records
+   unsupported objects, placement omissions, fixture collisions, and duplicate
+   spawns. It rejects output above 2,048 palette records; Atlas uses 1,596.
+   Empty placement and collision lists prove that the selected Atlas machine
+   set is no longer lossy. All 570 pinned maps parse; four source irregularities
+   remain visible in the inventory report instead of being normalized silently.
 
 The following remain release-contract work rather than hidden permissive
 behavior:

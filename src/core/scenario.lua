@@ -18,11 +18,39 @@ local TILE_VALUES = {
   floor = Constants.TILE.FLOOR,
 }
 
+local TURF_VALUES = {
+  space = Constants.TURF.SPACE,
+  plating = Constants.TURF.PLATING,
+  floor = Constants.TURF.FLOOR,
+  reinforced_floor = Constants.TURF.REINFORCED_FLOOR,
+}
+
 local STRUCTURE_VALUES = {
   empty = Constants.STRUCTURE.EMPTY,
   wall = Constants.STRUCTURE.WALL,
   door_closed = Constants.STRUCTURE.DOOR_CLOSED,
   door_open = Constants.STRUCTURE.DOOR_OPEN,
+}
+
+local WALL_VALUES = {
+  standard = Constants.WALL.STANDARD,
+  reinforced = Constants.WALL.REINFORCED,
+}
+
+local FEATURE_VALUES = {
+  window = Constants.FEATURE.WINDOW,
+  grille = Constants.FEATURE.GRILLE,
+  table = Constants.FEATURE.TABLE,
+  chair = Constants.FEATURE.CHAIR,
+  light = Constants.FEATURE.LIGHT,
+  storage = Constants.FEATURE.STORAGE,
+  crate = Constants.FEATURE.CRATE,
+  lattice = Constants.FEATURE.LATTICE,
+  catwalk = Constants.FEATURE.CATWALK,
+  pipe = Constants.FEATURE.PIPE,
+  disposal = Constants.FEATURE.DISPOSAL,
+  sign = Constants.FEATURE.SIGN,
+  decal = Constants.FEATURE.DECAL,
 }
 
 local FIXTURE_KINDS = {
@@ -100,10 +128,15 @@ local PALETTE_KEYS = {
   access = true,
   area = true,
   cable = true,
+  features = true,
   key = true,
   pressurized = true,
+  source_objects = true,
+  source_turfs = true,
   structure = true,
   tile = true,
+  turf_kind = true,
+  wall_kind = true,
 }
 
 local FIXTURE_KEYS = {
@@ -229,10 +262,52 @@ local function validate_palette(map, area_count)
     assert(not keys[key], "duplicate palette key: " .. key)
     keys[key] = true
     assert(TILE_VALUES[cell.tile], "unknown palette tile: " .. tostring(cell.tile))
+    local turf_kind = cell.turf_kind
+      or (cell.tile == "space" and "space" or "floor")
+    assert(TURF_VALUES[turf_kind],
+      "unknown palette turf kind: " .. tostring(turf_kind))
+    assert(
+      (cell.tile == "space") == (turf_kind == "space"),
+      "palette turf kind must agree with tile"
+    )
     assert(
       STRUCTURE_VALUES[cell.structure or "empty"] ~= nil,
       "unknown palette structure: " .. tostring(cell.structure)
     )
+    if cell.wall_kind ~= nil then
+      assert(WALL_VALUES[cell.wall_kind],
+        "unknown palette wall kind: " .. tostring(cell.wall_kind))
+      assert((cell.structure or "empty") == "wall",
+        "palette wall kind requires a wall")
+    end
+    local features = cell.features or {}
+    assert(type(features) == "table", "palette.features must be an array")
+    local previous_feature = ""
+    for feature_index = 1, #features do
+      local feature = features[feature_index]
+      assert(FEATURE_VALUES[feature],
+        "unknown palette feature: " .. tostring(feature))
+      assert(feature > previous_feature,
+        "palette features must be sorted and unique")
+      previous_feature = feature
+    end
+    for _, source_key in ipairs({ "source_turfs", "source_objects" }) do
+      local values = cell[source_key] or {}
+      assert(type(values) == "table", "palette." .. source_key .. " must be an array")
+      local previous = ""
+      for value_index = 1, #values do
+        local value = nonempty_string(
+          values[value_index],
+          "palette." .. source_key,
+          1024
+        )
+        assert(value:sub(1, 1) == "/",
+          "palette source paths must be absolute DM type paths")
+        assert(value > previous,
+          "palette source paths must be sorted and unique")
+        previous = value
+      end
+    end
     if cell.cable ~= nil then
       assert(type(cell.cable) == "boolean", "palette.cable must be boolean")
     end
@@ -252,12 +327,17 @@ local function validate_palette(map, area_count)
     local access = cell.access or ""
     local semantic = table.concat({
       cell.tile,
+      turf_kind,
       cell.structure or "empty",
+      cell.wall_kind or "",
       cell.cable == true and "1" or "0",
       cell.pressurized == true and "1" or "0",
       tostring(cell.area or 0),
       tostring(#access),
       access,
+      table.concat(features, ","),
+      table.concat(cell.source_turfs or {}, ","),
+      table.concat(cell.source_objects or {}, ","),
     }, ":")
     assert(not semantics[semantic], "duplicate semantic palette cell")
     semantics[semantic] = true
@@ -478,6 +558,8 @@ end
 
 local function palette_value(cell, areas)
   local structure = STRUCTURE_VALUES[cell.structure or "empty"]
+  local turf_kind = cell.turf_kind
+    or (cell.tile == "space" and "space" or "floor")
   local access = cell.access
   if structure == Constants.STRUCTURE.DOOR_CLOSED
     or structure == Constants.STRUCTURE.DOOR_OPEN
@@ -485,9 +567,21 @@ local function palette_value(cell, areas)
     local area = areas[cell.area or 0]
     access = access or (area and area.access) or "public"
   end
+  local feature_mask = 0
+  for index = 1, #(cell.features or {}) do
+    feature_mask = feature_mask + FEATURE_VALUES[cell.features[index]]
+  end
   return {
     tile = TILE_VALUES[cell.tile],
+    turf_kind = TURF_VALUES[turf_kind],
     structure = structure,
+    wall_kind = cell.wall_kind and WALL_VALUES[cell.wall_kind]
+      or (
+        structure == Constants.STRUCTURE.WALL
+          and Constants.WALL.STANDARD
+        or Constants.WALL.NONE
+      ),
+    feature_mask = feature_mask,
     cable = cell.cable == true,
     pressurized = cell.pressurized == true,
     area = cell.area or 0,
@@ -497,7 +591,20 @@ end
 
 local function apply_cell(world, index, cell)
   world.tile[index] = cell.tile
+  world.turf_kind[index] = cell.turf_kind
   world.structure[index] = cell.structure
+  world.wall_kind[index] = cell.wall_kind
+  world.feature_mask[index] = cell.feature_mask
+  if cell.structure == Constants.STRUCTURE.WALL then
+    local maximum = cell.wall_kind == Constants.WALL.REINFORCED and 300 or 100
+    world.structure_health[index] = maximum
+    world.structure_max_health[index] = maximum
+  elseif cell.structure == Constants.STRUCTURE.DOOR_CLOSED
+    or cell.structure == Constants.STRUCTURE.DOOR_OPEN
+  then
+    world.structure_health[index] = 100
+    world.structure_max_health[index] = 100
+  end
   world.cable[index] = cell.cable
   world.area[index] = cell.area
   world.door_access[index] = cell.access
@@ -536,8 +643,13 @@ local function validate_expanded(definition, world, fixtures, spawns, targets)
   for index = 1, #fixtures do
     local fixture = fixtures[index]
     local tile_index = fixture.index
-    assert(world:is_passable(tile_index),
-      "fixture is not on a passable floor: " .. fixture.id)
+    local structure = world.structure[tile_index]
+    assert(
+      world.tile[tile_index] == Constants.TILE.FLOOR
+        and structure ~= Constants.STRUCTURE.WALL
+        and structure ~= Constants.STRUCTURE.DOOR_CLOSED,
+      "fixture is not anchored to a usable floor: " .. fixture.id
+    )
     if fixture.kind == "apc" then
       assert(world.area[tile_index] > 0, "APC has no area: " .. fixture.id)
       assert(touches_cable(world, tile_index),

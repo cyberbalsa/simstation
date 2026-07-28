@@ -7,6 +7,7 @@ local CommandQueue = require("src.core.command_queue")
 local Pathfinding = require("src.core.pathfinding")
 local Scenario = require("src.core.scenario")
 local Machine = require("src.core.machine")
+local Interaction = require("src.core.interaction")
 local HookContext = require("src.mods.context")
 
 local Simulation = {}
@@ -663,6 +664,76 @@ function Simulation:_apply_command(command)
     return true
   elseif command.kind == "trigger_meteor" then
     self:_trigger_meteor(true)
+    return true
+  elseif command.kind == "tile_action" then
+    local target = Stable.deep_copy(payload.target or {
+      kind = "tile",
+      x = payload.x,
+      y = payload.y,
+    })
+    local index = target.index
+    if index == nil
+      and type(target.x) == "number"
+      and type(target.y) == "number"
+    then
+      index = self.world:index(target.x, target.y)
+    end
+    if type(index) ~= "number"
+      or index % 1 ~= 0
+      or index < 1
+      or index > self.world.size
+    then
+      return false, "outside-map"
+    end
+    local target_x, target_y = self.world:coordinates(index)
+    target.kind = "tile"
+    target.index = index
+    local actor = self:_crew_by_id(payload.actor_id)
+    if not actor then
+      return false, "actor-missing"
+    end
+    local request = {
+      action_id = payload.action_id,
+      actor_id = actor.id,
+      map_id = self.world.map_id,
+      parameters = Stable.deep_copy(payload.parameters or {}),
+      target = {
+        kind = "tile",
+        index = index,
+        x = target_x,
+        y = target_y,
+      },
+    }
+    if self.hooks then
+      local allowed, reason = self.hooks:validate(
+        "org.simstation.core:hook/tile/action/validate",
+        Stable.deep_copy(request),
+        HookContext.new(self, {
+          action = Stable.deep_copy(request),
+          actor = Stable.deep_copy(actor),
+          tile = {
+            index = index,
+            x = target_x,
+            y = target_y,
+          },
+        })
+      )
+      if not allowed then
+        return false, reason or "rejected by a trusted mod"
+      end
+    end
+    local ok, reason = Interaction.perform(
+      self,
+      target,
+      payload.action_id,
+      actor,
+      payload.parameters or {}
+    )
+    if not ok then
+      return false, type(reason) == "table"
+          and tostring(reason.code)
+        or tostring(reason)
+    end
     return true
   end
   return false, "unknown command: " .. tostring(command.kind)

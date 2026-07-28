@@ -4,6 +4,32 @@ local Stable = require("src.core.stable")
 local World = {}
 World.__index = World
 
+local FEATURE_IDS = {
+  { "catwalk", Constants.FEATURE.CATWALK },
+  { "chair", Constants.FEATURE.CHAIR },
+  { "crate", Constants.FEATURE.CRATE },
+  { "decal", Constants.FEATURE.DECAL },
+  { "disposal", Constants.FEATURE.DISPOSAL },
+  { "grille", Constants.FEATURE.GRILLE },
+  { "lattice", Constants.FEATURE.LATTICE },
+  { "light", Constants.FEATURE.LIGHT },
+  { "pipe", Constants.FEATURE.PIPE },
+  { "sign", Constants.FEATURE.SIGN },
+  { "storage", Constants.FEATURE.STORAGE },
+  { "table", Constants.FEATURE.TABLE },
+  { "window", Constants.FEATURE.WINDOW },
+}
+
+local TOPOLOGY_FEATURES = {
+  [Constants.FEATURE.CATWALK] = true,
+  [Constants.FEATURE.CRATE] = true,
+  [Constants.FEATURE.GRILLE] = true,
+  [Constants.FEATURE.LATTICE] = true,
+  [Constants.FEATURE.STORAGE] = true,
+  [Constants.FEATURE.TABLE] = true,
+  [Constants.FEATURE.WINDOW] = true,
+}
+
 local function filled_array(size, value)
   local result = {}
   for i = 1, size do
@@ -25,7 +51,13 @@ function World.new(width, height)
     chunks_x = chunks_x,
     chunks_y = chunks_y,
     tile = filled_array(size, Constants.TILE.SPACE),
+    turf_kind = filled_array(size, Constants.TURF.SPACE),
     structure = filled_array(size, Constants.STRUCTURE.EMPTY),
+    wall_kind = filled_array(size, Constants.WALL.NONE),
+    feature_mask = filled_array(size, 0),
+    structure_health = filled_array(size, 0),
+    structure_max_health = filled_array(size, 0),
+    interaction_state = filled_array(size, false),
     cable = filled_array(size, false),
     powered = filled_array(size, false),
     blueprint = filled_array(size, false),
@@ -92,19 +124,229 @@ function World:touch(x, y, topology)
   end
 end
 
+function World:has_feature(index, feature)
+  if not index or type(feature) ~= "number" or feature < 1 then
+    return false
+  end
+  local mask = self.feature_mask[index] or 0
+  return math.floor(mask / feature) % 2 == 1
+end
+
+function World:feature_ids(index)
+  local result = {}
+  for feature_index = 1, #FEATURE_IDS do
+    local record = FEATURE_IDS[feature_index]
+    if self:has_feature(index, record[2]) then
+      result[#result + 1] = record[1]
+    end
+  end
+  return result
+end
+
+function World:feature_is_intact(index, component)
+  local state = self:peek_interaction_state(index, component)
+  return not state or state.destroyed ~= true
+end
+
+function World:set_feature(index, feature, enabled)
+  if not index or type(feature) ~= "number" or feature < 1 then
+    return false, "invalid-feature"
+  end
+  local mask = self.feature_mask[index] or 0
+  local present = math.floor(mask / feature) % 2 == 1
+  enabled = not not enabled
+  if present == enabled then
+    return true, false
+  end
+  self.feature_mask[index] = enabled and (mask + feature) or (mask - feature)
+  local x, y = self:coordinates(index)
+  self:touch(x, y, TOPOLOGY_FEATURES[feature] == true)
+  return true, true
+end
+
+function World:peek_interaction_state(index, component)
+  local state = index and self.interaction_state[index]
+  return type(state) == "table" and state[component] or nil
+end
+
+function World:ensure_interaction_state(index, component, defaults)
+  assert(index and index >= 1 and index <= self.size, "invalid tile index")
+  assert(type(component) == "string" and component ~= "",
+    "interaction component is required")
+  local state = self.interaction_state[index]
+  if type(state) ~= "table" then
+    state = {}
+    self.interaction_state[index] = state
+  end
+  local value = state[component]
+  if type(value) ~= "table" then
+    value = Stable.deep_copy(defaults or {})
+    state[component] = value
+  end
+  return value
+end
+
+local function wall_max_health(wall_kind)
+  if wall_kind == Constants.WALL.REINFORCED then
+    return 300
+  elseif wall_kind == Constants.WALL.STANDARD then
+    return 100
+  end
+  return 0
+end
+
+function World:set_wall_kind(index, wall_kind)
+  if not index
+    or (
+      wall_kind ~= Constants.WALL.NONE
+      and wall_kind ~= Constants.WALL.STANDARD
+      and wall_kind ~= Constants.WALL.REINFORCED
+    )
+  then
+    return false, "invalid-wall-kind"
+  end
+  self.wall_kind[index] = wall_kind
+  if wall_kind == Constants.WALL.NONE then
+    if self.structure[index] == Constants.STRUCTURE.WALL then
+      self.structure[index] = Constants.STRUCTURE.EMPTY
+    end
+    self.structure_health[index] = 0
+    self.structure_max_health[index] = 0
+  else
+    self.structure[index] = Constants.STRUCTURE.WALL
+    local maximum = wall_max_health(wall_kind)
+    self.structure_max_health[index] = maximum
+    self.structure_health[index] = maximum
+  end
+  local x, y = self:coordinates(index)
+  self:touch(x, y, true)
+  return true
+end
+
+function World:damage_structure(index, amount, damage_type)
+  if not index or index < 1 or index > self.size then
+    return false, "outside-map"
+  end
+  if type(amount) ~= "number"
+    or amount % 1 ~= 0
+    or amount <= 0
+    or amount > 1000000
+  then
+    return false, "invalid-damage"
+  end
+  if damage_type ~= nil
+    and damage_type ~= "brute"
+    and damage_type ~= "burn"
+    and damage_type ~= "corrosive"
+    and damage_type ~= "explosive"
+  then
+    return false, "invalid-damage-type"
+  end
+  local structure = self.structure[index]
+  if structure ~= Constants.STRUCTURE.WALL
+    and structure ~= Constants.STRUCTURE.DOOR_CLOSED
+    and structure ~= Constants.STRUCTURE.DOOR_OPEN
+  then
+    return false, "not-damageable"
+  end
+  local maximum = self.structure_max_health[index] or 0
+  if maximum <= 0 then
+    if structure == Constants.STRUCTURE.WALL then
+      maximum = wall_max_health(self.wall_kind[index])
+    else
+      maximum = 100
+    end
+    self.structure_max_health[index] = maximum
+  end
+  local current = self.structure_health[index]
+  if not current or current <= 0 then
+    current = maximum
+  end
+  current = math.max(0, current - amount)
+  self.structure_health[index] = current
+  local destroyed = current == 0
+  if destroyed then
+    self.structure[index] = Constants.STRUCTURE.EMPTY
+    self.wall_kind[index] = Constants.WALL.NONE
+    self.structure_max_health[index] = 0
+    self.door_access[index] = false
+    self.door_close_tick[index] = 0
+  end
+  local x, y = self:coordinates(index)
+  self:touch(x, y, destroyed)
+  return true, {
+    damage_type = damage_type or "brute",
+    destroyed = destroyed,
+    health = current,
+    maximum = maximum,
+  }
+end
+
+function World:repair_structure(index, amount)
+  if not index or index < 1 or index > self.size then
+    return false, "outside-map"
+  end
+  if type(amount) ~= "number"
+    or amount % 1 ~= 0
+    or amount <= 0
+    or amount > 1000000
+  then
+    return false, "invalid-repair"
+  end
+  local maximum = self.structure_max_health[index] or 0
+  local current = self.structure_health[index] or 0
+  if maximum <= 0 or current <= 0 or current >= maximum then
+    return false, "not-repairable"
+  end
+  current = math.min(maximum, current + amount)
+  self.structure_health[index] = current
+  local x, y = self:coordinates(index)
+  self:touch(x, y, false)
+  return true, {
+    health = current,
+    maximum = maximum,
+  }
+end
+
 function World:is_gas_cell(index)
   if not index or self.tile[index] ~= Constants.TILE.FLOOR then
     return false
   end
   local structure = self.structure[index]
   return structure ~= Constants.STRUCTURE.WALL
+    and not (
+      self:has_feature(index, Constants.FEATURE.WINDOW)
+      and self:feature_is_intact(index, "window")
+    )
 end
 
 function World:is_passable(index)
-  if not self:is_gas_cell(index) then
+  if not index then
     return false
   end
-  return self.structure[index] ~= Constants.STRUCTURE.DOOR_CLOSED
+  local has_walkable_surface = self.tile[index] == Constants.TILE.FLOOR
+    or self:has_feature(index, Constants.FEATURE.LATTICE)
+    or self:has_feature(index, Constants.FEATURE.CATWALK)
+  if not has_walkable_surface then
+    return false
+  end
+  if self.structure[index] == Constants.STRUCTURE.WALL
+    or self.structure[index] == Constants.STRUCTURE.DOOR_CLOSED
+  then
+    return false
+  end
+  if self:has_feature(index, Constants.FEATURE.WINDOW)
+    and self:feature_is_intact(index, "window")
+  then
+    return false
+  end
+  return not (
+      self:has_feature(index, Constants.FEATURE.GRILLE)
+      and self:feature_is_intact(index, "grille")
+    )
+    and not self:has_feature(index, Constants.FEATURE.TABLE)
+    and not self:has_feature(index, Constants.FEATURE.STORAGE)
+    and not self:has_feature(index, Constants.FEATURE.CRATE)
 end
 
 function World:pressure_dkpa(index)
@@ -127,9 +369,16 @@ function World:seed_starting_core(center_x, center_y, half_width, half_height)
     for x = min_x, max_x do
       local index = assert(self:index(x, y))
       self.tile[index] = Constants.TILE.FLOOR
+      self.turf_kind[index] = Constants.TURF.FLOOR
       local perimeter = x == min_x or x == max_x or y == min_y or y == max_y
       self.structure[index] = perimeter and Constants.STRUCTURE.WALL
         or Constants.STRUCTURE.EMPTY
+      self.wall_kind[index] = perimeter and Constants.WALL.STANDARD
+        or Constants.WALL.NONE
+      if perimeter then
+        self.structure_health[index] = 100
+        self.structure_max_health[index] = 100
+      end
       self.temperature_mk[index] = Constants.STANDARD_TEMPERATURE_MK
       if not perimeter then
         self.o2[index] = Constants.STANDARD_O2
@@ -150,6 +399,9 @@ function World:seed_starting_core(center_x, center_y, half_width, half_height)
     local x, y = doors[i][1], doors[i][2]
     local index = assert(self:index(x, y))
     self.structure[index] = Constants.STRUCTURE.DOOR_CLOSED
+    self.wall_kind[index] = Constants.WALL.NONE
+    self.structure_health[index] = 100
+    self.structure_max_health[index] = 100
     self.o2[index] = Constants.STANDARD_O2
     self.n2[index] = Constants.STANDARD_N2
     self.cable[index] = true
@@ -205,12 +457,20 @@ function World:complete_blueprint(index)
   local x, y = self:coordinates(index)
   if kind == Constants.BLUEPRINT.FLOOR then
     self.tile[index] = Constants.TILE.FLOOR
+    self.turf_kind[index] = Constants.TURF.FLOOR
     self.structure[index] = Constants.STRUCTURE.EMPTY
+    self.wall_kind[index] = Constants.WALL.NONE
     self.temperature_mk[index] = Constants.SPACE_TEMPERATURE_MK
   elseif kind == Constants.BLUEPRINT.WALL then
     self.structure[index] = Constants.STRUCTURE.WALL
+    self.wall_kind[index] = Constants.WALL.STANDARD
+    self.structure_health[index] = 100
+    self.structure_max_health[index] = 100
   elseif kind == Constants.BLUEPRINT.DOOR then
     self.structure[index] = Constants.STRUCTURE.DOOR_CLOSED
+    self.wall_kind[index] = Constants.WALL.NONE
+    self.structure_health[index] = 100
+    self.structure_max_health[index] = 100
   elseif kind == Constants.BLUEPRINT.CABLE then
     self.cable[index] = true
   end
@@ -225,6 +485,9 @@ function World:make_breach(x, y)
     return false
   end
   self.structure[index] = Constants.STRUCTURE.EMPTY
+  self.wall_kind[index] = Constants.WALL.NONE
+  self.structure_health[index] = 0
+  self.structure_max_health[index] = 0
   self:touch(x, y, true)
   return true
 end
@@ -507,7 +770,13 @@ function World:snapshot()
     width = self.width,
     height = self.height,
     tile = self.tile,
+    turf_kind = self.turf_kind,
     structure = self.structure,
+    wall_kind = self.wall_kind,
+    feature_mask = self.feature_mask,
+    structure_health = self.structure_health,
+    structure_max_health = self.structure_max_health,
+    interaction_state = self.interaction_state,
     cable = self.cable,
     powered = self.powered,
     blueprint = self.blueprint,
@@ -542,7 +811,13 @@ function World.from_snapshot(snapshot)
   local world = World.new(snapshot.width, snapshot.height)
   local keys = {
     "tile",
+    "turf_kind",
     "structure",
+    "wall_kind",
+    "feature_mask",
+    "structure_health",
+    "structure_max_health",
+    "interaction_state",
     "cable",
     "powered",
     "blueprint",
@@ -578,6 +853,23 @@ function World.from_snapshot(snapshot)
   world.power_supply_w = snapshot.power_supply_w
   world.power_demand_w = snapshot.power_demand_w
   world.power_served_w = snapshot.power_served_w
+  if snapshot.turf_kind == nil then
+    for index = 1, world.size do
+      world.turf_kind[index] = world.tile[index] == Constants.TILE.FLOOR
+          and Constants.TURF.FLOOR
+        or Constants.TURF.SPACE
+      if world.structure[index] == Constants.STRUCTURE.WALL then
+        world.wall_kind[index] = Constants.WALL.STANDARD
+        world.structure_health[index] = 100
+        world.structure_max_health[index] = 100
+      elseif world.structure[index] == Constants.STRUCTURE.DOOR_CLOSED
+        or world.structure[index] == Constants.STRUCTURE.DOOR_OPEN
+      then
+        world.structure_health[index] = 100
+        world.structure_max_health[index] = 100
+      end
+    end
+  end
   return world
 end
 

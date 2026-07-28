@@ -71,12 +71,20 @@ function App.new(args)
       }
     end
   end
-  local camera = Camera.new(simulation.world, width, height)
+  local viewport_x, viewport_y, viewport_width, viewport_height =
+    Ui.world_viewport(width, height)
+  local camera = Camera.new(
+    simulation.world,
+    viewport_width,
+    viewport_height,
+    viewport_x,
+    viewport_y
+  )
   local app = setmetatable({
     args = args,
     simulation = simulation,
     camera = camera,
-    renderer = Renderer.new(simulation.world),
+    renderer = Renderer.new(simulation.world, simulation.content),
     ui = Ui.new(),
     audio = Audio.new(),
     save_store = SaveStore.new({
@@ -207,7 +215,14 @@ function App:draw()
 end
 
 function App:resize(width, height)
-  self.camera:resize(width, height)
+  local viewport_x, viewport_y, viewport_width, viewport_height =
+    Ui.world_viewport(width, height)
+  self.camera:resize(
+    viewport_width,
+    viewport_height,
+    viewport_x,
+    viewport_y
+  )
   self.camera:clamp(self.simulation.world)
 end
 
@@ -260,7 +275,7 @@ function App:keypressed(key, _, is_repeat)
     local loaded, result = self.save_store:load()
     if loaded then
       self.simulation = loaded
-      self.renderer = Renderer.new(loaded.world)
+      self.renderer = Renderer.new(loaded.world, loaded.content)
       self.camera:clamp(loaded.world)
       self.ui:set_notification("Loaded tick " .. loaded.tick, self.now, 5)
     else
@@ -278,7 +293,7 @@ function App:mousepressed(x, y, button)
     self:_set_tool("inspect")
     return
   elseif button == 3 then
-    self.dragging_camera = true
+    self.dragging_camera = self.camera:contains_screen_point(x, y)
     return
   elseif button ~= 1 or self.ui:is_over_ui(x, y) then
     return
@@ -325,6 +340,9 @@ function App:wheelmoved(_, y)
     return
   end
   local mouse_x, mouse_y = love.mouse.getPosition()
+  if not self.camera:contains_screen_point(mouse_x, mouse_y) then
+    return
+  end
   local factor = y > 0 and 2 or 0.5
   self.camera:set_zoom(
     self.camera.zoom * factor,

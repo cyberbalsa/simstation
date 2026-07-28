@@ -3,6 +3,10 @@ local Constants = require("src.core.constants")
 local Ui = {}
 Ui.__index = Ui
 
+Ui.TOP_BAR_HEIGHT = 48
+Ui.VIEWPORT_BLOCK_TILES_X = 7
+Ui.VIEWPORT_BLOCK_TILES_Y = 5
+
 local TOOL_LABELS = {
   inspect = "Inspect",
   floor = "Floor [F]",
@@ -46,16 +50,65 @@ function Ui:toggle_help()
 end
 
 function Ui:is_over_ui(_, y)
-  return y <= 48
+  return y < Ui.TOP_BAR_HEIGHT
+end
+
+function Ui.world_viewport(width, height)
+  local available_height = math.max(1, height - Ui.TOP_BAR_HEIGHT)
+  local block_width = Ui.VIEWPORT_BLOCK_TILES_X * Constants.TILE_SIZE
+  local block_height = Ui.VIEWPORT_BLOCK_TILES_Y * Constants.TILE_SIZE
+  local blocks = math.floor(math.min(
+    width / block_width,
+    available_height / block_height
+  ))
+  if blocks < 1 then
+    local viewport_width = math.max(
+      1,
+      math.floor(math.min(
+        width,
+        available_height
+          * Ui.VIEWPORT_BLOCK_TILES_X
+          / Ui.VIEWPORT_BLOCK_TILES_Y
+      ))
+    )
+    local viewport_height = math.max(
+      1,
+      math.floor(
+        viewport_width
+          * Ui.VIEWPORT_BLOCK_TILES_Y
+          / Ui.VIEWPORT_BLOCK_TILES_X
+      )
+    )
+    return
+      math.floor((width - viewport_width) / 2),
+      Ui.TOP_BAR_HEIGHT
+        + math.floor((available_height - viewport_height) / 2),
+      viewport_width,
+      viewport_height
+  end
+  local viewport_width = blocks * block_width
+  local viewport_height = blocks * block_height
+  return
+    math.floor((width - viewport_width) / 2),
+    Ui.TOP_BAR_HEIGHT
+      + math.floor((available_height - viewport_height) / 2),
+    viewport_width,
+    viewport_height
 end
 
 function Ui:draw(snapshot, renderer, camera, now)
   local width, height = love.graphics.getDimensions()
   love.graphics.origin()
   love.graphics.setColor(0.025, 0.035, 0.05, 0.96)
-  love.graphics.rectangle("fill", 0, 0, width, 48)
+  love.graphics.rectangle("fill", 0, 0, width, Ui.TOP_BAR_HEIGHT)
   love.graphics.setColor(0.16, 0.22, 0.30, 1)
-  love.graphics.rectangle("fill", 0, 47, width, 1)
+  love.graphics.rectangle(
+    "fill",
+    0,
+    Ui.TOP_BAR_HEIGHT - 1,
+    width,
+    1
+  )
 
   local status = snapshot.paused and "PAUSED" or tostring(snapshot.speed) .. "x"
   love.graphics.setColor(0.92, 0.95, 1, 1)

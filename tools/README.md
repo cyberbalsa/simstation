@@ -57,9 +57,12 @@ python3 tools/map_import.py compile maps/atlas.dmm \
 irregularities separately from grammar failures. `compile` applies
 `goon-type-path-adapter-v1`, emits `simstation-map-v1`, and records exact
 commit/blob/byte hashes, crop orientation, unsupported paths, collisions, and
-placement omissions in the definition. The normal game reads only the emitted
-native JSON. Use `--allow-unpinned` solely for deliberate research; output from
-an unpinned revision is not a release candidate.
+placement omissions in the definition. Reviewed turf/object paths and native
+turf, wall, and feature classes are retained in the palette; compilation fails
+before writing if more than 2,048 palette records would be required. The normal
+game reads only the emitted native JSON. Use `--allow-unpinned` solely for
+deliberate research; output from an unpinned revision is not a release
+candidate.
 
 ## Determinism and performance
 

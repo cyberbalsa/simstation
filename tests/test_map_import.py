@@ -16,6 +16,60 @@ ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "fixtures" / "maps"
 
 
+def _decoded_scenario_cells(scenario: dict) -> dict[tuple[int, int], dict]:
+    native_map = scenario["map"]
+    width = native_map["width"]
+    height = native_map["height"]
+    palette = native_map["palette"]
+    cells = [
+        palette[native_map["default_palette"] - 1]
+        for _ in range(width * height)
+    ]
+    for start, length, palette_index in native_map["runs"]:
+        cells[start - 1 : start - 1 + length] = [
+            palette[palette_index - 1]
+        ] * length
+    return {
+        (x, y): cells[(y - 1) * width + x - 1]
+        for y in range(1, height + 1)
+        for x in range(1, width + 1)
+    }
+
+
+def _classification_tokens(record: dict) -> set[str]:
+    """Read classification fields without coupling tests to provenance layout."""
+
+    result: set[str] = set()
+
+    def visit(key: str, value: object) -> None:
+        normalized_key = key.lower().replace("_", "-")
+        classification_key = (
+            "class" in normalized_key
+            or normalized_key.endswith("-kind")
+            or normalized_key in {
+                "features",
+                "native-features",
+                "source-features",
+            }
+        )
+        if classification_key and isinstance(value, str):
+            result.add(value.lower().replace("_", "-"))
+        elif classification_key and isinstance(value, list):
+            for child in value:
+                if isinstance(child, str):
+                    result.add(child.lower().replace("_", "-"))
+                elif isinstance(child, dict):
+                    for child_key, child_value in child.items():
+                        visit(str(child_key), child_value)
+        elif isinstance(value, dict):
+            for child_key, child_value in value.items():
+                visit(str(child_key), child_value)
+
+    for record_key, record_value in record.items():
+        visit(str(record_key), record_value)
+    return result
+
+
 class MapImportTests(unittest.TestCase):
     def parse_fixture(self, name: str) -> map_import.ParsedMap:
         path = FIXTURES / name
@@ -221,6 +275,266 @@ class MapImportTests(unittest.TestCase):
         self.assertEqual(lower["tile"], "floor")
         self.assertEqual(lower["structure"], "empty")
 
+    def test_native_import_preserves_representative_turf_and_object_classes(
+        self,
+    ) -> None:
+        entries = {
+            "a": ("/turf/simulated/floor", None),
+            "b": ("/turf/simulated/floor/plating", None),
+            "c": ("/turf/simulated/wall/auto/supernorn", None),
+            "d": (
+                "/turf/simulated/wall/auto/reinforced/supernorn",
+                None,
+            ),
+            "e": (
+                "/turf/simulated/floor",
+                "/obj/mapping_helper/wingrille_spawn/auto/reinforced",
+            ),
+            "f": ("/turf/simulated/floor", "/obj/mesh/grille/steel"),
+            "g": ("/turf/simulated/floor", "/obj/table/reinforced"),
+            "h": ("/turf/simulated/floor", "/obj/stool/chair"),
+            "i": ("/turf/simulated/floor", "/obj/machinery/light"),
+            "j": ("/turf/simulated/floor", "/obj/storage/closet"),
+            "k": ("/turf/simulated/floor", "/obj/storage/crate"),
+            "l": (
+                "/turf/simulated/floor",
+                "/obj/machinery/door/airlock/pyro/security",
+            ),
+            "m": ("/turf/simulated/floor", "/obj/window/reinforced"),
+        }
+        dictionary = []
+        for key, (turf, object_path) in entries.items():
+            atoms = ([object_path] if object_path else []) + [
+                turf,
+                "/area/station/engineering",
+            ]
+            dictionary.append(
+                f'"{key}" = ({",".join(atoms)})\n'.encode()
+            )
+        parsed = map_import.parse_map(
+            b"".join(dictionary)
+            + b'(1,1,1) = {"abcdefghijklm"}\n',
+            "representative-native-classes.dmm",
+        )
+        document = map_import.compile_scenario(
+            parsed,
+            {
+                "commit": "1" * 40,
+                "path": "maps/representative-native-classes.dmm",
+                "git_blob": "2" * 40,
+                "sha256": "3" * 64,
+            },
+            scenario_id="org.example.test:scenario/native-classes",
+            name="Native Classes",
+            crop=(1, 1, 16, 16),
+        )
+        scenario = document["definitions"][0]
+        cells = _decoded_scenario_cells(scenario)
+
+        expected = {
+            1: {"floor"},
+            2: {"plating"},
+            3: {"wall"},
+            4: {"reinforced-wall"},
+            5: {"grille", "window"},
+            6: {"grille"},
+            7: {"table"},
+            8: {"chair"},
+            9: {"light"},
+            10: {"storage"},
+            11: {"crate"},
+            13: {"window"},
+        }
+        for x, wanted in expected.items():
+            tokens = _classification_tokens(cells[(x, 16)])
+            if "reinforced-wall" in wanted:
+                self.assertTrue(
+                    {"reinforced", "reinforced-wall", "rwall"} & tokens,
+                    f"cell {x} did not preserve reinforced-wall: {tokens}",
+                )
+            elif "wall" in wanted:
+                self.assertTrue(
+                    {"standard", "wall"} & tokens,
+                    f"cell {x} did not preserve wall: {tokens}",
+                )
+            else:
+                self.assertTrue(
+                    wanted <= tokens,
+                    f"cell {x} lost native classes {wanted}: {tokens}",
+                )
+
+        for x in (*range(5, 12), 13):
+            features = cells[(x, 16)].get(
+                "features",
+                cells[(x, 16)].get("native_features", []),
+            )
+            self.assertIsInstance(features, list)
+            self.assertEqual(
+                features,
+                sorted(set(features)),
+                f"cell {x} features must be sorted and unique",
+            )
+
+        for x, (turf, object_path) in enumerate(entries.values(), start=1):
+            cell = cells[(x, 16)]
+            source_turfs = cell.get("source_turfs", [])
+            source_objects = cell.get("source_objects", [])
+            self.assertEqual(source_turfs, sorted(set(source_turfs)))
+            self.assertEqual(source_objects, sorted(set(source_objects)))
+            self.assertIn(turf, source_turfs)
+            if object_path:
+                self.assertIn(object_path, source_objects)
+
+        airlock = cells[(12, 16)]
+        self.assertEqual(airlock["structure"], "door_closed")
+        self.assertIn(
+            "/obj/machinery/door/airlock/pyro/security",
+            airlock.get("source_objects", []),
+        )
+
+    def test_native_object_classification_respects_dm_type_boundaries(self) -> None:
+        entries = {
+            "a": "/obj/machinery/door/unpowered/wood",
+            "b": "/obj/machinery/door_control",
+            "c": "/obj/window_blinds/cog2",
+            "d": "/obj/grille/legacy",
+            "e": "/obj/mesh/grille/steel",
+            "f": "/obj/mapping_helper/wingrille_spawn/auto/reinforced",
+        }
+        dictionary = [
+            (
+                f'"{key}" = ({object_path},/turf/simulated/floor,'
+                "/area/station/engineering)\n"
+            ).encode()
+            for key, object_path in entries.items()
+        ]
+        parsed = map_import.parse_map(
+            b"".join(dictionary) + b'(1,1,1) = {"abcdef"}\n',
+            "native-type-boundaries.dmm",
+        )
+        scenario = map_import.compile_scenario(
+            parsed,
+            {
+                "commit": "1" * 40,
+                "path": "maps/native-type-boundaries.dmm",
+                "git_blob": "2" * 40,
+                "sha256": "3" * 64,
+            },
+            scenario_id="org.example.test:scenario/native-boundaries",
+            name="Native Boundaries",
+            crop=(1, 1, 16, 16),
+        )["definitions"][0]
+        cells = _decoded_scenario_cells(scenario)
+
+        self.assertEqual(cells[(1, 16)]["structure"], "door_closed")
+        self.assertEqual(cells[(2, 16)]["structure"], "empty")
+        self.assertEqual(cells[(3, 16)]["structure"], "empty")
+        self.assertNotIn("window", cells[(3, 16)].get("features", []))
+        for x in (4, 5):
+            self.assertEqual(cells[(x, 16)]["structure"], "empty")
+            self.assertEqual(cells[(x, 16)]["features"], ["grille"])
+        self.assertEqual(cells[(6, 16)]["structure"], "wall")
+        self.assertEqual(cells[(6, 16)]["features"], ["grille", "window"])
+
+    def test_scenario_validator_enforces_native_palette_metadata(self) -> None:
+        parsed = map_import.parse_map(
+            (
+                b'"a" = ('
+                b'/obj/table,'
+                b'/turf/simulated/floor,'
+                b'/area/station/engineering'
+                b')\n'
+                b'(1,1,1) = {"a"}\n'
+            ),
+            "native-palette-validation.dmm",
+        )
+        scenario = map_import.compile_scenario(
+            parsed,
+            {
+                "commit": "1" * 40,
+                "path": "maps/native-palette-validation.dmm",
+                "git_blob": "2" * 40,
+                "sha256": "3" * 64,
+            },
+            scenario_id="org.example.test:scenario/native-palette",
+            name="Native Palette",
+            crop=(1, 1, 16, 16),
+        )["definitions"][0]
+        mod_tools.validate_scenario(scenario, "scenario.json", 0)
+        table_cell = next(
+            cell
+            for cell in scenario["map"]["palette"]
+            if cell.get("features") == ["table"]
+        )
+
+        invalid = copy.deepcopy(scenario)
+        invalid["map"]["palette"][
+            scenario["map"]["palette"].index(table_cell)
+        ]["features"] = ["table", "grille"]
+        with self.assertRaisesRegex(mod_tools.ModError, "sorted and unique"):
+            mod_tools.validate_scenario(invalid, "scenario.json", 0)
+
+        invalid = copy.deepcopy(scenario)
+        invalid_cell = invalid["map"]["palette"][
+            scenario["map"]["palette"].index(table_cell)
+        ]
+        invalid_cell["source_turfs"] *= 2
+        with self.assertRaisesRegex(mod_tools.ModError, "source_turfs"):
+            mod_tools.validate_scenario(invalid, "scenario.json", 0)
+
+        invalid = copy.deepcopy(scenario)
+        invalid["map"]["palette"][
+            scenario["map"]["palette"].index(table_cell)
+        ]["turf_kind"] = "space"
+        with self.assertRaisesRegex(mod_tools.ModError, "agree with tile"):
+            mod_tools.validate_scenario(invalid, "scenario.json", 0)
+
+        invalid = copy.deepcopy(scenario)
+        invalid["map"]["palette"][
+            scenario["map"]["palette"].index(table_cell)
+        ]["wall_kind"] = "standard"
+        with self.assertRaisesRegex(mod_tools.ModError, "requires a wall"):
+            mod_tools.validate_scenario(invalid, "scenario.json", 0)
+
+        invalid = copy.deepcopy(scenario)
+        invalid["map"]["palette"][
+            scenario["map"]["palette"].index(table_cell)
+        ]["features"] = ["window"]
+        with self.assertRaisesRegex(mod_tools.ModError, "requires a boundary"):
+            mod_tools.validate_scenario(invalid, "scenario.json", 0)
+
+        invalid = copy.deepcopy(scenario)
+        invalid["map"]["palette"][
+            scenario["map"]["palette"].index(table_cell)
+        ]["features"] = ["crate"]
+        with self.assertRaisesRegex(mod_tools.ModError, "requires storage"):
+            mod_tools.validate_scenario(invalid, "scenario.json", 0)
+
+        invalid = copy.deepcopy(scenario)
+        duplicate = copy.deepcopy(table_cell)
+        duplicate["key"] = "same-runtime-semantics"
+        duplicate.pop("turf_kind", None)
+        invalid["map"]["palette"].append(duplicate)
+        with self.assertRaisesRegex(mod_tools.ModError, "duplicate semantic"):
+            mod_tools.validate_scenario(invalid, "scenario.json", 0)
+
+        invalid = copy.deepcopy(scenario)
+        invalid["spawns"] = [
+            {
+                "id": (
+                    "org.example.test:scenario-spawn/native-palette/"
+                    "assistant-x001-y016"
+                ),
+                "x": 1,
+                "y": 16,
+                "job": "org.simstation.core:job/assistant",
+                "department": "engineering",
+                "source_path": "/obj/landmark/start/job/assistant",
+            }
+        ]
+        with self.assertRaisesRegex(mod_tools.ModError, "invalid spawn anchor"):
+            mod_tools.validate_scenario(invalid, "scenario.json", 0)
+
     def test_committed_atlas_scenario_reproduces_from_forked_source(self) -> None:
         source_path = ROOT / "assets" / "upstream" / "goon" / "maps" / "atlas.dmm"
         scenario_path = (
@@ -324,12 +638,55 @@ class MapImportTests(unittest.TestCase):
             scenario["provenance"]["omissions"]["placement_omissions"],
             [],
         )
+        palette = scenario["map"]["palette"]
+        self.assertEqual(len(palette), 1596)
+        self.assertLessEqual(len(palette), 2048)
+        self.assertEqual(len(scenario["map"]["runs"]), 4443)
+        cells = _decoded_scenario_cells(scenario)
+        self.assertEqual(
+            Counter(cell.get("turf_kind", "<wall>") for cell in cells.values()),
+            Counter(
+                {
+                    "space": 32100,
+                    "plating": 1060,
+                    "floor": 2365,
+                    "<wall>": 1073,
+                    "reinforced_floor": 266,
+                }
+            ),
+        )
+        feature_cells = Counter(
+            feature
+            for cell in cells.values()
+            for feature in cell.get("features", [])
+        )
+        self.assertEqual(
+            feature_cells,
+            Counter(
+                {
+                    "catwalk": 318,
+                    "chair": 72,
+                    "crate": 26,
+                    "decal": 334,
+                    "disposal": 464,
+                    "grille": 385,
+                    "lattice": 289,
+                    "light": 353,
+                    "pipe": 124,
+                    "sign": 35,
+                    "storage": 100,
+                    "table": 155,
+                    "window": 378,
+                }
+            ),
+        )
 
     def test_compiler_and_validator_preserve_colocated_machine_fixtures(self) -> None:
         parsed = map_import.parse_map(
             (
                 b'"a" = ('
                 b'/obj/cable,'
+                b'/obj/table,'
                 b'/obj/machinery/power/apc,'
                 b'/obj/machinery/power/smes{'
                 b'charge = 1e6; chargelevel = 15000; output = 10000'
@@ -366,6 +723,10 @@ class MapImportTests(unittest.TestCase):
                 "chargelevel": 15_000,
                 "output": 10_000,
             },
+        )
+        self.assertEqual(
+            _decoded_scenario_cells(scenario)[(1, 16)]["features"],
+            ["table"],
         )
         mod_tools.validate_scenario(scenario, "scenario.json", 0)
 
@@ -438,6 +799,36 @@ class MapImportTests(unittest.TestCase):
         invalid["wires"][1]["index"] = invalid["wires"][0]["index"]
         with self.assertRaisesRegex(mod_tools.ModError, "invalid wire record"):
             mod_tools.validate_machine(invalid, "content/machines.json", 0)
+
+    def test_shipped_structure_contracts_validate_strict_schema(self) -> None:
+        structure_path = (
+            ROOT
+            / "mods"
+            / "org.simstation.core"
+            / "content"
+            / "structures.json"
+        )
+        document = json.loads(structure_path.read_text(encoding="utf-8"))
+        definitions = document["definitions"]
+        self.assertGreaterEqual(len(definitions), 3)
+        for index, definition in enumerate(definitions):
+            mod_tools.validate_structure(
+                definition,
+                "content/structures.json",
+                index,
+            )
+
+        invalid = copy.deepcopy(definitions[0])
+        invalid["actions"][0]["source_symbol"] = ""
+        with self.assertRaisesRegex(
+            mod_tools.ModError,
+            "invalid structure action",
+        ):
+            mod_tools.validate_structure(
+                invalid,
+                "content/structures.json",
+                0,
+            )
 
     def test_scenario_validator_rejects_foreign_nested_identity(self) -> None:
         parsed = self.parse_fixture("tgm_minimal.dmm")

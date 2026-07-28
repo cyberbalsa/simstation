@@ -16,6 +16,9 @@ local Registry = require("src.content.registry")
 local ModLoader = require("src.mods.loader")
 local HookContext = require("src.mods.context")
 local RuntimeContent = require("src.content.runtime")
+local Camera = require("src.presentation.camera")
+local Ui = require("src.presentation.ui")
+local World = require("src.core.world")
 
 local tests = {}
 
@@ -46,6 +49,114 @@ test("RNG sequence is reproducible", function()
   for _ = 1, 1000 do
     equal(first:next_int(), second:next_int())
   end
+end)
+
+test("camera keeps native pixels aligned inside its world viewport", function()
+  equal(Constants.TILE_SIZE, 32)
+  local foundation_handle = assert(io.open(
+    "assets/runtime/goon/graphics/foundation.json",
+    "rb"
+  ))
+  local foundation = Json.decode(foundation_handle:read("*a"))
+  foundation_handle:close()
+  equal(#Stable.sorted_keys(foundation.sprites), 29)
+  equal(#foundation.pages, 14)
+  for _, entry in pairs(foundation.sprites) do
+    equal(entry.cell_width, Constants.TILE_SIZE)
+    equal(entry.cell_height, Constants.TILE_SIZE)
+    for _, frames in pairs(entry.directions) do
+      for frame_index = 1, #frames do
+        equal(frames[frame_index].w, Constants.TILE_SIZE)
+        equal(frames[frame_index].h, Constants.TILE_SIZE)
+      end
+    end
+  end
+
+  local viewport_x, viewport_y, viewport_width, viewport_height =
+    Ui.world_viewport(1280, 720)
+  equal(viewport_x, 192)
+  equal(viewport_y, 64)
+  equal(viewport_width, 896)
+  equal(viewport_height, 640)
+  equal(viewport_width % Constants.TILE_SIZE, 0)
+  equal(viewport_height % Constants.TILE_SIZE, 0)
+  equal(viewport_width * 5, viewport_height * 7)
+
+  viewport_x, viewport_y, viewport_width, viewport_height =
+    Ui.world_viewport(960, 540)
+  equal(viewport_x, 144)
+  equal(viewport_y, 54)
+  equal(viewport_width, 672)
+  equal(viewport_height, 480)
+  equal(viewport_width / Constants.TILE_SIZE, 21)
+  equal(viewport_height / Constants.TILE_SIZE, 15)
+  equal(viewport_width * 5, viewport_height * 7)
+
+  local world = World.new(64, 64)
+  local camera = Camera.new(world, 1001, 553, 0, 48)
+  viewport_x, viewport_y, viewport_width, viewport_height =
+    camera:viewport_rect()
+  equal(viewport_x, 0)
+  equal(viewport_y, 48)
+  equal(viewport_width, 1001)
+  equal(viewport_height, 553)
+  truthy(not camera:contains_screen_point(500, 47))
+  truthy(camera:contains_screen_point(500, 48))
+
+  local center_x = viewport_x + math.floor(viewport_width / 2)
+  local center_y = viewport_y + math.floor(viewport_height / 2)
+  local world_x, world_y = camera:screen_to_world(center_x, center_y)
+  equal(world_x, 1024)
+  equal(world_y, 1024)
+  equal(camera:screen_to_tile(center_x, 47, world), nil)
+
+  camera.x = 100.3
+  camera.y = 200.7
+  camera.zoom = 0.5
+  local render_x, render_y = camera:render_position()
+  equal((render_x * camera.zoom) % 1, 0)
+  equal((render_y * camera.zoom) % 1, 0)
+  camera:set_zoom(1.7, center_x, center_y, world)
+  equal(camera.zoom, 2)
+  render_x, render_y = camera:render_position()
+  equal((render_x * camera.zoom) % 1, 0)
+  equal((render_y * camera.zoom) % 1, 0)
+
+  local camera_positions = {
+    { 100.3, 200.7 },
+    { 511.5, 1024.25 },
+    { 1600.9, 901.1 },
+  }
+  local world_points = {
+    { 0, 0 },
+    { 96, 160 },
+    { 641.5, 319.25 },
+  }
+  for zoom_index = 1, #Camera.ZOOM_LEVELS do
+    camera.zoom = Camera.ZOOM_LEVELS[zoom_index]
+    for position_index = 1, #camera_positions do
+      camera.x = camera_positions[position_index][1]
+      camera.y = camera_positions[position_index][2]
+      render_x, render_y = camera:render_position()
+      equal((render_x * camera.zoom) % 1, 0)
+      equal((render_y * camera.zoom) % 1, 0)
+      for point_index = 1, #world_points do
+        local point = world_points[point_index]
+        local screen_x =
+          center_x + (point[1] - render_x) * camera.zoom
+        local screen_y =
+          center_y + (point[2] - render_y) * camera.zoom
+        local roundtrip_x, roundtrip_y =
+          camera:screen_to_world(screen_x, screen_y)
+        truthy(math.abs(roundtrip_x - point[1]) < 0.000000001)
+        truthy(math.abs(roundtrip_y - point[2]) < 0.000000001)
+      end
+    end
+  end
+
+  camera:resize(800, 400, 10, 60)
+  truthy(camera:contains_screen_point(10, 60))
+  truthy(not camera:contains_screen_point(810, 60))
 end)
 
 test("content IDs enforce namespace and kind", function()
@@ -233,6 +344,24 @@ local function wire_with_id(machine, wanted)
   for index = 1, #machine.wires do
     if machine.wires[index].id == wanted then
       return machine.wires[index]
+    end
+  end
+  return nil
+end
+
+local function action_ids(actions)
+  local result = {}
+  for index = 1, #(actions or {}) do
+    local action = actions[index]
+    result[index] = type(action) == "table" and action.id or action
+  end
+  return result
+end
+
+local function find_affordance(affordances, action_id)
+  for index = 1, #(affordances or {}) do
+    if affordances[index].id == action_id then
+      return affordances[index]
     end
   end
   return nil
@@ -455,6 +584,420 @@ test("snapshot restoration preserves state hash and continuation", function()
     restored:step()
   end
   equal(restored:state_hash(), original:state_hash())
+end)
+
+test("structure definitions own closed sorted interaction profiles", function()
+  local Interaction = require("src.core.interaction")
+  local content = load_core_runtime_content()
+  local expected_actions = {
+    ["org.simstation.core:structure/floor"] = {
+      profile = "goon-floor-v1",
+      actions = {
+        "inspect",
+        "place-floor",
+        "pry-floor",
+        "reinforce-floor",
+        "remove-floor-reinforcement",
+      },
+    },
+    ["org.simstation.core:structure/wall"] = {
+      profile = "goon-wall-v1",
+      actions = { "dismantle-wall", "inspect", "repair-wall" },
+    },
+    ["org.simstation.core:structure/door"] = {
+      profile = "goon-airlock-v1",
+      actions = {
+        "close-door",
+        "inspect",
+        "open-door",
+        "pry-door",
+        "toggle-door-panel",
+        "weld-door",
+      },
+    },
+  }
+  local definitions = content.by_kind.structure or {}
+  truthy(#definitions >= 3)
+  local saw_expected = {}
+  for index = 1, #definitions do
+    local definition = definitions[index]
+    equal(definition.schema, 2)
+    truthy(
+      definition.interaction_profile,
+      definition.id .. " must reference an interaction profile"
+    )
+    equal(type(definition.interaction_profile), "string")
+    local ids = action_ids(definition.actions)
+    truthy(#ids > 0, definition.id .. " interaction profile has no actions")
+    local sorted = Stable.deep_copy(ids)
+    table.sort(sorted)
+    equal(
+      Stable.hash(ids),
+      Stable.hash(sorted),
+      definition.id .. " interaction actions must be sorted"
+    )
+    local seen = {}
+    for action_index = 1, #ids do
+      local action = definition.actions[action_index]
+      equal(type(action), "table")
+      truthy(not seen[ids[action_index]], "duplicate action " .. ids[action_index])
+      seen[ids[action_index]] = true
+      truthy(
+        Interaction.is_handler_registered(
+          definition.interaction_profile,
+          action.handler
+        ),
+        definition.id .. " has no handler " .. tostring(action.handler)
+      )
+    end
+    local expected = expected_actions[definition.id]
+    if expected then
+      saw_expected[definition.id] = true
+      equal(definition.interaction_profile, expected.profile)
+      equal(#ids, #expected.actions, definition.id .. " action set is not closed")
+      for expected_index = 1, #expected.actions do
+        equal(ids[expected_index], expected.actions[expected_index])
+      end
+    end
+  end
+  local expected_ids = Stable.sorted_keys(expected_actions)
+  for index = 1, #expected_ids do
+    truthy(saw_expected[expected_ids[index]], "missing " .. expected_ids[index])
+  end
+end)
+
+test("tile interaction gates and physical transitions are deterministic", function()
+  local Interaction = require("src.core.interaction")
+  local traversal_world = World.new(3, 1)
+  local catwalk_index = assert(traversal_world:index(1, 1))
+  local lattice_index = assert(traversal_world:index(2, 1))
+  local traversal_revision = traversal_world.topology_revision
+  truthy(traversal_world:set_feature(
+    catwalk_index,
+    Constants.FEATURE.CATWALK,
+    true
+  ))
+  truthy(traversal_world.topology_revision > traversal_revision)
+  truthy(traversal_world:set_feature(
+    lattice_index,
+    Constants.FEATURE.LATTICE,
+    true
+  ))
+  truthy(traversal_world:is_passable(catwalk_index))
+  truthy(traversal_world:is_passable(lattice_index))
+  truthy(not traversal_world:is_gas_cell(catwalk_index))
+  truthy(traversal_world:set_feature(
+    lattice_index,
+    Constants.FEATURE.GRILLE,
+    true
+  ))
+  truthy(not traversal_world:is_passable(lattice_index))
+
+  local content = load_core_runtime_content()
+  local sim = Simulation.new({
+    seed = 1201,
+    width = 48,
+    height = 48,
+    crew_count = 1,
+    content = content,
+  })
+  local actor = sim.crew[1]
+  actor.tools[#actor.tools + 1] = "floor_tile"
+  table.sort(actor.tools)
+
+  local floor_index = assert(sim.world:index(25, 24))
+  local floor_target = { kind = "tile", index = floor_index }
+  actor.index = assert(sim.world:index(24, 24))
+
+  local allowed, reason = Interaction.can_action(
+    sim,
+    floor_target,
+    "unknown-action",
+    actor,
+    {}
+  )
+  truthy(not allowed)
+  equal(reason.code, "unknown-action")
+  allowed, reason = Interaction.can_action(
+    sim,
+    { kind = "tile", index = 0 },
+    "inspect",
+    actor,
+    {}
+  )
+  truthy(not allowed)
+  equal(reason.code, "outside-map")
+  allowed, reason = Interaction.can_action(
+    sim,
+    { kind = "machine", index = floor_index },
+    "inspect",
+    actor,
+    {}
+  )
+  truthy(not allowed)
+  equal(reason.code, "unsupported")
+
+  local far_actor = Stable.deep_copy(actor)
+  far_actor.index = assert(sim.world:index(1, 1))
+  allowed, reason = Interaction.can_action(
+    sim,
+    floor_target,
+    "pry-floor",
+    far_actor,
+    {}
+  )
+  truthy(not allowed)
+  equal(reason.code, "not-adjacent")
+
+  local unequipped = Stable.deep_copy(actor)
+  unequipped.tools = {}
+  allowed, reason = Interaction.can_action(
+    sim,
+    floor_target,
+    "pry-floor",
+    unequipped,
+    {}
+  )
+  truthy(not allowed)
+  equal(reason.code, "wrong-tool")
+  local denied_affordances = Interaction.affordances(
+    sim,
+    floor_target,
+    unequipped
+  )
+  local denied_pry = find_affordance(denied_affordances, "pry-floor")
+  truthy(denied_pry, "NPC affordances should retain unavailable actions")
+  truthy(not denied_pry.available)
+  equal(denied_pry.reason, "wrong-tool")
+
+  sim.crew[2] = {
+    id = 999001,
+    index = floor_index,
+    alive = true,
+    tools = {},
+    access = { "public" },
+  }
+  allowed, reason = Interaction.can_action(
+    sim,
+    floor_target,
+    "pry-floor",
+    actor,
+    {}
+  )
+  truthy(not allowed)
+  equal(reason.code, "occupied")
+  sim.crew[2] = nil
+
+  local affordances = Interaction.affordances(sim, floor_target, actor)
+  local ids = action_ids(affordances)
+  local sorted_ids = Stable.deep_copy(ids)
+  table.sort(sorted_ids)
+  equal(Stable.hash(ids), Stable.hash(sorted_ids))
+  equal(#ids, #Stable.sorted_keys((function()
+    local unique = {}
+    for index = 1, #ids do unique[ids[index]] = true end
+    return unique
+  end)()))
+  truthy(find_affordance(affordances, "pry-floor").available)
+
+  local floor_chunk = sim.world:chunk_index(25, 24)
+  local floor_revision = sim.world.chunk_revision[floor_chunk]
+  truthy(Interaction.perform(
+    sim,
+    floor_target,
+    "pry-floor",
+    actor,
+    {}
+  ))
+  equal(sim.world.tile[floor_index], Constants.TILE.FLOOR)
+  equal(sim.world.turf_kind[floor_index], Constants.TURF.PLATING)
+  truthy(sim.world.chunk_revision[floor_chunk] > floor_revision)
+  allowed, reason = Interaction.can_action(
+    sim,
+    floor_target,
+    "pry-floor",
+    actor,
+    {}
+  )
+  truthy(not allowed)
+  equal(reason.code, "invalid-target-state")
+  local plating_affordances = Interaction.affordances(
+    sim,
+    floor_target,
+    actor
+  )
+  local invalid_pry = find_affordance(plating_affordances, "pry-floor")
+  truthy(invalid_pry, "known sibling actions should remain NPC-visible")
+  truthy(not invalid_pry.available)
+  equal(invalid_pry.reason, "invalid-target-state")
+  truthy(find_affordance(plating_affordances, "place-floor").available)
+  truthy(Interaction.can_action(
+    sim,
+    floor_target,
+    "place-floor",
+    actor,
+    {}
+  ))
+  truthy(Interaction.perform(
+    sim,
+    floor_target,
+    "place-floor",
+    actor,
+    {}
+  ))
+  equal(sim.world.turf_kind[floor_index], Constants.TURF.FLOOR)
+
+  local wall_index = assert(sim.world:index(9, 23))
+  local wall_target = { kind = "tile", index = wall_index }
+  actor.index = assert(sim.world:index(10, 23))
+  local wall_chunk = sim.world:chunk_index(9, 23)
+  local wall_revision = sim.world.chunk_revision[wall_chunk]
+  local damaged, damage_result = sim.world:damage_structure(
+    wall_index,
+    25,
+    "brute"
+  )
+  truthy(damaged, tostring(damage_result))
+  truthy(sim.world.chunk_revision[wall_chunk] > wall_revision)
+  local damaged_affordances = Interaction.affordances(
+    sim,
+    wall_target,
+    actor
+  )
+  truthy(find_affordance(damaged_affordances, "repair-wall").available)
+  allowed, reason = Interaction.can_action(
+    sim,
+    wall_target,
+    "repair-wall",
+    unequipped,
+    {}
+  )
+  truthy(not allowed)
+  equal(reason.code, "not-adjacent")
+  unequipped.index = actor.index
+  allowed, reason = Interaction.can_action(
+    sim,
+    wall_target,
+    "repair-wall",
+    unequipped,
+    {}
+  )
+  truthy(not allowed)
+  equal(reason.code, "wrong-tool")
+  truthy(Interaction.perform(
+    sim,
+    wall_target,
+    "repair-wall",
+    actor,
+    {}
+  ))
+  allowed, reason = Interaction.can_action(
+    sim,
+    wall_target,
+    "repair-wall",
+    actor,
+    {}
+  )
+  truthy(not allowed)
+  equal(reason.code, "invalid-target-state")
+
+  local before_invalid_damage = sim.world.chunk_revision[wall_chunk]
+  damaged, damage_result = sim.world:damage_structure(
+    wall_index,
+    0,
+    "brute"
+  )
+  truthy(not damaged)
+  equal(sim.world.chunk_revision[wall_chunk], before_invalid_damage)
+
+  local no_welder = Stable.deep_copy(actor)
+  no_welder.tools = { "wrench" }
+  allowed, reason = Interaction.can_action(
+    sim,
+    wall_target,
+    "dismantle-wall",
+    no_welder,
+    {}
+  )
+  truthy(not allowed)
+  equal(reason.code, "wrong-tool")
+  local topology_revision = sim.world.topology_revision
+  truthy(Interaction.perform(
+    sim,
+    wall_target,
+    "dismantle-wall",
+    actor,
+    {}
+  ))
+  equal(sim.world.structure[wall_index], Constants.STRUCTURE.EMPTY)
+  equal(sim.world.wall_kind[wall_index], Constants.WALL.NONE)
+  truthy(sim.world:is_passable(wall_index))
+  truthy(sim.world.topology_revision > topology_revision)
+
+  local restored = Simulation.from_snapshot(sim:snapshot(), {
+    content = content,
+  })
+  equal(restored:state_hash(), sim:state_hash())
+  equal(restored.world.turf_kind[floor_index], Constants.TURF.FLOOR)
+  equal(restored.world.wall_kind[wall_index], Constants.WALL.NONE)
+  equal(
+    Stable.hash(restored.world:feature_ids(floor_index)),
+    Stable.hash(sim.world:feature_ids(floor_index))
+  )
+end)
+
+test("tile actions enforce power and access at the command boundary", function()
+  local content = load_core_runtime_content()
+  local sim = Simulation.new({
+    seed = 1202,
+    width = 48,
+    height = 48,
+    crew_count = 1,
+    content = content,
+  })
+  local door_index = assert(sim.world:index(24, 13))
+  local actor = sim.crew[1]
+  actor.index = assert(sim.world:index(24, 14))
+  actor.access = { "public", "general" }
+  sim.world.door_access[door_index] = "security"
+  sim.world.powered[door_index] = false
+
+  local payload = {
+    target = { kind = "tile", index = door_index },
+    actor_id = actor.id,
+    action_id = "open-door",
+    parameters = {},
+  }
+  sim:enqueue("tile_action", payload)
+  sim:step()
+  local event = sim.events.values[#sim.events.values]
+  equal(event.kind, "command_rejected")
+  equal(event.payload.reason, "unpowered")
+  equal(
+    sim.world.structure[door_index],
+    Constants.STRUCTURE.DOOR_CLOSED
+  )
+
+  sim.world.powered[door_index] = true
+  sim:enqueue("tile_action", payload)
+  sim:step()
+  event = sim.events.values[#sim.events.values]
+  equal(event.kind, "command_rejected")
+  equal(event.payload.reason, "access-denied")
+  equal(
+    sim.world.structure[door_index],
+    Constants.STRUCTURE.DOOR_CLOSED
+  )
+
+  actor.access = { "public", "security" }
+  sim:enqueue("tile_action", payload)
+  sim:step()
+  event = sim.events.values[#sim.events.values]
+  equal(event.kind, "tile_action_completed")
+  equal(event.payload.action_id, "open-door")
+  equal(event.payload.actor_id, actor.id)
+  equal(event.payload.target.index, door_index)
+  equal(sim.world.structure[door_index], Constants.STRUCTURE.DOOR_OPEN)
 end)
 
 test("department machine modules own every implemented core handler", function()

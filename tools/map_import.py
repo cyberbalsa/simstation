@@ -969,8 +969,18 @@ def _door_access(objects: tuple[str, ...], area_path: str) -> str:
     return _station_access(area_path)
 
 
+def _is_type_path(path: str, root: str) -> bool:
+    """Return whether a DM type path is exactly root or one of its children."""
+
+    return path == root or path.startswith(root + "/")
+
+
+def _has_path_segment(path: str, segment: str) -> bool:
+    return segment in path.strip("/").split("/")
+
+
 def _is_wall_turf(path: str) -> bool:
-    return path.startswith("/turf/") and ("/wall" in path or path.endswith("/wall"))
+    return _is_type_path(path, "/turf") and _has_path_segment(path, "wall")
 
 
 def _is_airless_turf(path: str) -> bool:
@@ -978,18 +988,91 @@ def _is_airless_turf(path: str) -> bool:
 
 
 def _is_door_object(path: str) -> bool:
-    return path == "/obj/machinery/door" or path.startswith(
-        ("/obj/machinery/door/airlock", "/obj/machinery/door/poddoor")
-    )
+    return _is_type_path(path, "/obj/machinery/door")
 
 
 def _is_window_object(path: str) -> bool:
-    return path.startswith(
-        (
-            "/obj/window",
-            "/obj/grille",
-            "/obj/mapping_helper/wingrille_spawn",
+    return _is_type_path(path, "/obj/window") or _is_type_path(
+        path, "/obj/mapping_helper/wingrille_spawn"
+    )
+
+
+def _is_grille_object(path: str) -> bool:
+    return (
+        _is_type_path(path, "/obj/mesh/grille")
+        or _is_type_path(path, "/obj/grille")
+        or _is_type_path(path, "/obj/mapping_helper/wingrille_spawn")
+    )
+
+
+def _is_disposal_object(path: str) -> bool:
+    return any(
+        _is_type_path(path, root)
+        for root in (
+            "/obj/disposaloutlet",
+            "/obj/disposalpipe",
+            "/obj/machinery/disposal",
+            "/obj/machinery/disposal_pipedispenser",
         )
+    )
+
+
+def _object_features(path: str) -> tuple[str, ...]:
+    features = set()
+    if _is_window_object(path):
+        features.add("window")
+    if _is_grille_object(path):
+        features.add("grille")
+    if _is_type_path(path, "/obj/table"):
+        features.add("table")
+    if _is_type_path(path, "/obj/stool/chair") or _is_type_path(
+        path, "/obj/item/chair"
+    ):
+        features.add("chair")
+    if _is_type_path(path, "/obj/machinery/light"):
+        features.add("light")
+    if _is_type_path(path, "/obj/storage"):
+        features.add("storage")
+        if _has_path_segment(path, "crate"):
+            features.add("crate")
+    if _is_type_path(path, "/obj/lattice"):
+        features.add("lattice")
+    if _is_type_path(path, "/obj/mesh/catwalk"):
+        features.add("catwalk")
+    if _is_type_path(path, "/obj/machinery/atmospherics/pipe"):
+        features.add("pipe")
+    if _is_disposal_object(path):
+        features.add("disposal")
+    if _is_type_path(path, "/obj/decal"):
+        features.add("decal")
+        if _has_path_segment(path, "wallsign"):
+            features.add("sign")
+    if _is_type_path(path, "/obj/wallsign") or _is_type_path(path, "/obj/sign"):
+        features.add("sign")
+    return tuple(sorted(features))
+
+
+def _turf_kind(turfs: tuple[str, ...]) -> str | None:
+    if not turfs:
+        return "space"
+    if any(_is_wall_turf(path) for path in turfs):
+        return None
+    if not any(not _is_type_path(path, "/turf/space") for path in turfs):
+        return "space"
+    if any(_is_type_path(path, "/turf/simulated/floor/engine") for path in turfs):
+        return "reinforced_floor"
+    if any(_has_path_segment(path, "plating") for path in turfs):
+        return "plating"
+    return "floor"
+
+
+def _preserve_source_object(path: str) -> bool:
+    """Keep reviewed tile/object provenance without exploding map palettes."""
+
+    return bool(
+        _object_features(path)
+        or _is_door_object(path)
+        or _is_type_path(path, "/obj/cable")
     )
 
 
@@ -1081,11 +1164,9 @@ def _scenario_namespace(scenario_id: str, nested_kind: str) -> str:
 def _adapted_object(path: str) -> bool:
     return bool(
         _fixture_kind(path)
-        or _is_door_object(path)
-        or _is_window_object(path)
-        or path.startswith("/obj/cable")
-        or path.startswith("/obj/landmark/start/job/")
-        or path.startswith("/obj/mapping_helper/access/")
+        or _preserve_source_object(path)
+        or _is_type_path(path, "/obj/landmark/start/job")
+        or _is_type_path(path, "/obj/mapping_helper/access")
     )
 
 
@@ -1114,20 +1195,40 @@ def _cell_contract(
     area_ids: dict[str, int],
 ) -> tuple[object, ...]:
     if entry is None:
-        return ("space", "empty", False, False, 0, False)
-    turfs = tuple(atom.path for atom in entry.atoms if _atom_kind(atom.path) == "turf")
+        return (
+            "space",
+            "empty",
+            False,
+            False,
+            0,
+            False,
+            "space",
+            None,
+            (),
+            (),
+            (),
+        )
+    turfs = tuple(
+        sorted(
+            {
+                atom.path
+                for atom in entry.atoms
+                if _atom_kind(atom.path) == "turf"
+            }
+        )
+    )
     objects = tuple(
         atom.path for atom in entry.atoms if _atom_kind(atom.path) == "object"
     )
     area_path = _station_area_path(entry)
-    non_space = any(not path.startswith("/turf/space") for path in turfs)
+    non_space = any(not _is_type_path(path, "/turf/space") for path in turfs)
     tile = "floor" if non_space else "space"
     structure = "wall" if any(_is_wall_turf(path) for path in turfs) else "empty"
     if any(_is_window_object(path) for path in objects):
         structure = "wall"
     if any(_is_door_object(path) for path in objects):
         structure = "door_closed"
-    cable = any(path.startswith("/obj/cable") for path in objects)
+    cable = any(_is_type_path(path, "/obj/cable") for path in objects)
     pressurized = bool(
         area_path
         and non_space
@@ -1138,11 +1239,63 @@ def _cell_contract(
     access: str | bool = False
     if structure == "door_closed":
         access = _door_access(objects, area_path)
-    return (tile, structure, cable, pressurized, area_id, access)
+    turf_kind = _turf_kind(turfs)
+    wall_kind = None
+    if structure == "wall":
+        wall_kind = (
+            "reinforced"
+            if any(
+                _is_wall_turf(path) and _has_path_segment(path, "reinforced")
+                for path in turfs
+            )
+            else "standard"
+        )
+    features = tuple(
+        sorted(
+            {
+                feature
+                for path in objects
+                for feature in _object_features(path)
+            }
+            | (
+                {"catwalk"}
+                if any(_has_path_segment(path, "catwalk") for path in turfs)
+                else set()
+            )
+        )
+    )
+    source_objects = tuple(
+        sorted({path for path in objects if _preserve_source_object(path)})
+    )
+    return (
+        tile,
+        structure,
+        cable,
+        pressurized,
+        area_id,
+        access,
+        turf_kind,
+        wall_kind,
+        features,
+        turfs,
+        source_objects,
+    )
 
 
 def _palette_record(key: str, contract: tuple[object, ...]) -> dict[str, object]:
-    tile, structure, cable, pressurized, area_id, access = contract
+    (
+        tile,
+        structure,
+        cable,
+        pressurized,
+        area_id,
+        access,
+        turf_kind,
+        wall_kind,
+        features,
+        source_turfs,
+        source_objects,
+    ) = contract
     record: dict[str, object] = {
         "key": key,
         "tile": tile,
@@ -1155,6 +1308,16 @@ def _palette_record(key: str, contract: tuple[object, ...]) -> dict[str, object]
         record["pressurized"] = True
     if access:
         record["access"] = access
+    if turf_kind is not None:
+        record["turf_kind"] = turf_kind
+    if wall_kind is not None:
+        record["wall_kind"] = wall_kind
+    if features:
+        record["features"] = list(features)
+    if source_turfs:
+        record["source_turfs"] = list(source_turfs)
+    if source_objects:
+        record["source_objects"] = list(source_objects)
     return record
 
 
@@ -1168,7 +1331,7 @@ def _sample_hull_targets(
     for y in range(1, height + 1):
         for x in range(1, width + 1):
             index = (y - 1) * width + x
-            tile, structure, _, _, area_id, _ = contracts[index - 1]
+            tile, structure, _, _, area_id, *_ = contracts[index - 1]
             if tile != "floor" or structure != "wall" or area_id == 0:
                 continue
             neighbors = (
@@ -1278,12 +1441,22 @@ def compile_scenario(
         False,
         0,
         False,
+        "space",
+        None,
+        (),
+        (),
+        (),
     )
     unique_contracts = sorted(
         set(contracts) - {default_contract},
         key=lambda value: json.dumps(value, separators=(",", ":")),
     )
     ordered_contracts = [default_contract, *unique_contracts]
+    if len(ordered_contracts) > 2048:
+        raise MapError(
+            "compiled map requires "
+            f"{len(ordered_contracts)} palette records; maximum is 2048"
+        )
     palette_index = {
         contract: index for index, contract in enumerate(ordered_contracts, 1)
     }
@@ -1492,7 +1665,8 @@ def compile_scenario(
         },
         "notes": (
             "DM code and override expressions are not executed. Unsupported "
-            "objects and one-anchor fixture collisions are counted explicitly."
+            "objects and placement limitations are counted explicitly; "
+            "compatible source-layered fixtures are retained."
         ),
     }
     scenario = {

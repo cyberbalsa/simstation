@@ -12,6 +12,10 @@ function love.conf(t)
   t.window.resizable = true
   t.window.vsync = 1
   t.window.highdpi = true
+  -- Keep graphics, resize, and pointer coordinates in LÖVE's shared
+  -- DPI-scaled units; the camera preserves square 32px source cells and
+  -- snaps its transform before LÖVE applies the platform backing scale.
+  t.window.usedpiscale = true
 
   t.modules.joystick = false
   t.modules.physics = false

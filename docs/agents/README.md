@@ -30,10 +30,18 @@ records are:
   `architecture_scope/atmos_prod_cargo_research`
 - [`machine-research-archive.md`](machine-research-archive.md) —
   `archive_machine_research`
+- [`tile-source-coverage.md`](tile-source-coverage.md) —
+  resumed `archive_machine_research` tile/source coverage episode
 - [`machine-fidelity-tests.md`](machine-fidelity-tests.md) —
   `machine_fidelity_tests`
+- [`tile-interaction-tests.md`](tile-interaction-tests.md) —
+  resumed `machine_fidelity_tests` tile-interaction episode
 - [`machine-docs-renderer.md`](machine-docs-renderer.md) —
   `machine_docs_renderer`
+- [`tile-interaction-docs.md`](tile-interaction-docs.md) —
+  resumed `machine_docs_renderer` world-interaction fidelity episode
+- [`pixel-viewport-audit.md`](pixel-viewport-audit.md) —
+  `pixel_viewport_audit`
 - [`goon-graphics-pipeline.md`](goon-graphics-pipeline.md) — Harvey /
   `goon_graphics_pipeline`
 - [`love-render-assets.md`](love-render-assets.md) — Kierkegaard /

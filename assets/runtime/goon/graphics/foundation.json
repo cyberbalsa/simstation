@@ -56,12 +56,52 @@
     },
     {
       "bundle": "specialty",
+      "file": "atlas-046.png",
+      "format": "rgba8-png",
+      "height": 2048,
+      "page": 46,
+      "runtime_path": "specialty/atlas-046.png",
+      "sha256": "af5f5f526a2335ce5071e6274385c164d922b511b3c6ac60495edbedf0c55550",
+      "width": 2048
+    },
+    {
+      "bundle": "specialty",
       "file": "atlas-047.png",
       "format": "rgba8-png",
       "height": 2048,
       "page": 47,
       "runtime_path": "specialty/atlas-047.png",
       "sha256": "ca0650e6ad4bad74ef0581ef3743afce8cfc6805cc173a3c69597fc4c34e3a82",
+      "width": 2048
+    },
+    {
+      "bundle": "specialty",
+      "file": "atlas-048.png",
+      "format": "rgba8-png",
+      "height": 2048,
+      "page": 48,
+      "runtime_path": "specialty/atlas-048.png",
+      "sha256": "5d61100ef25c4f024c742ab6c8c69a686716cf030f1e8503bfc23c9b16037c9e",
+      "width": 2048
+    },
+    {
+      "bundle": "specialty",
+      "file": "atlas-049.png",
+      "format": "rgba8-png",
+      "height": 2048,
+      "page": 49,
+      "runtime_path": "specialty/atlas-049.png",
+      "sha256": "c42f9587d827590e16ac602d5777b7d5d65ed73914168accb95c42160b0de843",
+      "width": 2048
+    },
+    {
+      "bundle": "specialty",
+      "file": "atlas-051.png",
+      "format": "rgba8-png",
+      "height": 2048,
+      "page": 51,
+      "runtime_path": "specialty/atlas-051.png",
+      "sha256": "a0d06b4204866c4e9cfdd4639e1ebc00bd2951f379d33c543cc39674e78cd8e3",
       "width": 2048
     },
     {
@@ -82,6 +122,26 @@
       "page": 53,
       "runtime_path": "specialty/atlas-053.png",
       "sha256": "b05be898e0a186437275ad0f7258702095eb9fa9e8f9891911b8f5c3b1280fbc",
+      "width": 2048
+    },
+    {
+      "bundle": "specialty",
+      "file": "atlas-054.png",
+      "format": "rgba8-png",
+      "height": 2048,
+      "page": 54,
+      "runtime_path": "specialty/atlas-054.png",
+      "sha256": "1e4b3cbdbdcf1ac3460c19cc55b7e39324a3f210a3b409957a7b48555f759909",
+      "width": 2048
+    },
+    {
+      "bundle": "specialty",
+      "file": "atlas-055.png",
+      "format": "rgba8-png",
+      "height": 2048,
+      "page": 55,
+      "runtime_path": "specialty/atlas-055.png",
+      "sha256": "d15f2271a87e4a441b9c1b8c3776127423403bd0f5da372e558accb2103ab84b",
       "width": 2048
     }
   ],
@@ -152,6 +212,218 @@
       "source_sha256": "dd790234dfab468300fe96ecfc4e88898fedd366f4b701c18aaccb069adb7ba7",
       "source_state": "apc0",
       "source_state_index": 7,
+      "source_state_occurrence": 1
+    },
+    "catwalk": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "east": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 46,
+            "w": 32,
+            "x": 1497,
+            "y": 205
+          }
+        ],
+        "north": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 46,
+            "w": 32,
+            "x": 1293,
+            "y": 205
+          }
+        ],
+        "northeast": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 46,
+            "w": 32,
+            "x": 681,
+            "y": 239
+          }
+        ],
+        "northwest": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 46,
+            "w": 32,
+            "x": 69,
+            "y": 239
+          }
+        ],
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 46,
+            "w": 32,
+            "x": 1293,
+            "y": 205
+          }
+        ],
+        "southeast": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 46,
+            "w": 32,
+            "x": 851,
+            "y": 239
+          }
+        ],
+        "southwest": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 46,
+            "w": 32,
+            "x": 1055,
+            "y": 239
+          }
+        ],
+        "west": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 46,
+            "w": 32,
+            "x": 1497,
+            "y": 205
+          }
+        ]
+      },
+      "dirs": 8,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/grille-dmi/catwalk--b98443a7fa-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/grille.dmi",
+      "source_sha256": "44bc7ded83521fa5ab755dbdd1e0d9a4f274bf9dd7dec57713ac6f81556c70b4",
+      "source_state": "catwalk",
+      "source_state_index": 23,
+      "source_state_occurrence": 1
+    },
+    "chair": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "east": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 48,
+            "w": 32,
+            "x": 1905,
+            "y": 1389
+          }
+        ],
+        "north": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 48,
+            "w": 32,
+            "x": 1871,
+            "y": 1389
+          }
+        ],
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 48,
+            "w": 32,
+            "x": 1837,
+            "y": 1389
+          }
+        ],
+        "west": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 48,
+            "w": 32,
+            "x": 1939,
+            "y": 1389
+          }
+        ]
+      },
+      "dirs": 4,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/furniture/chairs-dmi/chair--851e13a653-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/furniture/chairs.dmi",
+      "source_sha256": "ead50fb3bee1f0e912aa60cba25c58226bc02750dc1ec599aa16277c2fbc7257",
+      "source_state": "chair",
+      "source_state_index": 4,
+      "source_state_occurrence": 1
+    },
+    "crate": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 54,
+            "w": 32,
+            "x": 1497,
+            "y": 1461
+          }
+        ]
+      },
+      "dirs": 1,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/storage/crate-dmi/crate--1673dc3970-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/storage/crate.dmi",
+      "source_sha256": "27dbe679ae34df0079e443e978857940ce930440cd3fe315ea8a31b1f131c125",
+      "source_state": "crate",
+      "source_state_index": 14,
       "source_state_occurrence": 1
     },
     "crew_female": {
@@ -286,6 +558,107 @@
       "source_sha256": "fd1252ef7a0566f0612210daf7afc78a76460ec19073102ec4fd00a56a13f49d",
       "source_state": "body_m",
       "source_state_index": 4,
+      "source_state_occurrence": 1
+    },
+    "decal": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "east": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 49,
+            "w": 32,
+            "x": 1293,
+            "y": 103
+          }
+        ],
+        "north": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 49,
+            "w": 32,
+            "x": 1259,
+            "y": 103
+          }
+        ],
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 49,
+            "w": 32,
+            "x": 1225,
+            "y": 103
+          }
+        ],
+        "west": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 49,
+            "w": 32,
+            "x": 1327,
+            "y": 103
+          }
+        ]
+      },
+      "dirs": 4,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/hazard_stripes-dmi/stripe--2fcb5a43a4-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/hazard_stripes.dmi",
+      "source_sha256": "07920030555c54e15a908a7776f6f74a11b91877abc2f9d299e488598f5570f4",
+      "source_state": "stripe",
+      "source_state_index": 1,
+      "source_state_occurrence": 1
+    },
+    "disposal": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 48,
+            "w": 32,
+            "x": 541,
+            "y": 679
+          }
+        ]
+      },
+      "dirs": 1,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/disposal-dmi/disposal--4edc28b0fb-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/disposal.dmi",
+      "source_sha256": "79f5af866307f024c1ec68316360124f6a7bbea1c5e71ae6c0772e9332cfe965",
+      "source_state": "disposal",
+      "source_state_index": 2,
       "source_state_occurrence": 1
     },
     "door_closed": {
@@ -424,6 +797,40 @@
       "source_state_index": 2,
       "source_state_occurrence": 1
     },
+    "floor_white": {
+      "bundle": "core_tiles",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 0,
+            "w": 32,
+            "x": 1905,
+            "y": 375
+          }
+        ]
+      },
+      "dirs": 1,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/turf/floors-dmi/white--528cef87d0-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/turf/floors.dmi",
+      "source_sha256": "6aef9c554d1e33a74fc5414af44f18e2c9e62357f92deac1d6f166f5318279b1",
+      "source_state": "white",
+      "source_state_index": 3,
+      "source_state_occurrence": 1
+    },
     "generator": {
       "bundle": "specialty",
       "cell_height": 32,
@@ -458,6 +865,286 @@
       "source_state_index": 111,
       "source_state_occurrence": 1
     },
+    "grille": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 49,
+            "w": 32,
+            "x": 341,
+            "y": 35
+          }
+        ]
+      },
+      "dirs": 1,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/grille-dmi/grille-0--59a5a19a50-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/grille.dmi",
+      "source_sha256": "44bc7ded83521fa5ab755dbdd1e0d9a4f274bf9dd7dec57713ac6f81556c70b4",
+      "source_state": "grille-0",
+      "source_state_index": 2,
+      "source_state_occurrence": 1
+    },
+    "lattice": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 54,
+            "w": 32,
+            "x": 1633,
+            "y": 1631
+          }
+        ]
+      },
+      "dirs": 1,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/structures-dmi/lattice--6e0a57eb0d-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/structures.dmi",
+      "source_sha256": "0ff1fb163d1d2b9b2d159d7da51f28c38c6f067c6b1720e124432221603ae887",
+      "source_state": "lattice",
+      "source_state_index": 6,
+      "source_state_occurrence": 1
+    },
+    "light": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "east": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 51,
+            "w": 32,
+            "x": 1,
+            "y": 1387
+          }
+        ],
+        "north": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 51,
+            "w": 32,
+            "x": 2007,
+            "y": 1353
+          }
+        ],
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 51,
+            "w": 32,
+            "x": 1973,
+            "y": 1353
+          }
+        ],
+        "west": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 51,
+            "w": 32,
+            "x": 35,
+            "y": 1387
+          }
+        ]
+      },
+      "dirs": 4,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/lighting-dmi/tube1--75faa72913-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/lighting.dmi",
+      "source_sha256": "5a084eae728465dce7d40063bd1866b942da74a004cce70368958419410a2c53",
+      "source_state": "tube1",
+      "source_state_index": 1,
+      "source_state_occurrence": 1
+    },
+    "pipe": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "east": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 45,
+            "w": 32,
+            "x": 613,
+            "y": 1361
+          }
+        ],
+        "north": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 45,
+            "w": 32,
+            "x": 579,
+            "y": 1361
+          }
+        ],
+        "northeast": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 45,
+            "w": 32,
+            "x": 715,
+            "y": 1361
+          }
+        ],
+        "northwest": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 45,
+            "w": 32,
+            "x": 749,
+            "y": 1361
+          }
+        ],
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 45,
+            "w": 32,
+            "x": 579,
+            "y": 1361
+          }
+        ],
+        "southeast": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 45,
+            "w": 32,
+            "x": 647,
+            "y": 1361
+          }
+        ],
+        "southwest": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 45,
+            "w": 32,
+            "x": 681,
+            "y": 1361
+          }
+        ],
+        "west": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 45,
+            "w": 32,
+            "x": 613,
+            "y": 1361
+          }
+        ]
+      },
+      "dirs": 8,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/atmospherics/pipes/pipe-dmi/normal--9c2a6e4809-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/atmospherics/pipes/pipe.dmi",
+      "source_sha256": "414302aac0132793be19ff2f60e50f46f72211bafcd2e448c18e5966bbd47ecd",
+      "source_state": "normal",
+      "source_state_index": 1,
+      "source_state_occurrence": 1
+    },
+    "plating": {
+      "bundle": "core_tiles",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 0,
+            "w": 32,
+            "x": 1803,
+            "y": 1089
+          }
+        ]
+      },
+      "dirs": 1,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/turf/floors-dmi/plating--eea474ed21-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/turf/floors.dmi",
+      "source_sha256": "6aef9c554d1e33a74fc5414af44f18e2c9e62357f92deac1d6f166f5318279b1",
+      "source_state": "plating",
+      "source_state_index": 132,
+      "source_state_occurrence": 1
+    },
     "refinery": {
       "bundle": "specialty",
       "cell_height": 32,
@@ -490,6 +1177,74 @@
       "source_sha256": "c0ad888d26f13702fa15e01d17c659755c93356ddea24a844ab5c5b1dfd7881c",
       "source_state": "fab2-on",
       "source_state_index": 37,
+      "source_state_occurrence": 1
+    },
+    "reinforced_floor": {
+      "bundle": "core_tiles",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 0,
+            "w": 32,
+            "x": 1973,
+            "y": 1089
+          }
+        ]
+      },
+      "dirs": 1,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/turf/floors-dmi/engine--c64033672f-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/turf/floors.dmi",
+      "source_sha256": "6aef9c554d1e33a74fc5414af44f18e2c9e62357f92deac1d6f166f5318279b1",
+      "source_state": "engine",
+      "source_state_index": 137,
+      "source_state_occurrence": 1
+    },
+    "reinforced_wall": {
+      "bundle": "core_tiles",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 1,
+            "w": 32,
+            "x": 1361,
+            "y": 239
+          }
+        ]
+      },
+      "dirs": 1,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/turf/walls-dmi/r_wall--a3c258120b-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/turf/walls.dmi",
+      "source_sha256": "bca2f891566d2af1ee3ef4a93ef991377d285ac336f5c83885c90a4f029d6964",
+      "source_state": "r_wall",
+      "source_state_index": 2,
       "source_state_occurrence": 1
     },
     "scrubber": {
@@ -557,6 +1312,108 @@
       "source_sha256": "07763391b66cf080cdb82a0ce3a9e31891b34a3944678ffed9fc8160acaade9c",
       "source_state": "on-map",
       "source_state_index": 9,
+      "source_state_occurrence": 1
+    },
+    "sign": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 48,
+            "w": 32,
+            "x": 69,
+            "y": 273
+          }
+        ]
+      },
+      "dirs": 1,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/decals/wallsigns-dmi/wall_caution--1756bab6e8-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/decals/wallsigns.dmi",
+      "source_sha256": "4cb64fd50a68cfd0cba8c417cd6f6943af7f06effc9c34ace03abb97a2ce35e0",
+      "source_state": "wall_caution",
+      "source_state_index": 41,
+      "source_state_occurrence": 1
+    },
+    "storage": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 54,
+            "w": 32,
+            "x": 69,
+            "y": 1563
+          }
+        ]
+      },
+      "dirs": 1,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/storage/locker-dmi/closed--ea88fbaa99-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/storage/locker.dmi",
+      "source_sha256": "79848c133b98ec32208fdb8782ef55ef494efa5bd76263ec1592bd8b8d81def7",
+      "source_state": "closed",
+      "source_state_index": 2,
+      "source_state_occurrence": 1
+    },
+    "table": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 48,
+            "w": 32,
+            "x": 409,
+            "y": 1693
+          }
+        ]
+      },
+      "dirs": 1,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/furniture/table-dmi/0--b6589fc6ab-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/furniture/table.dmi",
+      "source_sha256": "7a7f3095014a07863bef2ebc60675eac4c43b3ffc449be8a322953aed8985daf",
+      "source_state": "0",
+      "source_state_index": 2,
       "source_state_occurrence": 1
     },
     "vent": {
@@ -658,6 +1515,123 @@
       "source_sha256": "bca2f891566d2af1ee3ef4a93ef991377d285ac336f5c83885c90a4f029d6964",
       "source_state": "riveted",
       "source_state_index": 10,
+      "source_state_occurrence": 1
+    },
+    "window": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "east": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 55,
+            "w": 32,
+            "x": 171,
+            "y": 651
+          }
+        ],
+        "north": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 55,
+            "w": 32,
+            "x": 137,
+            "y": 651
+          }
+        ],
+        "northeast": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 55,
+            "w": 32,
+            "x": 239,
+            "y": 651
+          }
+        ],
+        "northwest": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 55,
+            "w": 32,
+            "x": 239,
+            "y": 651
+          }
+        ],
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 55,
+            "w": 32,
+            "x": 103,
+            "y": 651
+          }
+        ],
+        "southeast": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 55,
+            "w": 32,
+            "x": 239,
+            "y": 651
+          }
+        ],
+        "southwest": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 55,
+            "w": 32,
+            "x": 239,
+            "y": 651
+          }
+        ],
+        "west": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 55,
+            "w": 32,
+            "x": 205,
+            "y": 651
+          }
+        ]
+      },
+      "dirs": 8,
+      "frames": 1,
+      "hotspots_raw": [
+        [
+          0,
+          29,
+          1
+        ]
+      ],
+      "id": "org.simstation.goon:sprite/icons/obj/window-dmi/window--320ad267d8-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/window.dmi",
+      "source_sha256": "580ab9e4daf695b7eec8a00c06947b60da88b131b40d3016e53746355c245c58",
+      "source_state": "window",
+      "source_state_index": 1,
       "source_state_occurrence": 1
     }
   }

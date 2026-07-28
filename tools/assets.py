@@ -42,6 +42,18 @@ FOUNDATION_SPRITES = {
         "org.simstation.goon:sprite/icons/obj/power-dmi/"
         "apc0--afcf739cd9-o01"
     ),
+    "catwalk": (
+        "org.simstation.goon:sprite/icons/obj/grille-dmi/"
+        "catwalk--b98443a7fa-o01"
+    ),
+    "chair": (
+        "org.simstation.goon:sprite/icons/obj/furniture/chairs-dmi/"
+        "chair--851e13a653-o01"
+    ),
+    "crate": (
+        "org.simstation.goon:sprite/icons/obj/storage/crate-dmi/"
+        "crate--1673dc3970-o01"
+    ),
     "crew_female": (
         "org.simstation.goon:sprite/icons/mob/human-dmi/"
         "body_f--4ed48d58ce-o01"
@@ -58,9 +70,21 @@ FOUNDATION_SPRITES = {
         "org.simstation.goon:sprite/icons/obj/doors/doorclassic-dmi/"
         "door_open--5fe7ebb3c8-o01"
     ),
+    "decal": (
+        "org.simstation.goon:sprite/icons/obj/hazard_stripes-dmi/"
+        "stripe--2fcb5a43a4-o01"
+    ),
+    "disposal": (
+        "org.simstation.goon:sprite/icons/obj/disposal-dmi/"
+        "disposal--4edc28b0fb-o01"
+    ),
     "floor": (
         "org.simstation.goon:sprite/icons/turf/floors-dmi/"
         "floor--3684c9d3c0-o01"
+    ),
+    "floor_white": (
+        "org.simstation.goon:sprite/icons/turf/floors-dmi/"
+        "white--528cef87d0-o01"
     ),
     "fabricator": (
         "org.simstation.goon:sprite/icons/obj/manufacturer-dmi/"
@@ -70,13 +94,53 @@ FOUNDATION_SPRITES = {
         "org.simstation.goon:sprite/icons/obj/power-dmi/"
         "teg--7c8224529a-o01"
     ),
+    "grille": (
+        "org.simstation.goon:sprite/icons/obj/grille-dmi/"
+        "grille-0--59a5a19a50-o01"
+    ),
+    "lattice": (
+        "org.simstation.goon:sprite/icons/obj/structures-dmi/"
+        "lattice--6e0a57eb0d-o01"
+    ),
+    "light": (
+        "org.simstation.goon:sprite/icons/obj/lighting-dmi/"
+        "tube1--75faa72913-o01"
+    ),
+    "pipe": (
+        "org.simstation.goon:sprite/icons/obj/atmospherics/pipes/pipe-dmi/"
+        "normal--9c2a6e4809-o01"
+    ),
+    "plating": (
+        "org.simstation.goon:sprite/icons/turf/floors-dmi/"
+        "plating--eea474ed21-o01"
+    ),
     "refinery": (
         "org.simstation.goon:sprite/icons/obj/crafting-dmi/"
         "fab2-on--e654caa777-o01"
     ),
+    "reinforced_floor": (
+        "org.simstation.goon:sprite/icons/turf/floors-dmi/"
+        "engine--c64033672f-o01"
+    ),
+    "reinforced_wall": (
+        "org.simstation.goon:sprite/icons/turf/walls-dmi/"
+        "r_wall--a3c258120b-o01"
+    ),
     "scrubber": (
         "org.simstation.goon:sprite/icons/obj/atmospherics/"
         "vent_scrubber-dmi/on-map--a3645389b9-o01"
+    ),
+    "sign": (
+        "org.simstation.goon:sprite/icons/obj/decals/wallsigns-dmi/"
+        "wall_caution--1756bab6e8-o01"
+    ),
+    "storage": (
+        "org.simstation.goon:sprite/icons/obj/storage/locker-dmi/"
+        "closed--ea88fbaa99-o01"
+    ),
+    "table": (
+        "org.simstation.goon:sprite/icons/obj/furniture/table-dmi/"
+        "0--b6589fc6ab-o01"
     ),
     "vent": (
         "org.simstation.goon:sprite/icons/obj/atmospherics/"
@@ -86,7 +150,12 @@ FOUNDATION_SPRITES = {
         "org.simstation.goon:sprite/icons/turf/walls-dmi/"
         "riveted--b2df855a7c-o01"
     ),
+    "window": (
+        "org.simstation.goon:sprite/icons/obj/window-dmi/"
+        "window--320ad267d8-o01"
+    ),
 }
+FOUNDATION_CELL_SIZE = 32
 
 FOUNDATION_AUDIO = {
     "bailout": "org.simstation.goon:audio/sound/misc/cashregister",
@@ -1412,9 +1481,25 @@ def audit(_: argparse.Namespace) -> None:
             if set(foundation["sprites"]) != set(FOUNDATION_SPRITES):
                 raise SystemExit("foundation graphics alias set is stale")
             for alias, identifier in sorted(FOUNDATION_SPRITES.items()):
-                if foundation["sprites"][alias]["id"] != identifier:
+                entry = foundation["sprites"][alias]
+                if entry["id"] != identifier:
                     raise SystemExit(
                         f"foundation graphics alias mismatch: {alias}"
+                    )
+                if (
+                    entry.get("cell_width") != FOUNDATION_CELL_SIZE
+                    or entry.get("cell_height") != FOUNDATION_CELL_SIZE
+                    or any(
+                        frame.get("w") != FOUNDATION_CELL_SIZE
+                        or frame.get("h") != FOUNDATION_CELL_SIZE
+                        for frames in entry.get("directions", {}).values()
+                        for frame in frames
+                    )
+                ):
+                    raise SystemExit(
+                        f"foundation sprite is not "
+                        f"{FOUNDATION_CELL_SIZE}x{FOUNDATION_CELL_SIZE}: "
+                        f"{alias}"
                     )
             for page in foundation["pages"]:
                 path = atlas_path.parent / page["runtime_path"]

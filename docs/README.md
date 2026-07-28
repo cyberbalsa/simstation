@@ -37,6 +37,8 @@ both the relevant document and its acceptance tests.
 5. Use the [glossary](design/13-glossary.md) for canonical terminology.
 6. For the current playable start, read the
    [native scenario and Goon map-import contract](technical/08-native-scenarios-and-map-import.md).
+7. For crew and NPC interaction with the physical station, read the
+   [Goon-compatible world-interaction fidelity contract](technical/10-goon-world-interaction-fidelity.md).
 
 ## Change rule
 

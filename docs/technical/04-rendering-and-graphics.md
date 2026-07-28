@@ -319,12 +319,20 @@ collisions, and decompression bombs.
 
 `tools/assets.py` has fetched and compiled the complete pinned snapshot into
 eight bundles and 134 atlas pages with source/runtime catalogs. A generated
-16 KiB foundation selection resolves 12 logical sprites without parsing the
-71 MiB exhaustive catalog. Its eight referenced pages add APC, generator,
-vent, scrubber, fabricator, and refinery art to the original floor, wall,
-door, and crew selection. The presentation renderer lazy-loads pages, uses
-revisioned per-chunk SpriteBatches for imported static structure, and draws
-authored Atlas machines with generated shapes as the missing-media fallback.
+foundation selection resolves 29 logical sprites without parsing the
+exhaustive catalog. Its 14 referenced pages cover native turfs, walls,
+windows, grilles, furniture, infrastructure, signage, crew, APC, generator,
+vent, scrubber, fabricator, and refinery art. The presentation renderer
+lazy-loads pages, uses revisioned per-chunk SpriteBatches for imported static
+structure, and draws authored Atlas machines with generated shapes as the
+missing-media fallback.
+
+The runtime keeps Goon's 32×32 source cells square and unscaled at 1×. A
+centered, scissored 7:5 world viewport is built in whole 7×5-tile blocks:
+the minimum 960×540 window exposes the 21×15 upstream reference field as
+672×480 units, while the default 1280×720 window exposes 28×20 tiles as
+896×640 units. Discrete reciprocal/integer zoom levels, nearest filtering,
+and a shared snapped camera transform keep rendering and hit testing aligned.
 
 `verify-graphics` compares every one of the 164,558 compiled
 frame-direction cells to its pinned source pixels, and a clean rebuild produces

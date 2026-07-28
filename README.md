@@ -79,7 +79,7 @@ The upstream fork is pinned to Goonstation commit
 `1b2b250abb5be747d55e274de0203a59cfc8da78`. The current import preserves 5,869
 upstream files, including `maps/atlas.dmm`, compiles 46,160 sprite states into
 134 portable PNG atlas pages, and catalogs 4,699 sounds. Normal startup reads
-only two compact foundation catalogs; their 12 sprite aliases reference eight
+only two compact foundation catalogs; their 29 sprite aliases reference 14
 atlas pages that are opened lazily, and sounds open only as events request
 them.
 

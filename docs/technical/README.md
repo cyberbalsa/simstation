@@ -16,6 +16,7 @@ must grow toward these contracts without breaking their boundaries.
 7. [Performance, testing, and packaging](07-performance-testing-packaging.md)
 8. [Native scenarios and Goon-informed map import](08-native-scenarios-and-map-import.md)
 9. [Goon-compatible machine fidelity](09-goon-machine-fidelity.md)
+10. [Goon-compatible world interaction and tile fidelity](10-goon-world-interaction-fidelity.md)
 
 Mod authors should then read the [modding specification](../modding/README.md).
 Milestones and release gates live in the
@@ -66,3 +67,6 @@ The broader command/event/save and station-system contracts in these documents
 remain the 1.0 target; native-start gaps are tracked in the
 [scenario contract](08-native-scenarios-and-map-import.md#implementation-audit)
 and [machine-fidelity contract](09-goon-machine-fidelity.md#current-executable-slice).
+The source precedence, construction state graphs, physical NPC affordances, and
+rendering obligations for turfs and fixtures are tracked separately in the
+[world-interaction fidelity contract](10-goon-world-interaction-fidelity.md#implementation-fidelity-ledger).
