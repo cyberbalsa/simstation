@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "definitions": [
+    {
+      "id": "org.simstation.example.salvage-scenario:objective/export-control-assemblies",
+      "kind": "objective",
+      "name_key": "example.salvage.objective.export-control-assemblies",
+      "description_key": "example.salvage.objective.export-control-assemblies.description",
+      "condition": {
+        "kind": "export",
+        "item": "org.simstation.core:item/control-assembly",
+        "quantity": 2
+      },
+      "deadline_shift": 3
+    },
+    {
+      "id": "org.simstation.example.salvage-scenario:scenario-profile/last-chance",
+      "kind": "scenario-profile",
+      "name_key": "example.salvage.profile.last-chance",
+      "scenario": "org.simstation.example.salvage-scenario:scenario/last-chance",
+      "default_seed": 90210,
+      "station_credits": 8000,
+      "material_units": 80,
+      "crew_count": 16,
+      "objectives": [
+        "org.simstation.example.salvage-scenario:objective/export-control-assemblies"
+      ],
+      "incident_allowlist": [
+        "org.simstation.core:incident/power-overload",
+        "org.simstation.core:incident/supply-delay"
+      ]
+    }
+  ]
+}

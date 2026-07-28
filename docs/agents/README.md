@@ -35,6 +35,18 @@ records are:
 - [`runtime-media.md`](runtime-media.md) — `runtime_media`
 - [`maintainability-ci.md`](maintainability-ci.md) —
   `maintainability_ci`
+- [`goon-map-pipeline.md`](goon-map-pipeline.md) —
+  `goon_map_pipeline`
+- [`goon-interaction-research.md`](goon-interaction-research.md) —
+  `goon_interaction_research`
+- [`scenario-contract.md`](scenario-contract.md) —
+  `scenario_contract`
+- [`goon-fixture-assets.md`](goon-fixture-assets.md) —
+  `fixture_asset_pack`
+- [`native-scenario-example.md`](native-scenario-example.md) —
+  `native_scenario_example`
+- [`atlas-docs-polish.md`](atlas-docs-polish.md) —
+  `atlas_docs_polish`
 
 Use [`TEMPLATE.md`](TEMPLATE.md) for future records.
 

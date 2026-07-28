@@ -43,10 +43,117 @@
       "runtime_path": "machines/atlas-000.png",
       "sha256": "bc468c09b405565438081ce4b828cb18cbdf75b8c380292b8f7dce94b58d352b",
       "width": 2048
+    },
+    {
+      "bundle": "specialty",
+      "file": "atlas-045.png",
+      "format": "rgba8-png",
+      "height": 2048,
+      "page": 45,
+      "runtime_path": "specialty/atlas-045.png",
+      "sha256": "3b18545cf599d4d36a62289df8f515537f19143c0a354f8b258b81a11febf29c",
+      "width": 2048
+    },
+    {
+      "bundle": "specialty",
+      "file": "atlas-047.png",
+      "format": "rgba8-png",
+      "height": 2048,
+      "page": 47,
+      "runtime_path": "specialty/atlas-047.png",
+      "sha256": "ca0650e6ad4bad74ef0581ef3743afce8cfc6805cc173a3c69597fc4c34e3a82",
+      "width": 2048
+    },
+    {
+      "bundle": "specialty",
+      "file": "atlas-052.png",
+      "format": "rgba8-png",
+      "height": 2048,
+      "page": 52,
+      "runtime_path": "specialty/atlas-052.png",
+      "sha256": "aff53970574c6f038da71d0bc1a2636ea81894cbf793a26f5522b558ddb12921",
+      "width": 2048
+    },
+    {
+      "bundle": "specialty",
+      "file": "atlas-053.png",
+      "format": "rgba8-png",
+      "height": 2048,
+      "page": 53,
+      "runtime_path": "specialty/atlas-053.png",
+      "sha256": "b05be898e0a186437275ad0f7258702095eb9fa9e8f9891911b8f5c3b1280fbc",
+      "width": 2048
     }
   ],
   "source_commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
   "sprites": {
+    "apc": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "east": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 53,
+            "w": 32,
+            "x": 69,
+            "y": 475
+          }
+        ],
+        "north": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 53,
+            "w": 32,
+            "x": 35,
+            "y": 475
+          }
+        ],
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 53,
+            "w": 32,
+            "x": 35,
+            "y": 475
+          }
+        ],
+        "west": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 53,
+            "w": 32,
+            "x": 103,
+            "y": 475
+          }
+        ]
+      },
+      "dirs": 4,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/power-dmi/apc0--afcf739cd9-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/power.dmi",
+      "source_sha256": "dd790234dfab468300fe96ecfc4e88898fedd366f4b701c18aaccb069adb7ba7",
+      "source_state": "apc0",
+      "source_state_index": 7,
+      "source_state_occurrence": 1
+    },
     "crew_female": {
       "bundle": "crew",
       "cell_height": 32,
@@ -249,6 +356,40 @@
       "source_state_index": 5,
       "source_state_occurrence": 1
     },
+    "fabricator": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 52,
+            "w": 32,
+            "x": 839,
+            "y": 1283
+          }
+        ]
+      },
+      "dirs": 1,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/manufacturer-dmi/fab-general--cf2f46a0d3-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/manufacturer.dmi",
+      "source_sha256": "2eac0861868f8256c25b7fe5188742b3f2c3500ff0d25dd76d85a3b765693d1a",
+      "source_state": "fab-general",
+      "source_state_index": 12,
+      "source_state_occurrence": 1
+    },
     "floor": {
       "bundle": "core_tiles",
       "cell_height": 32,
@@ -281,6 +422,208 @@
       "source_sha256": "6aef9c554d1e33a74fc5414af44f18e2c9e62357f92deac1d6f166f5318279b1",
       "source_state": "floor",
       "source_state_index": 2,
+      "source_state_occurrence": 1
+    },
+    "generator": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 53,
+            "w": 32,
+            "x": 35,
+            "y": 679
+          }
+        ]
+      },
+      "dirs": 1,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/power-dmi/teg--7c8224529a-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/power.dmi",
+      "source_sha256": "dd790234dfab468300fe96ecfc4e88898fedd366f4b701c18aaccb069adb7ba7",
+      "source_state": "teg",
+      "source_state_index": 111,
+      "source_state_occurrence": 1
+    },
+    "refinery": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 47,
+            "w": 32,
+            "x": 681,
+            "y": 1191
+          }
+        ]
+      },
+      "dirs": 1,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/crafting-dmi/fab2-on--e654caa777-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/crafting.dmi",
+      "source_sha256": "c0ad888d26f13702fa15e01d17c659755c93356ddea24a844ab5c5b1dfd7881c",
+      "source_state": "fab2-on",
+      "source_state_index": 37,
+      "source_state_occurrence": 1
+    },
+    "scrubber": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "east": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 45,
+            "w": 32,
+            "x": 579,
+            "y": 1633
+          }
+        ],
+        "north": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 45,
+            "w": 32,
+            "x": 545,
+            "y": 1633
+          }
+        ],
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 45,
+            "w": 32,
+            "x": 511,
+            "y": 1633
+          }
+        ],
+        "west": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 45,
+            "w": 32,
+            "x": 613,
+            "y": 1633
+          }
+        ]
+      },
+      "dirs": 4,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/atmospherics/vent_scrubber-dmi/on-map--a3645389b9-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/atmospherics/vent_scrubber.dmi",
+      "source_sha256": "07763391b66cf080cdb82a0ce3a9e31891b34a3944678ffed9fc8160acaade9c",
+      "source_state": "on-map",
+      "source_state_index": 9,
+      "source_state_occurrence": 1
+    },
+    "vent": {
+      "bundle": "specialty",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "east": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 45,
+            "w": 32,
+            "x": 2007,
+            "y": 1565
+          }
+        ],
+        "north": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 45,
+            "w": 32,
+            "x": 1973,
+            "y": 1565
+          }
+        ],
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 45,
+            "w": 32,
+            "x": 1939,
+            "y": 1565
+          }
+        ],
+        "west": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 45,
+            "w": 32,
+            "x": 1,
+            "y": 1599
+          }
+        ]
+      },
+      "dirs": 4,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/atmospherics/vent_pump-dmi/out-map--60b67c84ae-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/atmospherics/vent_pump.dmi",
+      "source_sha256": "95cd3421f7966f4a43fa1887293bc4181b562386d3d3c67fb6d83bc309854b35",
+      "source_state": "out-map",
+      "source_state_index": 7,
       "source_state_occurrence": 1
     },
     "wall": {

@@ -13,27 +13,27 @@
       },
       "checkpoints": [
         {
-          "state_hash": 936031148,
+          "state_hash": 945552630,
           "tick": 120
         },
         {
-          "state_hash": 1518135122,
+          "state_hash": 1707844100,
           "tick": 240
         },
         {
-          "state_hash": 1946289126,
+          "state_hash": 1427653557,
           "tick": 360
         },
         {
-          "state_hash": 1315313105,
+          "state_hash": 2100110200,
           "tick": 480
         },
         {
-          "state_hash": 943234082,
+          "state_hash": 1501078122,
           "tick": 600
         }
       ],
-      "final_state_hash": 943234082
+      "final_state_hash": 1501078122
     },
     "smoke": {
       "configuration": {
@@ -47,23 +47,23 @@
       },
       "checkpoints": [
         {
-          "state_hash": 206027005,
+          "state_hash": 1588355915,
           "tick": 60
         },
         {
-          "state_hash": 821470155,
+          "state_hash": 1441586515,
           "tick": 120
         },
         {
-          "state_hash": 987276484,
+          "state_hash": 1624917322,
           "tick": 180
         },
         {
-          "state_hash": 1661846301,
+          "state_hash": 1140910218,
           "tick": 240
         }
       ],
-      "final_state_hash": 1661846301
+      "final_state_hash": 1140910218
     }
   }
 }

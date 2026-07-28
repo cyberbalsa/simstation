@@ -84,36 +84,49 @@ versions because their output bytes participate in provenance.
 The implemented project commands are:
 
 ```text
-python3 tools/dev.py info       report LÖVE/Lua/Python/media/LFS tools
-python3 tools/dev.py run        start the foundation build
-python3 tools/dev.py test       run the deterministic Lua suite
-python3 tools/dev.py audit      mandatory handoff gate
+python3 tools/dev.py doctor     report/check runtime, media, and LFS capabilities
+python3 tools/dev.py info       backward-compatible JSON doctor alias
+python3 tools/dev.py run        start the current game
+python3 tools/dev.py test       run deterministic Lua and map-import fixtures
+python3 tools/dev.py audit      mandatory local handoff gate
+python3 tools/dev.py ci         fast CI-equivalent audit and smoke benchmark
+python3 tools/dev.py benchmark <scenario>
+python3 tools/dev.py soak --shifts <count>
+python3 tools/dev.py mod validate|test|package <folder>
 
 python3 tools/assets.py fetch-goon
 python3 tools/assets.py import-graphics-source
 python3 tools/assets.py build-graphics
 python3 tools/assets.py build-audio
+python3 tools/assets.py build-foundation-media
 python3 tools/assets.py audit
 python3 tools/assets.py all
+
+python3 tools/map_import.py inventory
+python3 tools/map_import.py analyze maps/atlas.dmm --pretty
+python3 tools/map_import.py compile maps/atlas.dmm <scenario options>
 ```
 
 `tools/assets.py` is separate because its commands intentionally fetch and
 write hundreds of megabytes; ordinary audit remains fast and non-regenerating.
+`tools/map_import.py` reads DMM/TGM as immutable pinned authoring input and
+emits native scenario JSON; DMM is never a runtime format.
 `tools/dev.py` locates the repository from its own path and runs commands at its
 root. Asset caches/staging are ignored, and neither audit mutates source.
+`python3 tools/dev.py run` chooses Atlas; a developer can choose any scenario
+in the resolved mod set with
+`python3 tools/dev.py run --scenario <namespaced-scenario-id>`.
 
 Before their owning milestones exit, extend `tools/dev.py` with:
 
 ```text
 lint / format --check           M1
-test unit|integration|all       M1
-mod validate|test|package       M1
 notices                         M2
-benchmark <scenario>            M3
 package <platform|all>          M4
 ```
 
-New commands accept `--json` for machine-readable results and return:
+Machine-facing commands emit JSON or provide a documented JSON format option.
+Command-line failures use these common exit categories:
 
 - `0` success;
 - `1` validation/test failure;
@@ -121,12 +134,12 @@ New commands accept `--json` for machine-readable results and return:
 - `3` invalid command/input;
 - `4` legal/provenance release block.
 
-The current `audit` runs Lua tests, Python bytecode compilation, JSON parsing,
-and `git diff --check`. By M1/M2 it must additionally run format-check, lint,
-unit/integration tests, data schemas, content ID/reference checks,
-generated-file staleness, asset fixture verification, license/provenance
-consistency, and documentation links. It does not run the long benchmark or
-full upstream reimport on every handoff.
+The current `audit` runs deterministic Lua and Python map fixtures, Python
+bytecode compilation, JSON/TOML parsing, content/example-mod validation,
+pure-core boundary and local Markdown-link checks, workflow/toolchain pin
+checks, LFS attribute checks, an LFS-aware asset catalog audit, and
+`git diff --check`. It does not regenerate assets, reimport the full upstream
+tree, or run the long benchmark on every handoff.
 
 ## Data/map authoring
 

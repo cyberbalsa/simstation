@@ -38,6 +38,10 @@ GUTTER = 1
 PACK_ID = "org.simstation.goon"
 
 FOUNDATION_SPRITES = {
+    "apc": (
+        "org.simstation.goon:sprite/icons/obj/power-dmi/"
+        "apc0--afcf739cd9-o01"
+    ),
     "crew_female": (
         "org.simstation.goon:sprite/icons/mob/human-dmi/"
         "body_f--4ed48d58ce-o01"
@@ -57,6 +61,26 @@ FOUNDATION_SPRITES = {
     "floor": (
         "org.simstation.goon:sprite/icons/turf/floors-dmi/"
         "floor--3684c9d3c0-o01"
+    ),
+    "fabricator": (
+        "org.simstation.goon:sprite/icons/obj/manufacturer-dmi/"
+        "fab-general--cf2f46a0d3-o01"
+    ),
+    "generator": (
+        "org.simstation.goon:sprite/icons/obj/power-dmi/"
+        "teg--7c8224529a-o01"
+    ),
+    "refinery": (
+        "org.simstation.goon:sprite/icons/obj/crafting-dmi/"
+        "fab2-on--e654caa777-o01"
+    ),
+    "scrubber": (
+        "org.simstation.goon:sprite/icons/obj/atmospherics/"
+        "vent_scrubber-dmi/on-map--a3645389b9-o01"
+    ),
+    "vent": (
+        "org.simstation.goon:sprite/icons/obj/atmospherics/"
+        "vent_pump-dmi/out-map--60b67c84ae-o01"
     ),
     "wall": (
         "org.simstation.goon:sprite/icons/turf/walls-dmi/"
@@ -87,6 +111,7 @@ FETCH_PATHS = [
     ".github/AUDIO_GUIDELINES.md",
     "strings/changelog_attribution/spriters.txt",
     "tools/dmi",
+    "maps/atlas.dmm",
 ]
 
 AUDIO_EXTENSIONS = {".ogg", ".xm", ".mod", ".s3m"}
@@ -211,6 +236,7 @@ def fetch_goon(_: argparse.Namespace) -> None:
         "/.github/AUDIO_GUIDELINES.md",
         "/strings/changelog_attribution/spriters.txt",
         "/tools/dmi/",
+        "/maps/atlas.dmm",
     ]
     run(["git", "sparse-checkout", "init", "--no-cone"], cwd=CACHE)
     run(
@@ -1383,6 +1409,13 @@ def audit(_: argparse.Namespace) -> None:
             foundation = json.loads(foundation_path.read_text(encoding="utf-8"))
             if foundation["full_catalog_sha256"] != sha256_file(atlas_path):
                 raise SystemExit("foundation graphics selection is stale")
+            if set(foundation["sprites"]) != set(FOUNDATION_SPRITES):
+                raise SystemExit("foundation graphics alias set is stale")
+            for alias, identifier in sorted(FOUNDATION_SPRITES.items()):
+                if foundation["sprites"][alias]["id"] != identifier:
+                    raise SystemExit(
+                        f"foundation graphics alias mismatch: {alias}"
+                    )
             for page in foundation["pages"]:
                 path = atlas_path.parent / page["runtime_path"]
                 if not path.exists() or sha256_file(path) != page["sha256"]:

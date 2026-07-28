@@ -319,10 +319,12 @@ collisions, and decompression bombs.
 
 `tools/assets.py` has fetched and compiled the complete pinned snapshot into
 eight bundles and 134 atlas pages with source/runtime catalogs. A generated
-8 KiB foundation selection resolves six logical sprites without parsing the
-71 MiB exhaustive catalog. The presentation renderer lazy-loads four required
-pages and uses revisioned per-chunk SpriteBatches for imported floors, walls,
-doors, and crew; generated shapes remain the missing-media fallback.
+16 KiB foundation selection resolves 12 logical sprites without parsing the
+71 MiB exhaustive catalog. Its eight referenced pages add APC, generator,
+vent, scrubber, fabricator, and refinery art to the original floor, wall,
+door, and crew selection. The presentation renderer lazy-loads pages, uses
+revisioned per-chunk SpriteBatches for imported static structure, and draws
+authored Atlas machines with generated shapes as the missing-media fallback.
 
 `verify-graphics` compares every one of the 164,558 compiled
 frame-direction cells to its pinned source pixels, and a clean rebuild produces

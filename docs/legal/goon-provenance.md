@@ -10,12 +10,45 @@
 | README license statement | [Pinned README](https://github.com/goonstation/goonstation/blob/1b2b250abb5be747d55e274de0203a59cfc8da78/README.md#license) |
 | Graphics root | [`icons/`](https://github.com/goonstation/goonstation/tree/1b2b250abb5be747d55e274de0203a59cfc8da78/icons) |
 | Audio root | [`sound/`](https://github.com/goonstation/goonstation/tree/1b2b250abb5be747d55e274de0203a59cfc8da78/sound) |
+| Current map source | [`maps/atlas.dmm`](https://github.com/goonstation/goonstation/blob/1b2b250abb5be747d55e274de0203a59cfc8da78/maps/atlas.dmm) |
 | Broad sprite credits | [`spriters.txt`](https://github.com/goonstation/goonstation/blob/1b2b250abb5be747d55e274de0203a59cfc8da78/strings/changelog_attribution/spriters.txt) |
 | Audio sourcing guidance | [Pinned audio guidelines](https://github.com/goonstation/goonstation/blob/1b2b250abb5be747d55e274de0203a59cfc8da78/.github/AUDIO_GUIDELINES.md) |
 
 Imports must use this exact immutable commit, never a moving branch or release
 label. A source update is a new reviewed import, not an in-place mutation of
 the recorded snapshot.
+
+## Current native-map derivative
+
+The first-party
+[`goon-atlas` scenario](../../mods/org.simstation.core/scenarios/goon-atlas.json)
+is a direct adapted map derivative under the same Goon root license:
+
+| Field | Recorded value |
+|---|---|
+| Source path | `maps/atlas.dmm` |
+| Commit | `1b2b250abb5be747d55e274de0203a59cfc8da78` |
+| Git blob | `a774a5beaa5fe849495de1eabe2173dca59ddfdd` |
+| Source SHA-256 | `694305dc6a227824572b49f4ecb58accb62ef5892a94132420d19f94520d8909` |
+| Source crop | X 61–252, Y 61–252, Z 1 |
+| Coordinate change | Source Y is flipped to native top-left/downward Y |
+| Converter | `tools/map_import.py`, format 1, `goon-type-path-adapter-v1` |
+| Output | `simstation-map-v1`, 192×192 |
+| License | `CC-BY-NC-SA-3.0-US` |
+
+The conversion maps reviewed turf, structure, area, cable, fixture, and job
+landmark families into a smaller native behavior vocabulary. It does not
+execute DM or evaluate map override expressions. The generated definition
+records 2,721 included and 4,712 omitted object instances, the top unsupported
+paths, four lower-priority fixture collisions, two invalid APC placements, and
+one duplicate spawn. That omission record is attribution/review evidence, not
+a claim that omitted Goon behavior was reproduced.
+
+The immutable source bytes are included under
+`assets/upstream/goon/maps/atlas.dmm` and in the 5,869-file upstream inventory.
+The runtime reads only the native JSON. Any source-commit update, crop change,
+adapter change, or omission-policy change requires regenerating and reviewing
+both scenario provenance and notices.
 
 ## Required per-asset record
 
@@ -54,6 +87,8 @@ Goonstation project attribution.
 - Sim Station's editable graphics fork uses lossless PNG sheets plus TOML
   metadata. Original compressed audio is retained; non-destructive runtime
   gain and classification live in metadata.
+- Pinned DMM remains immutable. Native scenario JSON is the reviewed map fork;
+  DMM and DM code are never runtime formats.
 - Generated atlases, indexes, tracker renders, contact sheets, and reports are
   reproducible outputs. Contributors must not hand-edit them.
 - Build-cache keys include source SHA-256, converter version, conversion

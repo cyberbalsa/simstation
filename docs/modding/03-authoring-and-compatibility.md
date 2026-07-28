@@ -26,7 +26,7 @@ org.example.catering/
 ```
 
 Do not commit generated pages without their editable source, manifest, and
-provenance. Once M1 lands the authoring CLI, package only through:
+provenance. Validate and package only through:
 
 ```text
 python3 tools/dev.py mod validate <folder>
@@ -34,11 +34,11 @@ python3 tools/dev.py mod test <folder>
 python3 tools/dev.py mod package <folder>
 ```
 
-Packaging compiles loose media, validates schemas/references/licenses, creates
-canonical credits, then writes a reproducible `.simmod`. The package has no
-network or post-install scripts. These `mod` subcommands are not in the current
-foundation CLI; until M1, only the resolver/hook fixtures in
-`python3 tools/dev.py test` are implemented.
+The current commands validate the folder, compare folder/archive registry
+results, and write a reproducible `.simmod`; the package has no network or
+post-install scripts. Automatic loose-media compilation and canonical
+per-package credits remain later authoring-tool work, so media packs must
+already contain their validated runtime artifacts and provenance.
 
 ## Four canonical examples
 
@@ -58,9 +58,15 @@ atlas coordinates.
 
 ### `org.simstation.example.salvage-scenario`
 
-Data-only starting map, budgets, crew mix, production/export objectives, and
-incident definitions. It proves scenarios/incidents use validated declarative
-content.
+Data-only schema-1 starting map with two areas, eight powered/utility/production
+fixtures, four job spawns, starting inventory, and two breach targets. It proves
+a normal pack can add a strict native scenario through `scenario_maps`.
+
+The package separately registers a future-facing recovery profile and export
+objective, preserving the intended seed, budget, crew mix, incident pool, and
+control-assembly goal without putting unsupported fields on the physical map.
+Those two definitions are registry data only; the current vertical slice does
+not execute profile/objective behavior.
 
 ### `org.simstation.example.smart-grid`
 
@@ -69,6 +75,14 @@ observer, and versioned private state. It proves warning, hook ordering,
 commands, save/reload, migration, errors, and replay.
 
 Every public release runs these examples from folder and `.simmod` forms.
+
+After installing/enabling the salvage pack, launch its physical start directly
+during development:
+
+```text
+python3 tools/dev.py run --scenario \
+  org.simstation.example.salvage-scenario:scenario/last-chance
+```
 
 ## Data workflow
 

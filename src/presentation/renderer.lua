@@ -16,6 +16,18 @@ local COLORS = {
   low_pressure = { 0.30, 0.55, 1.00, 0.20 },
   fire = { 1.00, 0.25, 0.05, 0.68 },
   grid = { 0.28, 0.34, 0.39, 0.34 },
+  machine = { 0.34, 0.48, 0.58, 1 },
+  machine_powered = { 0.28, 0.95, 0.48, 1 },
+  machine_unpowered = { 0.95, 0.25, 0.18, 1 },
+}
+
+local MACHINE_SPRITES = {
+  apc = "apc",
+  fabricator = "fabricator",
+  generator = "generator",
+  refinery = "refinery",
+  scrubber = "scrubber",
+  vent = "vent",
 }
 
 local function set_color(color)
@@ -51,6 +63,14 @@ function Renderer.new(world)
       "door_open",
     }),
     crew_media_enabled = atlas:has_all({ "crew_male", "crew_female" }),
+    machine_media_enabled = atlas:has_all({
+      "apc",
+      "fabricator",
+      "generator",
+      "refinery",
+      "scrubber",
+      "vent",
+    }),
     chunks = {},
     selected_x = false,
     selected_y = false,
@@ -349,6 +369,61 @@ function Renderer:_draw_overlays(world, min_x, min_y, max_x, max_y, zoom)
   end
 end
 
+function Renderer:_draw_machines(world, machines, min_x, min_y, max_x, max_y)
+  local tile_size = Constants.TILE_SIZE
+  local ordered = {}
+  for index = 1, #machines do
+    ordered[index] = machines[index]
+  end
+  table.sort(ordered, function(a, b)
+    if a.index ~= b.index then
+      return a.index < b.index
+    end
+    return a.id < b.id
+  end)
+  for index = 1, #ordered do
+    local machine = ordered[index]
+    local x, y = world:coordinates(machine.index)
+    if x >= min_x and x <= max_x and y >= min_y and y <= max_y then
+      local draw_x = (x - 1) * tile_size
+      local draw_y = (y - 1) * tile_size
+      local alias = MACHINE_SPRITES[machine.kind]
+      local sprite = self.machine_media_enabled
+        and alias
+        and self.atlas:sprite(alias, "south", 1)
+      if sprite then
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.draw(
+          sprite.image,
+          sprite.quad,
+          draw_x,
+          draw_y,
+          0,
+          tile_size / sprite.width,
+          tile_size / sprite.height
+        )
+      else
+        set_color(COLORS.machine)
+        love.graphics.rectangle(
+          "fill",
+          draw_x + 7,
+          draw_y + 7,
+          tile_size - 14,
+          tile_size - 14,
+          2,
+          2
+        )
+      end
+      set_color(
+        machine.powered
+            and COLORS.machine_powered
+          or COLORS.machine_unpowered
+      )
+      love.graphics.rectangle("fill", draw_x + 24, draw_y + 3, 5, 5)
+    end
+  end
+end
+
 function Renderer:_draw_crew(world, crew)
   local tile_size = Constants.TILE_SIZE
   local ordered = {}
@@ -460,6 +535,14 @@ function Renderer:draw(snapshot, camera)
   camera:apply()
   self:_draw_static(world, min_x, min_y, max_x, max_y)
   self:_draw_overlays(world, min_x, min_y, max_x, max_y, camera.zoom)
+  self:_draw_machines(
+    world,
+    snapshot.machines or {},
+    min_x,
+    min_y,
+    max_x,
+    max_y
+  )
   self:_draw_crew(world, snapshot.crew)
   self:_draw_cursor()
   camera:finish()

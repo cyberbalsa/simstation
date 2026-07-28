@@ -14,7 +14,8 @@ both the relevant document and its acceptance tests.
 - [Design index](design/README.md) — product contract, shared rules, systems, and
   acceptance criteria.
 - [Technical index](technical/README.md) — runtime architecture, persistence,
-  rendering, audio, libraries, performance, and packaging.
+  rendering, audio, libraries, performance, packaging, and native station-map
+  import.
 - [Modding index](modding/README.md) — package format, loading, hooks, trusted
   Lua, authoring, and compatibility policy.
 - [Production index](production/README.md) — vertical slice, roadmap, release,
@@ -34,6 +35,8 @@ both the relevant document and its acceptance tests.
 4. Check the [cross-system matrix](design/12-cross-system-matrix.md) before
    changing a public event, resource, or ownership boundary.
 5. Use the [glossary](design/13-glossary.md) for canonical terminology.
+6. For the current playable start, read the
+   [native scenario and Goon map-import contract](technical/08-native-scenarios-and-map-import.md).
 
 ## Change rule
 

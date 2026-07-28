@@ -89,13 +89,21 @@ def probe(command: list[str]) -> tuple[bool, str]:
     return result.returncode == 0, summary
 
 
-def command_run(_: argparse.Namespace) -> int:
-    return run([executable("love"), str(ROOT)]).returncode
+def command_run(args: argparse.Namespace) -> int:
+    command = [executable("love"), str(ROOT)]
+    if args.scenario:
+        command.append(f"--scenario={args.scenario}")
+    return run(command).returncode
 
 
 def command_test(_: argparse.Namespace) -> int:
-    return run(
+    lua_result = run(
         [executable("luajit", "lua", "lua5.1", "lua51"), "tests/run.lua"]
+    )
+    if lua_result.returncode:
+        return lua_result.returncode
+    return run(
+        [sys.executable, "-m", "unittest", "-v", "tests.test_map_import"]
     ).returncode
 
 
@@ -709,11 +717,15 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     run_parser = subparsers.add_parser("run", help="start Sim Station in LÖVE")
+    run_parser.add_argument(
+        "--scenario",
+        help="launch a loaded scenario by namespaced content ID",
+    )
     run_parser.set_defaults(callback=command_run)
 
     test_parser = subparsers.add_parser(
         "test",
-        help="run the deterministic pure-Lua test suite",
+        help="run deterministic simulation and map-import tests",
     )
     test_parser.set_defaults(callback=command_test)
 

@@ -48,6 +48,30 @@
       "department": "service",
       "base_wage_credits": 90,
       "work_tags": ["hauling", "cleaning", "construction"]
+    },
+    {
+      "id": "org.simstation.core:job/botanist",
+      "kind": "job",
+      "name_key": "job.botanist",
+      "department": "service",
+      "base_wage_credits": 110,
+      "work_tags": ["botany", "food", "hauling"]
+    },
+    {
+      "id": "org.simstation.core:job/chef",
+      "kind": "job",
+      "name_key": "job.chef",
+      "department": "service",
+      "base_wage_credits": 115,
+      "work_tags": ["cooking", "food", "service"]
+    },
+    {
+      "id": "org.simstation.core:job/janitor",
+      "kind": "job",
+      "name_key": "job.janitor",
+      "department": "service",
+      "base_wage_credits": 105,
+      "work_tags": ["cleaning", "maintenance", "hauling"]
     }
   ]
 }

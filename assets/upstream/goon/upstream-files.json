@@ -5817,6 +5817,11 @@
       "size": 395
     },
     {
+      "git_blob_oid": "a774a5beaa5fe849495de1eabe2173dca59ddfdd",
+      "path": "maps/atlas.dmm",
+      "size": 854315
+    },
+    {
       "git_blob_oid": "ee2c71538134b607bd25ca9f27b72ad1ce000a77",
       "path": "sound/ambience/dojo/dojoambi.ogg",
       "size": 239965

@@ -1,14 +1,16 @@
 schema = 1
 id = "org.simstation.example.salvage-scenario"
-version = "0.1.0"
+version = "0.2.0"
 name = "Salvage Scenario Example"
-description = "A data-only cash-poor recovery start and export objective."
+description = "A native recovery station plus declarative export objective and campaign profile."
 authors = ["Sim Station contributors"]
 license = "CC0-1.0"
 api = "^0.1.0"
 class = "data"
 load_priority = 0
 content = ["content/*.json"]
+localization = ["locales/*.json"]
+scenario_maps = ["scenarios/*.json"]
 dependencies = [{ id = "org.simstation.core", version = "^0.1.0" }]
 optional_dependencies = []
 conflicts = []

@@ -4,7 +4,7 @@ Sim Station — attribution notice
 Sim Station is an independent, noncommercial station-management project. It
 is not endorsed by Goonstation, Space Station 13, BYOND, or LÖVE.
 
-The media fork is derived from Goonstation:
+The media fork and native Atlas station layout are derived from Goonstation:
 
 - Source: https://github.com/goonstation/goonstation
 - Pinned commit: 1b2b250abb5be747d55e274de0203a59cfc8da78
@@ -23,6 +23,12 @@ Existing Ogg audio was copied byte-for-byte. Tracker modules were rendered to
 48 kHz stereo Ogg Vorbis with FFmpeg/libopenmpt. Exact source/output hashes and
 transform metadata are stored under assets/upstream/goon and
 assets/runtime/goon.
+
+The first-party 192×192 station scenario adapts the pinned
+`maps/atlas.dmm` crop at X 61–252, Y 61–252, Z 1 into native JSON. The import
+flips source Y, maps a reviewed subset of areas, structures, utilities,
+fixtures, and job landmarks, and records unsupported/omitted placements in the
+scenario provenance. Sim Station does not execute DM or load DMM at runtime.
 
 The project currently relies on Goonstation's root license for audio files
 without stronger per-file evidence, as requested by the project owner. That

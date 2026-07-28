@@ -1,0 +1,8 @@
+"A" = (/obj/table,/turf/simulated/floor,/area/station/cargo)
+"B" = (/turf/space,/area/space)
+
+(1,1,1) = {"
+AB
+BA
+"}
+(3,1,2) = {"A"}

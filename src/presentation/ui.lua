@@ -75,9 +75,12 @@ function Ui:draw(snapshot, renderer, camera, now)
   love.graphics.setColor(0.92, 0.95, 1, 1)
   love.graphics.print(
     string.format(
-      "¢%d   Materials %d   Power %.1f/%.1f kW",
+      "¢%d  Build %d  Ore %d  Steel %d  Circuits %d  Power %.1f/%.1f kW",
       snapshot.economy.station_credits,
       snapshot.economy.material_units,
+      snapshot.inventory["org.simstation.core:item/iron-ore"] or 0,
+      snapshot.inventory["org.simstation.core:item/steel-sheet"] or 0,
+      snapshot.inventory["org.simstation.core:item/circuit"] or 0,
       snapshot.world.power_served_w / 1000,
       snapshot.world.power_demand_w / 1000
     ),
@@ -114,18 +117,26 @@ function Ui:draw(snapshot, renderer, camera, now)
     )
     if index then
       local pressure = snapshot.world:pressure_dkpa(index) / 10
+      local area = snapshot.world:area_record(index)
+      local machine
+      for machine_index = 1, #(snapshot.machines or {}) do
+        if snapshot.machines[machine_index].index == index then
+          machine = snapshot.machines[machine_index]
+          break
+        end
+      end
       love.graphics.setColor(0.025, 0.035, 0.05, 0.92)
-      love.graphics.rectangle("fill", 12, height - 116, 270, 104, 4, 4)
+      love.graphics.rectangle("fill", 12, height - 166, 330, 154, 4, 4)
       love.graphics.setColor(0.88, 0.93, 0.98, 1)
       love.graphics.print(
         string.format("Tile %d, %d", self.selected_tile.x, self.selected_tile.y),
         24,
-        height - 104
+        height - 154
       )
       love.graphics.print(
         string.format("Pressure %.1f kPa", pressure),
         24,
-        height - 84
+        height - 134
       )
       love.graphics.print(
         string.format(
@@ -138,12 +149,31 @@ function Ui:draw(snapshot, renderer, camera, now)
           snapshot.world.powered[index] and "yes" or "no"
         ),
         24,
-        height - 64
+        height - 114
       )
       love.graphics.print(
-        "Blueprint: " .. tostring(snapshot.world.blueprint[index] or "none"),
+        "Area: " .. tostring(area and area.name or "Unzoned"),
         24,
-        height - 44
+        height - 94
+      )
+      love.graphics.print(
+        "Access: " .. tostring(snapshot.world.door_access[index] or "public"),
+        24,
+        height - 74
+      )
+      love.graphics.print(
+        machine
+            and string.format(
+              "Machine: %s — %s",
+              machine.name,
+              machine.powered and machine.state or "unpowered"
+            )
+          or (
+            "Blueprint: "
+            .. tostring(snapshot.world.blueprint[index] or "none")
+          ),
+        24,
+        height - 54
       )
     end
   end
@@ -181,7 +211,7 @@ function Ui:draw(snapshot, renderer, camera, now)
 
   if self.help_visible then
     local panel_width = 500
-    local panel_height = 310
+    local panel_height = 340
     local left = (width - panel_width) / 2
     local top = (height - panel_height) / 2
     love.graphics.setColor(0.02, 0.03, 0.045, 0.96)
@@ -201,6 +231,7 @@ function Ui:draw(snapshot, renderer, camera, now)
       "Left drag                Place blueprints",
       "Right click / Escape     Inspect",
       "M                        Meteor breach scenario",
+      "R / T / G                Queue steel / circuit / assembly",
       "F5 / F9                  Save / load",
       "F1                       Close this help",
       "",

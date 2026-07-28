@@ -54,10 +54,22 @@ documented schemas and methods are public.
 
 ## Implemented foundation
 
-`src/mods/resolver.lua` and `src/mods/hooks.lua` currently prove deterministic
-dependency traversal, cycle detection, hook transforms, error capture, and
-stable registration in tests. They do not yet parse `mod.toml`, mount
-`.simmod`, solve SemVer, expose `HookContext`, or implement this public API.
-Their abbreviated table/callback shapes and current priority-first ordering are
-schema-0 internals and must be upgraded with compatibility fixtures before M1
-exits.
+The current loader parses schema-1 `mod.toml`, discovers bundled/save-directory
+folder packs and `.simmod` archives, resolves SemVer dependencies and stable
+load order, seals one replacement-aware content registry, and hash-gates
+trusted Lua entry points. `HookContext` provides copied inventory, machine,
+scenario, station, tile, and content-definition queries plus versioned private
+state and next-tick commands. Deterministic hook ordering, failures, save state,
+folder hashing, ZIP packaging, and the four example packs have fixtures.
+
+Native maps use `scenario_maps = ["scenarios/*.json"]` and pass through the
+same registry path as other data definitions. The first-party Atlas start
+proves this path with authored areas, machines, spawns, inventory, power,
+manufacturing, incidents, and save continuation. See the
+[native scenario contract](../technical/08-native-scenarios-and-map-import.md).
+
+This remains a pre-1.0 API. There is no in-game mod manager, scenario picker,
+network workshop, schema migration UI, or general mod-defined physical machine
+kind yet. The packaged examples and current API `0.1.0` are compatibility
+fixtures, not a promise that all later system hooks in the design documents are
+already active.

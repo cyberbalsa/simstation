@@ -58,19 +58,28 @@ local function heuristic(world, from_index, to_index)
   return math.abs(from_x - to_x) + math.abs(from_y - to_y)
 end
 
-local function walkable(world, index)
+local function walkable(world, index, can_enter)
   if not index or world.tile[index] == 0 then
     return false
   end
-  return world.structure[index] ~= 1
+  if world.structure[index] == 1 then
+    return false
+  end
+  return not can_enter or can_enter(index)
 end
 
-function Pathfinding.find(world, start_index, target_index, maximum_nodes)
+function Pathfinding.find(
+  world,
+  start_index,
+  target_index,
+  maximum_nodes,
+  can_enter
+)
   maximum_nodes = maximum_nodes or 4096
   if start_index == target_index then
     return {}
   end
-  if not walkable(world, target_index) then
+  if not walkable(world, target_index, can_enter) then
     return nil, "target is not walkable"
   end
 
@@ -116,7 +125,7 @@ function Pathfinding.find(world, start_index, target_index, maximum_nodes)
       }
       for i = 1, 4 do
         local neighbor = neighbors[i]
-        if walkable(world, neighbor) and not closed[neighbor] then
+        if walkable(world, neighbor, can_enter) and not closed[neighbor] then
           local pressure = world:pressure_dkpa(neighbor)
           local hazard = pressure < 500 and 50 or 0
           hazard = hazard + world.fire[neighbor] * 100

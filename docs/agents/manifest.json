@@ -143,6 +143,96 @@
         "developer doctor and audit",
         "Git LFS-tolerant automation"
       ]
+    },
+    {
+      "canonical_task": "/root/goon_map_pipeline",
+      "display_name": null,
+      "archive": "goon-map-pipeline.md",
+      "last_observed_status": "implementation and local validation completed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible report",
+      "topics": [
+        "Goonstation DMM/TGM parser",
+        "complete map inventory",
+        "deterministic map analysis",
+        "map grammar fixtures",
+        "pinned Git blob reads"
+      ]
+    },
+    {
+      "canonical_task": "/root/goon_interaction_research",
+      "display_name": "Goon Interaction Research",
+      "archive": "goon-interaction-research.md",
+      "last_observed_status": "completed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible report",
+      "topics": [
+        "Goonstation interaction research",
+        "room and area identity",
+        "doors and access",
+        "power and atmosphere",
+        "cargo, manufacturing, and jobs"
+      ]
+    },
+    {
+      "canonical_task": "/root/scenario_contract",
+      "display_name": null,
+      "archive": "scenario-contract.md",
+      "last_observed_status": "contract design and implementation audit completed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible report",
+      "topics": [
+        "native scenario schema",
+        "palette and run encoding",
+        "map provenance",
+        "mod replacement",
+        "save compatibility"
+      ]
+    },
+    {
+      "canonical_task": "/root/fixture_asset_pack",
+      "display_name": "Goon Fixture Assets",
+      "archive": "goon-fixture-assets.md",
+      "last_observed_status": "completed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible report",
+      "topics": [
+        "Goon fixture sprites",
+        "foundation media aliases",
+        "machine rendering",
+        "asset provenance",
+        "deterministic asset validation"
+      ]
+    },
+    {
+      "canonical_task": "/root/native_scenario_example",
+      "display_name": null,
+      "archive": "native-scenario-example.md",
+      "last_observed_status": "completed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible report",
+      "topics": [
+        "native scenario example",
+        "data-mod scenario_maps",
+        "strict scenario validation",
+        "objective and profile separation",
+        "powered salvage fixture"
+      ]
+    },
+    {
+      "canonical_task": "/root/atlas_docs_polish",
+      "display_name": null,
+      "archive": "atlas-docs-polish.md",
+      "last_observed_status": "documentation implementation and validation completed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible report",
+      "topics": [
+        "Atlas milestone documentation",
+        "native scenario implementation audit",
+        "map and asset provenance",
+        "mod authoring documentation",
+        "agent archive indexing"
+      ]
     }
   ]
 }

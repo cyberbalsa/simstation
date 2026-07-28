@@ -10,9 +10,11 @@ public-source Goonstation derivative: original engine code is MIT, while
 Goonstation-derived material remains CC BY-NC-SA 3.0 US.
 
 This checkout contains a runnable foundation and the complete design contract,
-not a finished 1.0 game. The foundation proves deterministic ticks, autonomous
-crew construction, per-tile atmosphere/fire, power, budgets and wages,
-recoverable incidents, save/load, native Goon media, and day-one mod loading.
+not a finished 1.0 game. The executable now starts 24 crew on a native
+192×192 adaptation of Goonstation's NCS Atlas. It proves deterministic ticks,
+access-controlled powered doors, per-tile atmosphere/fire, area power,
+autonomous construction and manufacturing, budgets and wages, recoverable
+incidents, save/load continuation, native Goon media, and day-one mod loading.
 The implementation stages for the full station simulation are tracked in the
 [production roadmap](docs/production/02-roadmap.md).
 
@@ -31,15 +33,23 @@ python3 tools/dev.py test
 python3 tools/dev.py audit
 ```
 
+Atlas is the default start. To launch any other native scenario already loaded
+from an enabled pack, pass its exact content ID to LÖVE:
+
+```sh
+python3 tools/dev.py run --scenario org.example.station:scenario/my-start
+```
+
 After cloning, run `git lfs pull` before starting the game. If media is absent
 or damaged, rendering falls back to readable generated shapes and audio fails
 quietly; simulation behavior remains identical.
 
-The current executable is the deterministic foundation/proving ground. It
-opens a generated station core, simulates crew, atmosphere, power, needs,
-budgets, work orders, and incidents, and exposes construction and time
-controls. The complete product contract and implementation roadmap live in
-[docs](docs/README.md).
+The current executable is the deterministic Atlas milestone. It expands the
+first-party `org.simstation.core:scenario/goon-atlas` definition, instantiates
+authored areas, utility fixtures, job spawns, and incident targets, then
+simulates crew, atmosphere, power, needs, budgets, work orders, manufacturing,
+and incidents. The complete product contract and implementation roadmap live
+in [docs](docs/README.md).
 
 ## Controls
 
@@ -51,6 +61,7 @@ controls. The complete product contract and implementation roadmap live in
 - Left click/drag: issue a blueprint
 - Right click or `Escape`: inspect tool
 - `M`: trigger the meteor/breach recovery scenario
+- `R`, `T`, `G`: queue steel, circuit, or control-assembly production
 - `F5`: save; `F9`: load
 - `F1`: help and diagnostics
 
@@ -61,10 +72,12 @@ contain compiled LÖVE-ready atlases and Ogg audio, not DMI parsing logic.
 Attribution and source hashes are generated from asset manifests.
 
 The upstream fork is pinned to Goonstation commit
-`1b2b250abb5be747d55e274de0203a59cfc8da78`. The current import preserves 5,868
-upstream files, compiles 46,160 sprite states into 134 portable PNG atlas
-pages, and catalogs 4,699 sounds. Normal startup reads only two compact
-foundation catalogs, four atlas pages, and sounds as events request them.
+`1b2b250abb5be747d55e274de0203a59cfc8da78`. The current import preserves 5,869
+upstream files, including `maps/atlas.dmm`, compiles 46,160 sprite states into
+134 portable PNG atlas pages, and catalogs 4,699 sounds. Normal startup reads
+only two compact foundation catalogs; their 12 sprite aliases reference eight
+atlas pages that are opened lazily, and sounds open only as events request
+them.
 
 Rebuild or verify the fork with:
 
@@ -78,6 +91,21 @@ python3 tools/assets.py audit
 python3 tools/assets.py verify-graphics
 python3 tools/assets.py verify-audio
 ```
+
+The pinned Atlas source is compiled to the native scenario format with:
+
+```sh
+python3 tools/map_import.py compile maps/atlas.dmm \
+  --scenario-id org.simstation.core:scenario/goon-atlas \
+  --name "NCS Atlas — Sim Station" \
+  --crop 61 61 252 252 --power-supply-w 750000 \
+  --pretty --output mods/org.simstation.core/scenarios/goon-atlas.json
+```
+
+DMM is an immutable authoring/provenance input; the game never parses it at
+runtime. See the
+[native-scenario contract](docs/technical/08-native-scenarios-and-map-import.md)
+for the adaptation rules and known omissions.
 
 ## Mods
 

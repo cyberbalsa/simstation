@@ -2,8 +2,10 @@ package.path = "./?.lua;./?/init.lua;" .. package.path
 
 local Stable = require("src.core.stable")
 local Rng = require("src.core.rng")
+local Constants = require("src.core.constants")
 local ContentId = require("src.content.id")
 local Simulation = require("src.core.simulation")
+local Scenario = require("src.core.scenario")
 local Json = require("src.vendor.json")
 local Resolver = require("src.mods.resolver")
 local Hooks = require("src.mods.hooks")
@@ -11,6 +13,8 @@ local Semver = require("src.mods.semver")
 local Manifest = require("src.mods.manifest")
 local Registry = require("src.content.registry")
 local ModLoader = require("src.mods.loader")
+local HookContext = require("src.mods.context")
+local RuntimeContent = require("src.content.runtime")
 
 local tests = {}
 
@@ -164,6 +168,7 @@ test("base content and trusted-code example load through one mod path", function
     "content/materials.json",
     "content/recipes.json",
     "content/structures.json",
+    "scenarios/goon-atlas.json",
     "locales/en.json",
   })
   local smart_files = read_files(smart_root, { "mod.toml", "lua/init.lua" })
@@ -180,7 +185,7 @@ test("base content and trusted-code example load through one mod path", function
     api_version = "0.1.0",
     trusted_code = { ["org.simstation.example.smart-grid"] = true },
   }))
-  equal(session.registry:report().definition_count, 20)
+  equal(session.registry:report().definition_count, 24)
   local allowed, reason = session.hooks:validate(
     "org.simstation.core:hook/command/validate",
     { kind = "disconnect_network", payload = { essential = true } },
@@ -223,6 +228,114 @@ test("base content and trusted-code example load through one mod path", function
     restored.mod_state["org.simstation.example.smart-grid"].restorations,
     1
   )
+end)
+
+test("salvage example loads and instantiates as a native scenario", function()
+  local core_root = "mods/org.simstation.core"
+  local salvage_root =
+    "mods/examples/org.simstation.example.salvage-scenario"
+  local core_files = read_files(core_root, {
+    "mod.toml",
+    "content/incidents.json",
+    "content/jobs.json",
+    "content/materials.json",
+    "content/recipes.json",
+    "content/structures.json",
+  })
+  local salvage_files = read_files(salvage_root, {
+    "mod.toml",
+    "content/recovery.json",
+    "scenarios/last-chance.json",
+  })
+  local session = assert(ModLoader.load({
+    { root = core_root, files = core_files },
+    { root = salvage_root, files = salvage_files },
+  }, { api_version = "0.1.0" }))
+  local content = RuntimeContent.from_registry(session.registry)
+  local scenario = assert(content.by_id[
+    "org.simstation.example.salvage-scenario:scenario/last-chance"
+  ])
+  local world, setup = Scenario.instantiate(scenario, content)
+
+  equal(world.width, 16)
+  equal(world.height, 16)
+  equal(#world.areas, 2)
+  equal(#setup.fixtures, 8)
+  equal(#setup.spawns, 4)
+  equal(#setup.meteor_targets, 2)
+  truthy(world.area_powered[1], "engineering should start powered")
+  truthy(world.area_powered[2], "cargo should start powered")
+  equal(
+    setup.starting_inventory["org.simstation.core:item/steel-sheet"],
+    20
+  )
+
+  local profile = assert(content.by_id[
+    "org.simstation.example.salvage-scenario:scenario-profile/last-chance"
+  ])
+  equal(profile.default_seed, 90210)
+  equal(profile.station_credits, 8000)
+  equal(profile.crew_count, 16)
+  equal(profile.objectives[1],
+    "org.simstation.example.salvage-scenario:objective/export-control-assemblies")
+
+  local invalid = Stable.deep_copy(scenario)
+  invalid.areas[1].key =
+    "org.example.other:scenario-area/last-chance/engineering"
+  local valid, validation_error = pcall(Scenario.validate, invalid, content)
+  truthy(not valid, "nested scenario IDs must remain in the scenario namespace")
+  truthy(tostring(validation_error):match("must belong to scenario"))
+
+  invalid = Stable.deep_copy(scenario)
+  invalid.map.unexpected = true
+  valid, validation_error = pcall(Scenario.validate, invalid, content)
+  truthy(not valid, "unknown native-map keys must be rejected")
+  truthy(tostring(validation_error):match("unknown key"))
+
+  invalid = Stable.deep_copy(scenario)
+  invalid.map.runs[1][3] = invalid.map.default_palette
+  valid, validation_error = pcall(Scenario.validate, invalid, content)
+  truthy(not valid, "default-valued map runs must be rejected")
+  truthy(tostring(validation_error):match("default palette"))
+
+  invalid = Stable.deep_copy(scenario)
+  local duplicate_cell = Stable.deep_copy(invalid.map.palette[1])
+  duplicate_cell.key = "duplicate-" .. duplicate_cell.key
+  invalid.map.palette[#invalid.map.palette + 1] = duplicate_cell
+  valid, validation_error = pcall(Scenario.validate, invalid, content)
+  truthy(not valid, "semantic palette duplicates must be rejected")
+  truthy(tostring(validation_error):match("duplicate semantic"))
+
+  local interior_wall
+  for index = 1, world.size do
+    if world.structure[index] == Constants.STRUCTURE.WALL then
+      local x, y = world:coordinates(index)
+      local neighbors = {
+        world:index(x, y - 1),
+        world:index(x - 1, y),
+        world:index(x + 1, y),
+        world:index(x, y + 1),
+      }
+      local exposed = false
+      for neighbor_index = 1, 4 do
+        local neighbor = neighbors[neighbor_index]
+        if not neighbor or world.tile[neighbor] == Constants.TILE.SPACE then
+          exposed = true
+          break
+        end
+      end
+      if not exposed then
+        interior_wall = { x = x, y = y }
+        break
+      end
+    end
+  end
+  truthy(interior_wall, "salvage fixture should contain an interior wall")
+  invalid = Stable.deep_copy(scenario)
+  invalid.meteor_targets = { interior_wall }
+  valid, validation_error = pcall(Scenario.instantiate, invalid, content)
+  truthy(not valid, "meteor targets must be exterior hull walls")
+  truthy(tostring(validation_error):match("not exterior"))
 end)
 
 test("simulation command stream is deterministic", function()
@@ -271,6 +384,141 @@ test("breaches depressurize an exposed hull cell", function()
     sim.world:step_atmosphere()
   end
   truthy(sim.world:pressure_dkpa(index) < before, "breach should lose pressure")
+end)
+
+test("native Atlas scenario manufactures and round-trips", function()
+  local core_root = "mods/org.simstation.core"
+  local files = read_files(core_root, {
+    "mod.toml",
+    "content/incidents.json",
+    "content/jobs.json",
+    "content/materials.json",
+    "content/recipes.json",
+    "content/structures.json",
+    "scenarios/goon-atlas.json",
+    "locales/en.json",
+  })
+  local session = assert(ModLoader.load({
+    { root = core_root, files = files },
+  }, { api_version = "0.1.0" }))
+  local content = RuntimeContent.from_registry(session.registry)
+  local scenario = assert(
+    content.by_id["org.simstation.core:scenario/goon-atlas"]
+  )
+  local sim = Simulation.new({
+    seed = 2026,
+    crew_count = 24,
+    content = content,
+    scenario = scenario,
+  })
+  equal(sim.world.width, 192)
+  equal(sim.world.height, 192)
+  equal(#sim.crew, 24)
+  equal(#sim.world.areas, 84, "Atlas should preserve authored areas")
+  equal(#sim.machines, 121, "Atlas should instantiate adapted fixtures")
+  equal(#scenario.spawns, 85, "Atlas should preserve authored job starts")
+  equal(#sim.scenario.meteor_targets, 64, "Atlas should expose stable hull targets")
+  equal(
+    scenario.provenance.sources[1].commit,
+    "1b2b250abb5be747d55e274de0203a59cfc8da78",
+    "Atlas provenance should pin the reviewed Goonstation commit"
+  )
+  equal(
+    sim.inventory["org.simstation.core:item/iron-ore"],
+    36,
+    "Atlas starting inventory should load"
+  )
+  local context = HookContext.new(sim)
+  equal(
+    context:query(
+      "inventory",
+      "org.simstation.core:item/iron-ore"
+    ),
+    36,
+    "hook queries should expose stable-ID inventory projections"
+  )
+  local metal_ids = context:definitions("item", "metal")
+  equal(#metal_ids, 1)
+  equal(metal_ids[1], "org.simstation.core:item/steel-sheet")
+  local copied_item = assert(context:definition(
+    "org.simstation.core:item/steel-sheet"
+  ))
+  copied_item.stack_limit = 1
+  equal(
+    content.by_id["org.simstation.core:item/steel-sheet"].stack_limit,
+    50,
+    "hook definitions must not expose mutable registry values"
+  )
+  truthy(context:query_tile(sim.world.map_id, 1, 1))
+  equal(
+    context:query_tile("org.example.missing:scenario/nope", 1, 1),
+    nil,
+    "tile queries should reject another map identity"
+  )
+
+  local security_door
+  for index = 1, sim.world.size do
+    if sim.world.structure[index] == Constants.STRUCTURE.DOOR_CLOSED
+      and sim.world.door_access[index] == "security"
+      and sim.world.powered[index]
+    then
+      security_door = index
+      break
+    end
+  end
+  truthy(security_door, "Atlas should contain a powered security door")
+  local allowed, denial = sim.world:can_open_door(
+    security_door,
+    { "public", "general" }
+  )
+  truthy(not allowed, "general crew should not open security doors")
+  equal(denial, "access denied")
+  truthy(sim.world:can_open_door(
+    security_door,
+    { "public", "security" }
+  ))
+  local topology_revision = sim.world.topology_revision
+  truthy(sim.world:open_door(
+    security_door,
+    sim.tick,
+    { "public", "security" }
+  ))
+  equal(
+    sim.world.topology_revision,
+    topology_revision,
+    "door animation should not invalidate access-aware paths"
+  )
+  sim.world:step_doors(Constants.DOOR_AUTO_CLOSE_TICKS, {})
+  equal(
+    sim.world.structure[security_door],
+    Constants.STRUCTURE.DOOR_CLOSED,
+    "powered doors should auto-close"
+  )
+
+  sim:enqueue("queue_recipe", {
+    recipe_id = "org.simstation.core:recipe/smelt-steel",
+  })
+  for _ = 1, 1200 do
+    sim:step()
+  end
+  equal(
+    sim.inventory["org.simstation.core:item/iron-ore"],
+    34,
+    "manufacturing should reserve recipe inputs"
+  )
+  truthy(
+    sim.inventory["org.simstation.core:item/steel-sheet"] >= 9,
+    "crew should complete steel production"
+  )
+  local restored = Simulation.from_snapshot(sim:snapshot(), {
+    content = content,
+  })
+  equal(restored:state_hash(), sim:state_hash())
+  for _ = 1, 120 do
+    sim:step()
+    restored:step()
+  end
+  equal(restored:state_hash(), sim:state_hash())
 end)
 
 local failures = 0

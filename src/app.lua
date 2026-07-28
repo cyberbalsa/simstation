@@ -6,9 +6,27 @@ local Ui = require("src.presentation.ui")
 local Audio = require("src.presentation.audio")
 local SaveStore = require("src.platform.save_store")
 local ModLoader = require("src.mods.loader")
+local RuntimeContent = require("src.content.runtime")
 
 local App = {}
 App.__index = App
+
+local DEFAULT_SCENARIO_ID = "org.simstation.core:scenario/goon-atlas"
+
+local function option_value(args, name)
+  local prefix = name .. "="
+  for index = 1, #(args or {}) do
+    local argument = args[index]
+    if argument == name then
+      return args[index + 1]
+    elseif type(argument) == "string"
+      and argument:sub(1, #prefix) == prefix
+    then
+      return argument:sub(#prefix + 1)
+    end
+  end
+  return nil
+end
 
 function App.new(args)
   local width, height = love.graphics.getDimensions()
@@ -22,12 +40,25 @@ function App.new(args)
   if trust_error and not mod_error then
     mod_error = { message = trust_error }
   end
+  local content = mod_session
+    and RuntimeContent.from_registry(mod_session.registry)
+    or { by_id = {}, by_kind = {}, ids = {} }
+  local requested_scenario_id = option_value(args, "--scenario")
+    or DEFAULT_SCENARIO_ID
+  local scenario = content.by_id[requested_scenario_id]
+  local scenario_error
+  if not scenario or scenario.kind ~= "scenario" then
+    scenario_error = "Unknown scenario " .. requested_scenario_id
+    scenario = content.by_id[DEFAULT_SCENARIO_ID]
+  end
   local simulation = Simulation.new({
     seed = 1337,
     width = Constants.DEFAULT_WORLD_WIDTH,
     height = Constants.DEFAULT_WORLD_HEIGHT,
     crew_count = Constants.DEFAULT_CREW_COUNT,
     hooks = mod_session and mod_session.hooks or false,
+    content = content,
+    scenario = scenario,
   })
   local mod_lock = {}
   if mod_session then
@@ -51,6 +82,7 @@ function App.new(args)
     save_store = SaveStore.new({
       mod_lock = mod_lock,
       hooks = mod_session and mod_session.hooks or false,
+      content = content,
     }),
     mod_session = mod_session,
     mod_error = mod_error,
@@ -62,7 +94,13 @@ function App.new(args)
     last_painted_index = false,
     now = 0,
   }, App)
-  if mod_session then
+  if scenario_error then
+    app.ui:set_notification(
+      scenario_error .. "; loaded the default instead",
+      0,
+      10
+    )
+  elseif mod_session then
     local report = mod_session.registry:report()
     app.ui:set_notification(
       trust_error
@@ -196,6 +234,18 @@ function App:keypressed(key, _, is_repeat)
     self:_set_tool("inspect")
   elseif key == "m" then
     self.simulation:enqueue("trigger_meteor")
+  elseif key == "r" then
+    self.simulation:enqueue("queue_recipe", {
+      recipe_id = "org.simstation.core:recipe/smelt-steel",
+    })
+  elseif key == "t" then
+    self.simulation:enqueue("queue_recipe", {
+      recipe_id = "org.simstation.core:recipe/fabricate-circuit",
+    })
+  elseif key == "g" then
+    self.simulation:enqueue("queue_recipe", {
+      recipe_id = "org.simstation.core:recipe/control-assembly",
+    })
   elseif key == "f1" then
     self.ui:toggle_help()
   elseif key == "f5" then

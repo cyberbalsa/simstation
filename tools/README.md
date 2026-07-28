@@ -19,12 +19,47 @@ Python 3.11+ and a LuaJIT/compatible Lua interpreter are always required.
 FFmpeg/FFprobe, and hydrated runtime media; `full` requires everything.
 `doctor` is read-only and returns `2` when a required capability is missing.
 
-`audit` runs the Lua suite, Python compilation, JSON/TOML parsing, the
-pure-core boundary check, local Markdown-link checks, pinned-workflow/toolchain
+`python3 tools/dev.py run` starts the default Atlas scenario. During mod
+development, launch a specific scenario that is present in the resolved pack
+set with:
+
+```text
+python3 tools/dev.py run --scenario org.example.pack:scenario/start-id
+```
+
+`test` runs both the deterministic Lua suite and the DMM/native-map Python
+fixture suite. `audit` adds Python compilation, JSON/TOML parsing, the pure-core
+boundary check, local Markdown-link checks, pinned-workflow/toolchain
 consistency, LFS attribute checks, and every bundled example-mod validator.
 Its default `--assets auto` mode runs the media catalog/hash audit when all LFS
 payloads are hydrated and reports an explicit skip for pointer-only CI
 checkouts. Use `--assets required` for a media handoff.
+
+## Goon map research and native scenarios
+
+`tools/map_import.py` reads maps from immutable Git blobs at the commit in
+`assets/upstream/goon/upstream.lock.toml`. It does not execute DM or require a
+dense checkout. Default JSON is compact and deterministically ordered;
+`--pretty` changes whitespace only.
+
+```text
+python3 tools/map_import.py inventory
+python3 tools/map_import.py inventory --prefix '' --max-depth -1 --pretty
+python3 tools/map_import.py analyze maps/atlas.dmm --top 25 --pretty
+python3 tools/map_import.py compile maps/atlas.dmm \
+  --scenario-id org.simstation.core:scenario/goon-atlas \
+  --name "NCS Atlas — Sim Station" \
+  --crop 61 61 252 252 --power-supply-w 750000 \
+  --pretty --output mods/org.simstation.core/scenarios/goon-atlas.json
+```
+
+`inventory` parsed all 570 maps in the pinned tree and reports structural
+irregularities separately from grammar failures. `compile` applies
+`goon-type-path-adapter-v1`, emits `simstation-map-v1`, and records exact
+commit/blob/byte hashes, crop orientation, unsupported paths, collisions, and
+placement omissions in the definition. The normal game reads only the emitted
+native JSON. Use `--allow-unpinned` solely for deliberate research; output from
+an unpinned revision is not a release candidate.
 
 ## Determinism and performance
 

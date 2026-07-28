@@ -1,0 +1,25 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aa" = (
+/obj/machinery/door{
+	dir = 4;
+	id = "engineering";
+	links = list("ignored_nested_assignment" = 1)
+	},
+/turf/simulated/floor,
+/area/station/engineering)
+"bb" = (
+/obj/table,
+/turf/simulated/floor/white,
+/area/station/medical)
+"cc" = (
+/turf/space,
+/area/space)
+
+(10,20,1) = {"
+aa
+bb
+"}
+(11,20,1) = {"
+aa
+cc
+"}

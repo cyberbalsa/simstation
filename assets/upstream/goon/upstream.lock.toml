@@ -6,6 +6,7 @@ import_format = 1
 [paths]
 graphics = ["icons", "assets/icons"]
 audio = ["sound"]
+maps = ["maps/atlas.dmm"]
 notices = [
   "LICENSE",
   "README.md",

@@ -53,7 +53,7 @@ content = ["content/**/*.json"]
 localization = ["locales/*.json"]
 atlas_indexes = ["generated/graphics/*.atlas.json.z"]
 audio_manifests = ["generated/audio/*.audio.json.z"]
-scenario_maps = ["generated/maps/*.json"]
+scenario_maps = ["scenarios/*.json"]
 
 [[dependencies]]
 id = "org.simstation.core"
@@ -167,6 +167,26 @@ and explicitly replace the complete definition.
 Files, sprite atlas coordinates, audio paths, localization resources, and Lua
 modules cannot be overwritten by path collision across packs. Logical IDs and
 documented replacement are the only override mechanism.
+
+### Native scenario files
+
+`scenario_maps` selects schema-1 documents containing complete
+`simstation-map-v1` scenario definitions. They are kept separate so package
+validation can enforce map dimensions, canonical palette runs, namespaced
+area/fixture/spawn IDs, physical anchors, and provenance before registry
+sealing. A scenario is still an ordinary registry definition: additions use
+the pack namespace and replacements follow the exact rules above.
+
+The game defaults to the first-party Atlas definition. Any loaded scenario can
+use the same startup path:
+
+```text
+python3 tools/dev.py run --scenario org.example.station:scenario/my-start
+```
+
+There is no title-screen picker yet. The complete schema and Goon conversion
+boundary are in
+[native scenarios and map import](../technical/08-native-scenarios-and-map-import.md).
 
 ## Load failure UX
 

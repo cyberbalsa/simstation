@@ -14,6 +14,7 @@ must grow toward these contracts without breaking their boundaries.
 5. [Audio import and runtime](05-audio.md)
 6. [Libraries and toolchain](06-libraries-and-toolchain.md)
 7. [Performance, testing, and packaging](07-performance-testing-packaging.md)
+8. [Native scenarios and Goon-informed map import](08-native-scenarios-and-map-import.md)
 
 Mod authors should then read the [modding specification](../modding/README.md).
 Milestones and release gates live in the
@@ -48,10 +49,16 @@ audio manifest, mod hook, or package format requires:
 
 ## Foundation status
 
-The current bootstrap already establishes LÖVE 11.5, a pure-Lua simulation,
-fixed constants for a 10 Hz scheduler, serial command queuing, stable
-pathfinding tie-breaks, named deterministic RNG instances, a 192×192 default
-map, and 16×16 dirty chunks. Its abbreviated command/event/save shapes are
-temporary schema-0 implementation details. New work must implement the
-versioned shapes in these documents rather than exposing those abbreviations as
-the public mod API.
+The current executable establishes LÖVE 11.5, a pure-Lua simulation, fixed
+constants for a 10 Hz scheduler, serial command queuing, stable pathfinding
+tie-breaks, named deterministic RNG instances, and 16×16 dirty chunks. Its
+normal start expands the first-party 192×192 native Atlas scenario into
+authoritative world arrays, 84 operational areas, 121 machine fixtures, 85 job
+spawn markers, and 64 reviewed breach targets.
+
+Area-powered access doors, vents/scrubbers, a bounded manufacturing loop,
+starting inventory, scenario-aware incidents, state hashing, and save/load
+continuation are implemented as a deterministic vertical slice. The broader
+command/event/save and station-system contracts in these documents remain the
+1.0 target; the exact implemented-versus-release gaps for native starts are
+tracked in the [scenario contract](08-native-scenarios-and-map-import.md#implementation-audit).

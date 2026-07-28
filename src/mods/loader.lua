@@ -128,7 +128,9 @@ function Loader.load(records, options)
     table.sort(names)
     for j = 1, #names do
       local path = names[j]
-      if matches_any(path, manifest.content) then
+      if matches_any(path, manifest.content)
+        or matches_any(path, manifest.scenario_maps)
+      then
         local ok, document = pcall(Json.decode, pack.files[path])
         if not ok then
           return nil, {

@@ -4,10 +4,6 @@ local Stable = require("src.core.stable")
 local World = {}
 World.__index = World
 
-local STANDARD_O2 = 21000
-local STANDARD_N2 = 79000
-local STANDARD_TEMPERATURE_MK = 293150
-
 local function filled_array(size, value)
   local result = {}
   for i = 1, size do
@@ -22,6 +18,7 @@ function World.new(width, height)
   local chunks_x = math.ceil(width / Constants.CHUNK_SIZE)
   local chunks_y = math.ceil(height / Constants.CHUNK_SIZE)
   return setmetatable({
+    map_id = false,
     width = width,
     height = height,
     size = size,
@@ -38,14 +35,21 @@ function World.new(width, height)
     plasma = filled_array(size, 0),
     n2o = filled_array(size, 0),
     vapor = filled_array(size, 0),
-    temperature_mk = filled_array(size, 2700),
+    temperature_mk = filled_array(size, Constants.SPACE_TEMPERATURE_MK),
     fire = filled_array(size, 0),
     dirty = filled_array(size, 0),
+    area = filled_array(size, 0),
+    areas = {},
+    door_access = filled_array(size, false),
+    door_close_tick = filled_array(size, 0),
+    open_door_indices = {},
     chunk_revision = filled_array(chunks_x * chunks_y, 1),
     topology_revision = 1,
     gas_revision = 1,
     power_revision = 1,
     generator_indices = {},
+    apc_indices = {},
+    area_powered = {},
     power_supply_w = 0,
     power_demand_w = 0,
     power_served_w = 0,
@@ -126,10 +130,10 @@ function World:seed_starting_core(center_x, center_y, half_width, half_height)
       local perimeter = x == min_x or x == max_x or y == min_y or y == max_y
       self.structure[index] = perimeter and Constants.STRUCTURE.WALL
         or Constants.STRUCTURE.EMPTY
-      self.temperature_mk[index] = STANDARD_TEMPERATURE_MK
+      self.temperature_mk[index] = Constants.STANDARD_TEMPERATURE_MK
       if not perimeter then
-        self.o2[index] = STANDARD_O2
-        self.n2[index] = STANDARD_N2
+        self.o2[index] = Constants.STANDARD_O2
+        self.n2[index] = Constants.STANDARD_N2
         self.cable[index] = true
       end
       self:touch(x, y, true)
@@ -146,8 +150,8 @@ function World:seed_starting_core(center_x, center_y, half_width, half_height)
     local x, y = doors[i][1], doors[i][2]
     local index = assert(self:index(x, y))
     self.structure[index] = Constants.STRUCTURE.DOOR_CLOSED
-    self.o2[index] = STANDARD_O2
-    self.n2[index] = STANDARD_N2
+    self.o2[index] = Constants.STANDARD_O2
+    self.n2[index] = Constants.STANDARD_N2
     self.cable[index] = true
     self:touch(x, y, true)
   end
@@ -202,7 +206,7 @@ function World:complete_blueprint(index)
   if kind == Constants.BLUEPRINT.FLOOR then
     self.tile[index] = Constants.TILE.FLOOR
     self.structure[index] = Constants.STRUCTURE.EMPTY
-    self.temperature_mk[index] = 2700
+    self.temperature_mk[index] = Constants.SPACE_TEMPERATURE_MK
   elseif kind == Constants.BLUEPRINT.WALL then
     self.structure[index] = Constants.STRUCTURE.WALL
   elseif kind == Constants.BLUEPRINT.DOOR then
@@ -223,6 +227,95 @@ function World:make_breach(x, y)
   self.structure[index] = Constants.STRUCTURE.EMPTY
   self:touch(x, y, true)
   return true
+end
+
+function World:area_record(index)
+  local area_id = index and self.area[index] or 0
+  return area_id and area_id > 0 and self.areas[area_id] or nil
+end
+
+local function has_access(credentials, required)
+  if not required or required == "public" then
+    return true
+  end
+  if credentials == "override" then
+    return true
+  end
+  for index = 1, #(credentials or {}) do
+    if credentials[index] == required or credentials[index] == "all" then
+      return true
+    end
+  end
+  return false
+end
+
+function World:can_open_door(index, credentials, override)
+  local structure = index and self.structure[index]
+  if structure ~= Constants.STRUCTURE.DOOR_CLOSED
+    and structure ~= Constants.STRUCTURE.DOOR_OPEN
+  then
+    return false, "tile is not a door"
+  end
+  if not override and not self.powered[index] then
+    return false, "door has no power"
+  end
+  if not override and not has_access(credentials, self.door_access[index]) then
+    return false, "access denied"
+  end
+  return true
+end
+
+function World:open_door(index, current_tick, credentials, override)
+  local allowed, reason = self:can_open_door(index, credentials, override)
+  if not allowed then
+    return false, reason
+  end
+  if self.structure[index] == Constants.STRUCTURE.DOOR_CLOSED then
+    self.structure[index] = Constants.STRUCTURE.DOOR_OPEN
+    local x, y = self:coordinates(index)
+    self:touch(x, y, false)
+  end
+  if self.door_close_tick[index] == 0 then
+    self.open_door_indices[#self.open_door_indices + 1] = index
+    table.sort(self.open_door_indices)
+  end
+  self.door_close_tick[index] =
+    current_tick + Constants.DOOR_AUTO_CLOSE_TICKS
+  return true
+end
+
+function World:close_door(index)
+  if self.structure[index] ~= Constants.STRUCTURE.DOOR_OPEN then
+    return false, "door is not open"
+  end
+  self.structure[index] = Constants.STRUCTURE.DOOR_CLOSED
+  self.door_close_tick[index] = 0
+  local x, y = self:coordinates(index)
+  self:touch(x, y, false)
+  return true
+end
+
+function World:step_doors(current_tick, occupied)
+  local write = 1
+  for read = 1, #self.open_door_indices do
+    local index = self.open_door_indices[read]
+    local keep = self.structure[index] == Constants.STRUCTURE.DOOR_OPEN
+    if keep and self.door_close_tick[index] <= current_tick then
+      if occupied[index] then
+        self.door_close_tick[index] = current_tick + 10
+      else
+        self:close_door(index)
+        keep = false
+      end
+    end
+    if keep then
+      self.open_door_indices[write] = index
+      write = write + 1
+    end
+  end
+  for index = #self.open_door_indices, write, -1 do
+    self.open_door_indices[index] = nil
+  end
 end
 
 local GAS_KEYS = { "o2", "n2", "co2", "plasma", "n2o", "vapor" }
@@ -363,12 +456,41 @@ function World:step_power()
     end
   end
 
+  local area_powered = {}
+  for area_id = 1, #self.areas do
+    area_powered[area_id] = false
+  end
+  for apc_index = 1, #self.apc_indices do
+    local apc = self.apc_indices[apc_index]
+    local connected = visited[apc.index]
+    if not connected then
+      local x, y = self:coordinates(apc.index)
+      local neighbors = {
+        self:index(x, y - 1),
+        self:index(x - 1, y),
+        self:index(x + 1, y),
+        self:index(x, y + 1),
+      }
+      for neighbor_index = 1, 4 do
+        local neighbor = neighbors[neighbor_index]
+        if neighbor and visited[neighbor] then
+          connected = true
+          break
+        end
+      end
+    end
+    if connected and apc.area > 0 then
+      area_powered[apc.area] = true
+    end
+  end
+  self.area_powered = area_powered
+
   local demand = 0
-  local connected = 0
   for i = 1, self.size do
+    local area_id = self.area[i]
     self.powered[i] = visited[i]
-    if visited[i] then
-      connected = connected + 1
+      or (area_id > 0 and area_powered[area_id] == true)
+    if self.powered[i] then
       if self.tile[i] == Constants.TILE.FLOOR then
         demand = demand + 25
       end
@@ -381,6 +503,7 @@ end
 
 function World:snapshot()
   return {
+    map_id = self.map_id,
     width = self.width,
     height = self.height,
     tile = self.tile,
@@ -397,11 +520,18 @@ function World:snapshot()
     temperature_mk = self.temperature_mk,
     fire = self.fire,
     dirty = self.dirty,
+    area = self.area,
+    areas = self.areas,
+    door_access = self.door_access,
+    door_close_tick = self.door_close_tick,
+    open_door_indices = self.open_door_indices,
     chunk_revision = self.chunk_revision,
     topology_revision = self.topology_revision,
     gas_revision = self.gas_revision,
     power_revision = self.power_revision,
     generator_indices = self.generator_indices,
+    apc_indices = self.apc_indices,
+    area_powered = self.area_powered,
     power_supply_w = self.power_supply_w,
     power_demand_w = self.power_demand_w,
     power_served_w = self.power_served_w,
@@ -425,13 +555,23 @@ function World.from_snapshot(snapshot)
     "temperature_mk",
     "fire",
     "dirty",
+    "area",
+    "door_access",
+    "door_close_tick",
+    "open_door_indices",
     "chunk_revision",
     "generator_indices",
+    "apc_indices",
   }
   for i = 1, #keys do
     local key = keys[i]
-    world[key] = Stable.deep_copy(snapshot[key])
+    if snapshot[key] ~= nil then
+      world[key] = Stable.deep_copy(snapshot[key])
+    end
   end
+  world.map_id = snapshot.map_id or false
+  world.areas = Stable.deep_copy(snapshot.areas or {})
+  world.area_powered = Stable.deep_copy(snapshot.area_powered or {})
   world.topology_revision = snapshot.topology_revision
   world.gas_revision = snapshot.gas_revision
   world.power_revision = snapshot.power_revision

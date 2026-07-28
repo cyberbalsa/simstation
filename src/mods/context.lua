@@ -56,12 +56,41 @@ function Context:pack_id()
   return self.current_pack_id
 end
 
-function Context:query()
+function Context:query(kind, stable_id)
+  if kind == "inventory" then
+    if stable_id ~= nil then
+      return self.simulation.inventory[stable_id] or 0
+    end
+    return Stable.deep_copy(self.simulation.inventory)
+  elseif kind == "machines" then
+    if stable_id ~= nil then
+      for index = 1, #self.simulation.machines do
+        local machine = self.simulation.machines[index]
+        if machine.scenario_fixture_id == stable_id then
+          return Stable.deep_copy(machine)
+        end
+      end
+      return nil
+    end
+    return Stable.deep_copy(self.simulation.machines)
+  elseif kind == "scenario" then
+    return Stable.deep_copy(self.simulation.scenario)
+  elseif kind == "station" then
+    return {
+      tick = self.simulation.tick,
+      station = Stable.deep_copy(self.simulation.station),
+      economy = Stable.deep_copy(self.simulation.economy),
+      metrics = Stable.deep_copy(self.simulation.metrics),
+    }
+  end
   return nil
 end
 
-function Context:query_tile(_, x, y)
+function Context:query_tile(map_id, x, y)
   local world = self.simulation.world
+  if map_id ~= nil and map_id ~= world.map_id then
+    return nil
+  end
   local index = world:index(x, y)
   if not index then
     return nil
@@ -74,15 +103,40 @@ function Context:query_tile(_, x, y)
     pressure_dkpa = world:pressure_dkpa(index),
     powered = world.powered[index],
     fire = world.fire[index],
+    area = world.area[index],
+    area_record = Stable.deep_copy(world:area_record(index)),
+    door_access = world.door_access[index],
   }
 end
 
-function Context:definitions()
-  return {}
+function Context:definitions(kind, tag)
+  local values = self.simulation.content
+    and self.simulation.content.by_kind
+    and self.simulation.content.by_kind[kind]
+    or {}
+  local result = {}
+  for index = 1, #values do
+    local definition = values[index]
+    local matches = tag == nil
+    for tag_index = 1, #(definition.tags or {}) do
+      if definition.tags[tag_index] == tag then
+        matches = true
+        break
+      end
+    end
+    if matches then
+      result[#result + 1] = definition.id
+    end
+  end
+  table.sort(result)
+  return result
 end
 
-function Context:definition()
-  return nil
+function Context:definition(id)
+  local value = self.simulation.content
+    and self.simulation.content.by_id
+    and self.simulation.content.by_id[id]
+  return value and Stable.deep_copy(value) or nil
 end
 
 function Context:enqueue(command_type, payload)

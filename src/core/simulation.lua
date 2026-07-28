@@ -5,6 +5,7 @@ local World = require("src.core.world")
 local EventLog = require("src.core.event_log")
 local CommandQueue = require("src.core.command_queue")
 local Pathfinding = require("src.core.pathfinding")
+local Scenario = require("src.core.scenario")
 local HookContext = require("src.mods.context")
 
 local Simulation = {}
@@ -41,6 +42,7 @@ local TASK_PRIORITY = {
   emergency = 1000,
   construction = 500,
   maintenance = 400,
+  manufacturing = 420,
   hauling = 300,
   service = 200,
 }
@@ -59,6 +61,86 @@ local BLUEPRINT_WORK = {
   door = 2400,
 }
 
+local JOB_DEPARTMENT = {
+  engineer = "engineering",
+  cargo_technician = "cargo",
+  doctor = "medical",
+  scientist = "science",
+  security_officer = "security",
+  botanist = "service",
+  chef = "service",
+  janitor = "service",
+  assistant = "general",
+}
+
+local JOB_ACCESS = {
+  engineer = { "public", "engineering", "maintenance" },
+  cargo_technician = { "public", "cargo" },
+  doctor = { "public", "medical" },
+  scientist = { "public", "science" },
+  security_officer = { "public", "security", "maintenance" },
+  botanist = { "public", "service" },
+  chef = { "public", "service" },
+  janitor = { "public", "service", "maintenance" },
+  assistant = { "public", "general" },
+}
+
+local MACHINE_TAG = {
+  fabricator = "fabricator",
+  refinery = "refinery",
+}
+
+local MACHINE_POWER_W = {
+  apc = 500,
+  battery = 250,
+  cargo_pad = 3000,
+  fabricator = 8000,
+  generator = 0,
+  generic = 250,
+  refinery = 12000,
+  scrubber = 1500,
+  vent = 1000,
+}
+
+local MACHINE_IDLE_POWER_W = {
+  apc = 100,
+  battery = 50,
+  cargo_pad = 100,
+  fabricator = 250,
+  generator = 0,
+  generic = 50,
+  refinery = 250,
+  scrubber = 1500,
+  vent = 1000,
+}
+
+local MACHINE_POWER_PRIORITY = {
+  apc = 1,
+  vent = 2,
+  scrubber = 2,
+  battery = 3,
+  generator = 3,
+  cargo_pad = 4,
+  refinery = 5,
+  fabricator = 5,
+  generic = 6,
+}
+
+local MACHINE_DEPARTMENT_PRIORITY = {
+  engineering = 1,
+  cargo = 2,
+  general = 3,
+  science = 4,
+  medical = 5,
+  service = 6,
+  security = 7,
+  command = 8,
+}
+
+local function job_content_id(job)
+  return "org.simstation.core:job/" .. job:gsub("_", "-")
+end
+
 local function center_core(world)
   local center_x = math.floor(world.width / 2)
   local center_y = math.floor(world.height / 2)
@@ -66,17 +148,85 @@ local function center_core(world)
   return center_x, center_y
 end
 
-local function spawn_crew(sim, count, center_x, center_y)
+local function nearest_passable(world, origin_x, origin_y)
+  local best_index
+  local best_distance
+  for index = 1, world.size do
+    if world:is_passable(index) then
+      local x, y = world:coordinates(index)
+      local distance = math.abs(x - origin_x) + math.abs(y - origin_y)
+      if not best_distance
+        or distance < best_distance
+        or (distance == best_distance and index < best_index)
+      then
+        best_index = index
+        best_distance = distance
+      end
+    end
+  end
+  return best_index
+end
+
+local function choose_spawn(sim, job, center_x, center_y, spawns, usage)
+  local department = JOB_DEPARTMENT[job] or "general"
+  local job_id = job_content_id(job)
+  local candidates = {}
+  for index = 1, #(spawns or {}) do
+    local spawn = spawns[index]
+    if spawn.job == job_id or spawn.job == job then
+      candidates[#candidates + 1] = spawn
+    end
+  end
+  if #candidates == 0 then
+    for index = 1, #(spawns or {}) do
+      local spawn = spawns[index]
+      if spawn.department == department then
+        candidates[#candidates + 1] = spawn
+      end
+    end
+  end
+  if #candidates == 0 then
+    for index = 1, #(spawns or {}) do
+      local spawn = spawns[index]
+      if (spawn.department or "general") == "general" then
+        candidates[#candidates + 1] = spawn
+      end
+    end
+  end
+  if #candidates > 0 then
+    local used = usage[job] or 0
+    usage[job] = used + 1
+    local selected = candidates[(used % #candidates) + 1]
+    return selected.x, selected.y
+  end
+  return center_x + sim.rngs.crew:integer(-10, 10),
+    center_y + sim.rngs.crew:integer(-7, 7)
+end
+
+local function spawn_crew(sim, count, center_x, center_y, spawns)
   local world = sim.world
+  local spawn_usage = {}
   for i = 1, count do
     local job = Constants.JOBS[((i - 1) % #Constants.JOBS) + 1]
-    local x = center_x + sim.rngs.crew:integer(-10, 10)
-    local y = center_y + sim.rngs.crew:integer(-7, 7)
-    local index = assert(world:index(x, y))
+    local x, y = choose_spawn(
+      sim,
+      job,
+      center_x,
+      center_y,
+      spawns,
+      spawn_usage
+    )
+    local index = world:index(x, y)
+    if not index or not world:is_passable(index) then
+      index = assert(nearest_passable(world, x, y), "scenario has no passable spawn")
+    end
     sim.crew[#sim.crew + 1] = {
       id = sim.next_entity_id,
       name = CREW_NAMES[((i - 1) % #CREW_NAMES) + 1] .. " " .. tostring(i),
       job = job,
+      job_id = job_content_id(job),
+      department = JOB_DEPARTMENT[job] or "general",
+      access = Stable.deep_copy(JOB_ACCESS[job] or { "public" }),
       index = index,
       health = 1000,
       hunger = sim.rngs.crew:integer(20, 120),
@@ -94,13 +244,46 @@ local function spawn_crew(sim, count, center_x, center_y)
   end
 end
 
+local function spawn_machines(sim, fixtures)
+  for index = 1, #(fixtures or {}) do
+    local fixture = fixtures[index]
+    local machine = {
+      id = sim.next_entity_id,
+      scenario_fixture_id = fixture.id,
+      kind = fixture.kind,
+      name = fixture.name or fixture.kind:gsub("_", " "),
+      index = fixture.index,
+      x = fixture.x,
+      y = fixture.y,
+      department = fixture.department or "general",
+      machine_tag = MACHINE_TAG[fixture.kind] or false,
+      power_watts = MACHINE_POWER_W[fixture.kind] or MACHINE_POWER_W.generic,
+      state = "idle",
+      task_id = false,
+      recipe_id = false,
+      powered = false,
+      requested_watts = 0,
+      source_path = fixture.source_path or false,
+    }
+    sim.machines[#sim.machines + 1] = machine
+    sim.next_entity_id = sim.next_entity_id + 1
+  end
+end
+
 function Simulation.new(options)
   options = options or {}
   local seed = math.floor(options.seed or 1337)
-  local world = World.new(
-    options.width or Constants.DEFAULT_WORLD_WIDTH,
-    options.height or Constants.DEFAULT_WORLD_HEIGHT
-  )
+  local content = options.content or { by_id = {}, by_kind = {}, ids = {} }
+  local world
+  local scenario_setup
+  if options.scenario then
+    world, scenario_setup = Scenario.instantiate(options.scenario, content)
+  else
+    world = World.new(
+      options.width or Constants.DEFAULT_WORLD_WIDTH,
+      options.height or Constants.DEFAULT_WORLD_HEIGHT
+    )
+  end
   local sim = setmetatable({
     schema_version = Constants.SCHEMA_VERSION,
     seed = seed,
@@ -111,6 +294,7 @@ function Simulation.new(options)
     paused = false,
     world = world,
     crew = {},
+    machines = {},
     tasks = {},
     next_entity_id = 1,
     next_task_id = 1,
@@ -121,6 +305,23 @@ function Simulation.new(options)
     },
     commands = CommandQueue.new(),
     events = EventLog.new(),
+    content = content,
+    inventory = Stable.deep_copy(
+      scenario_setup and scenario_setup.starting_inventory or {}
+    ),
+    scenario = {
+      id = scenario_setup and scenario_setup.scenario_id
+        or "org.simstation.core:scenario/bootstrap-contract",
+      provenance = Stable.deep_copy(
+        scenario_setup and scenario_setup.provenance or {}
+      ),
+      schema = scenario_setup and scenario_setup.scenario_schema or 1,
+      map_format = scenario_setup and scenario_setup.map_format
+        or "procedural-foundation-v1",
+      meteor_targets = Stable.deep_copy(
+        scenario_setup and scenario_setup.meteor_targets or {}
+      ),
+    },
     economy = {
       station_credits = 50000,
       material_units = 300,
@@ -139,7 +340,7 @@ function Simulation.new(options)
       },
     },
     station = {
-      name = "NSS Bootstrap",
+      name = scenario_setup and scenario_setup.station_name or "NSS Bootstrap",
       grade = "C",
       alerts = {},
       incident_threat = 0,
@@ -155,12 +356,26 @@ function Simulation.new(options)
     mod_diagnostics = {},
   }, Simulation)
 
-  local center_x, center_y = center_core(world)
-  spawn_crew(sim, options.crew_count or Constants.DEFAULT_CREW_COUNT, center_x, center_y)
-  world:step_power()
+  local center_x, center_y
+  if scenario_setup then
+    center_x = math.floor(world.width / 2)
+    center_y = math.floor(world.height / 2)
+    spawn_machines(sim, scenario_setup.fixtures)
+  else
+    center_x, center_y = center_core(world)
+  end
+  spawn_crew(
+    sim,
+    options.crew_count or Constants.DEFAULT_CREW_COUNT,
+    center_x,
+    center_y,
+    scenario_setup and scenario_setup.spawns or nil
+  )
+  sim:_step_power()
   sim.events:emit(0, "station_started", {
     station = sim.station.name,
     seed = seed,
+    scenario = sim.scenario.id,
   })
   sim.last_state_hash = sim:state_hash()
   return sim
@@ -199,6 +414,109 @@ function Simulation:_task_by_id(task_id)
   return nil
 end
 
+function Simulation:_machine_by_id(machine_id)
+  for index = 1, #self.machines do
+    if self.machines[index].id == machine_id then
+      return self.machines[index]
+    end
+  end
+  return nil
+end
+
+function Simulation:_recipe(recipe_id)
+  local recipe = self.content
+    and self.content.by_id
+    and self.content.by_id[recipe_id]
+  if not recipe or recipe.kind ~= "recipe" then
+    return nil
+  end
+  return recipe
+end
+
+function Simulation:_step_power()
+  self.world:step_power()
+  local ordered = {}
+  for index = 1, #self.machines do
+    ordered[index] = self.machines[index]
+  end
+  table.sort(ordered, function(a, b)
+    local a_priority = MACHINE_POWER_PRIORITY[a.kind] or 100
+    local b_priority = MACHINE_POWER_PRIORITY[b.kind] or 100
+    if a_priority ~= b_priority then
+      return a_priority < b_priority
+    end
+    return a.id < b.id
+  end)
+
+  local available = math.max(
+    0,
+    self.world.power_supply_w - self.world.power_served_w
+  )
+  local machine_demand = 0
+  local machine_served = 0
+  for index = 1, #ordered do
+    local machine = ordered[index]
+    local request = MACHINE_IDLE_POWER_W[machine.kind]
+      or MACHINE_IDLE_POWER_W.generic
+    if machine.task_id then
+      local recipe = self:_recipe(machine.recipe_id)
+      request = recipe and recipe.power_watts
+        or machine.power_watts
+        or request
+    end
+    request = math.max(0, math.floor(request))
+    machine.requested_watts = request
+    machine_demand = machine_demand + request
+    local connected = machine.kind == "generator"
+      or self.world.powered[machine.index] == true
+    if connected and request <= available then
+      machine.powered = true
+      available = available - request
+      machine_served = machine_served + request
+    else
+      machine.powered = request == 0 and connected or false
+    end
+  end
+  self.world.power_demand_w = self.world.power_demand_w + machine_demand
+  self.world.power_served_w = self.world.power_served_w + machine_served
+end
+
+function Simulation:_step_atmos_fixtures()
+  for index = 1, #self.machines do
+    local machine = self.machines[index]
+    local tile_index = machine.index
+    if machine.powered and machine.kind == "vent" then
+      local o2_deficit = math.max(
+        0,
+        Constants.STANDARD_O2 - self.world.o2[tile_index]
+      )
+      local n2_deficit = math.max(
+        0,
+        Constants.STANDARD_N2 - self.world.n2[tile_index]
+      )
+      self.world.o2[tile_index] = self.world.o2[tile_index]
+        + math.min(1200, o2_deficit)
+      self.world.n2[tile_index] = self.world.n2[tile_index]
+        + math.min(4800, n2_deficit)
+      if o2_deficit > 0 or n2_deficit > 0 then
+        self.world.gas_revision = self.world.gas_revision + 1
+      end
+    elseif machine.powered and machine.kind == "scrubber" then
+      local changed = false
+      local species = { "co2", "plasma", "n2o", "vapor" }
+      for species_index = 1, #species do
+        local key = species[species_index]
+        local before = self.world[key][tile_index]
+        self.world[key][tile_index] = math.max(0, before - 1500)
+        changed = changed or before ~= self.world[key][tile_index]
+      end
+      if changed then
+        self.world.gas_revision = self.world.gas_revision + 1
+      end
+    end
+  end
+end
+
 function Simulation:_create_construction_task(tile_index, blueprint)
   local task = {
     id = self.next_task_id,
@@ -214,6 +532,81 @@ function Simulation:_create_construction_task(tile_index, blueprint)
   self.next_task_id = self.next_task_id + 1
   self.tasks[#self.tasks + 1] = task
   return task
+end
+
+function Simulation:_queue_recipe(recipe_id, requested_machine_id)
+  local recipe = self:_recipe(recipe_id)
+  if not recipe then
+    return false, "unknown recipe: " .. tostring(recipe_id)
+  end
+  local machine
+  for index = 1, #self.machines do
+    local candidate = self.machines[index]
+    local selected = not requested_machine_id
+      or candidate.id == requested_machine_id
+    if selected
+      and not candidate.task_id
+      and candidate.machine_tag == recipe.machine_tag
+      and (
+        not machine
+        or (
+          MACHINE_DEPARTMENT_PRIORITY[candidate.department] or 100
+        ) < (
+          MACHINE_DEPARTMENT_PRIORITY[machine.department] or 100
+        )
+        or (
+          candidate.department == machine.department
+          and candidate.id < machine.id
+        )
+      )
+    then
+      machine = candidate
+    end
+  end
+  if not machine then
+    return false, "no idle " .. tostring(recipe.machine_tag) .. " is available"
+  end
+
+  local inputs = recipe.inputs or {}
+  for index = 1, #inputs do
+    local input = inputs[index]
+    local available = self.inventory[input.id] or 0
+    if available < input.quantity then
+      return false, "insufficient " .. tostring(input.id)
+    end
+  end
+  for index = 1, #inputs do
+    local input = inputs[index]
+    self.inventory[input.id] = (self.inventory[input.id] or 0)
+      - input.quantity
+  end
+
+  local task = {
+    id = self.next_task_id,
+    kind = "manufacturing",
+    recipe_id = recipe.id,
+    machine_id = machine.id,
+    target_index = machine.index,
+    priority = TASK_PRIORITY.manufacturing,
+    state = "offered",
+    claimed_by = false,
+    work_remaining = math.max(1, math.floor(recipe.duration_ticks)) * 100,
+    created_tick = self.tick,
+    reserved_inputs = Stable.deep_copy(inputs),
+    outputs = Stable.deep_copy(recipe.outputs or {}),
+  }
+  self.next_task_id = self.next_task_id + 1
+  self.tasks[#self.tasks + 1] = task
+  machine.task_id = task.id
+  machine.recipe_id = recipe.id
+  self:_step_power()
+  machine.state = machine.powered and "queued" or "unpowered"
+  self:_emit("manufacturing_queued", {
+    task_id = task.id,
+    machine_id = machine.id,
+    recipe_id = recipe.id,
+  })
+  return true
 end
 
 function Simulation:_apply_command(command)
@@ -261,15 +654,27 @@ function Simulation:_apply_command(command)
     end
     local structure = self.world.structure[index]
     if structure == Constants.STRUCTURE.DOOR_CLOSED then
-      self.world.structure[index] = Constants.STRUCTURE.DOOR_OPEN
+      local opened, reason = self.world:open_door(
+        index,
+        self.tick,
+        "override",
+        true
+      )
+      if not opened then
+        return false, reason
+      end
     elseif structure == Constants.STRUCTURE.DOOR_OPEN then
-      self.world.structure[index] = Constants.STRUCTURE.DOOR_CLOSED
+      local closed, reason = self.world:close_door(index)
+      if not closed then
+        return false, reason
+      end
     else
       return false, "tile is not a door"
     end
-    self.world:touch(payload.x, payload.y, true)
     self:_emit("door_toggled", { x = payload.x, y = payload.y })
     return true
+  elseif command.kind == "queue_recipe" then
+    return self:_queue_recipe(payload.recipe_id, payload.machine_id)
   elseif command.kind == "trigger_meteor" then
     self:_trigger_meteor(true)
     return true
@@ -313,6 +718,12 @@ local function task_score(sim, crew, task)
   if task.state ~= "offered" then
     return nil
   end
+  if task.kind == "manufacturing" then
+    local machine = sim:_machine_by_id(task.machine_id)
+    if not machine or not machine.powered then
+      return nil
+    end
+  end
   local crew_x, crew_y = sim.world:coordinates(crew.index)
   local task_x, task_y = sim.world:coordinates(task.target_index)
   local distance = math.abs(crew_x - task_x) + math.abs(crew_y - task_y)
@@ -324,6 +735,14 @@ local function task_score(sim, crew, task)
       qualification = 120
     else
       qualification = -100
+    end
+  elseif task.kind == "manufacturing" then
+    if crew.job == "engineer" or crew.job == "cargo_technician" then
+      qualification = 300
+    elseif crew.job == "scientist" or crew.job == "assistant" then
+      qualification = 100
+    else
+      qualification = -150
     end
   end
   local score = task.priority
@@ -362,13 +781,27 @@ local function task_work_index(world, task)
   for i = 1, 4 do
     local index = candidates[i]
     if index
-      and world.tile[index] == Constants.TILE.FLOOR
-      and world.structure[index] ~= Constants.STRUCTURE.WALL
+      and world:is_passable(index)
     then
       return index
     end
   end
   return nil
+end
+
+local function find_path_for_crew(sim, crew, target_index)
+  return Pathfinding.find(
+    sim.world,
+    crew.index,
+    target_index,
+    math.min(sim.world.size, 16384),
+    function(index)
+      if sim.world.structure[index] == Constants.STRUCTURE.DOOR_CLOSED then
+        return sim.world:can_open_door(index, crew.access)
+      end
+      return true
+    end
+  )
 end
 
 function Simulation:_claim_task(crew)
@@ -391,7 +824,7 @@ function Simulation:_claim_task(crew)
   if not work_index then
     return
   end
-  local path = Pathfinding.find(self.world, crew.index, work_index)
+  local path = find_path_for_crew(self, crew, work_index)
   if not path then
     return
   end
@@ -438,7 +871,7 @@ function Simulation:_work_crew(crew)
   if crew.path_revision ~= self.world.topology_revision then
     local work_index = task_work_index(self.world, task)
     local path = work_index
-      and Pathfinding.find(self.world, crew.index, work_index)
+      and find_path_for_crew(self, crew, work_index)
     if not path then
       self:_release_task(crew, task, "route invalidated")
       return
@@ -455,7 +888,7 @@ function Simulation:_work_crew(crew)
       if not next_index then
         local work_index = task_work_index(self.world, task)
         local path = work_index
-          and Pathfinding.find(self.world, crew.index, work_index)
+          and find_path_for_crew(self, crew, work_index)
         if not path then
           self:_release_task(crew, task, "target unreachable")
           return
@@ -467,10 +900,15 @@ function Simulation:_work_crew(crew)
       if next_index then
         local structure = self.world.structure[next_index]
         if structure == Constants.STRUCTURE.DOOR_CLOSED then
-          self.world.structure[next_index] = Constants.STRUCTURE.DOOR_OPEN
-          local x, y = self.world:coordinates(next_index)
-          self.world:touch(x, y, true)
-          crew.path_revision = self.world.topology_revision
+          local opened, reason = self.world:open_door(
+            next_index,
+            self.tick,
+            crew.access
+          )
+          if not opened then
+            self:_release_task(crew, task, reason or "door unavailable")
+            return
+          end
         end
         crew.index = next_index
       end
@@ -479,23 +917,62 @@ function Simulation:_work_crew(crew)
     return
   end
 
+  if task.kind == "manufacturing" then
+    local machine = self:_machine_by_id(task.machine_id)
+    if not machine then
+      task.state = "failed"
+      self.metrics.failed_tasks = self.metrics.failed_tasks + 1
+      crew.task_id = false
+      crew.path = {}
+      return
+    end
+    if not machine.powered then
+      machine.state = "unpowered"
+      return
+    end
+    machine.state = "working"
+  end
   task.state = "executing"
   task.work_remaining = task.work_remaining - crew.work_skill
   crew.fatigue = Stable.clamp(crew.fatigue + 1, 0, 1000)
   if task.work_remaining <= 0 then
-    local completed, kind = self.world:complete_blueprint(task.target_index)
-    if completed then
+    if task.kind == "construction" then
+      local completed, kind = self.world:complete_blueprint(task.target_index)
+      if completed then
+        task.state = "completed"
+        self.metrics.completed_tasks = self.metrics.completed_tasks + 1
+        self.metrics.construction_completed =
+          self.metrics.construction_completed + 1
+        self:_emit("construction_completed", {
+          task_id = task.id,
+          crew_id = crew.id,
+          blueprint = kind,
+        })
+      else
+        task.state = "failed"
+        self.metrics.failed_tasks = self.metrics.failed_tasks + 1
+      end
+    elseif task.kind == "manufacturing" then
+      local machine = self:_machine_by_id(task.machine_id)
+      for output_index = 1, #(task.outputs or {}) do
+        local output = task.outputs[output_index]
+        self.inventory[output.id] = (self.inventory[output.id] or 0)
+          + output.quantity
+      end
       task.state = "completed"
       self.metrics.completed_tasks = self.metrics.completed_tasks + 1
-      self.metrics.construction_completed = self.metrics.construction_completed + 1
-      self:_emit("construction_completed", {
+      if machine then
+        machine.task_id = false
+        machine.recipe_id = false
+        machine.state = "idle"
+      end
+      self:_step_power()
+      self:_emit("manufacturing_completed", {
         task_id = task.id,
         crew_id = crew.id,
-        blueprint = kind,
+        machine_id = task.machine_id,
+        recipe_id = task.recipe_id,
       })
-    else
-      task.state = "failed"
-      self.metrics.failed_tasks = self.metrics.failed_tasks + 1
     end
     crew.task_id = false
     crew.path = {}
@@ -509,6 +986,13 @@ function Simulation:_step_crew()
   for i = 1, #self.crew do
     self:_work_crew(self.crew[i])
   end
+  local occupied = {}
+  for index = 1, #self.crew do
+    if self.crew[index].alive then
+      occupied[self.crew[index].index] = true
+    end
+  end
+  self.world:step_doors(self.tick, occupied)
 end
 
 function Simulation:_step_needs_and_health()
@@ -589,20 +1073,38 @@ function Simulation:_finish_shift()
 end
 
 function Simulation:_trigger_meteor(forced)
-  local center_x = math.floor(self.world.width / 2)
-  local center_y = math.floor(self.world.height / 2)
-  local side = self.rngs.incidents:integer(1, 4)
   local x, y
-  if side == 1 then
-    x, y = center_x, center_y - 11
-  elseif side == 2 then
-    x, y = center_x + 15, center_y
-  elseif side == 3 then
-    x, y = center_x, center_y + 11
+  local targets = self.scenario.meteor_targets or {}
+  if #targets > 0 then
+    local selected = self.rngs.incidents:integer(1, #targets)
+    for offset = 0, #targets - 1 do
+      local target = targets[((selected + offset - 1) % #targets) + 1]
+      local target_index = self.world:index(target.x, target.y)
+      if target_index
+        and self.world.structure[target_index] == Constants.STRUCTURE.WALL
+      then
+        x, y = target.x, target.y
+        break
+      end
+    end
   else
-    x, y = center_x - 15, center_y
+    local center_x = math.floor(self.world.width / 2)
+    local center_y = math.floor(self.world.height / 2)
+    local side = self.rngs.incidents:integer(1, 4)
+    if side == 1 then
+      x, y = center_x, center_y - 11
+    elseif side == 2 then
+      x, y = center_x + 15, center_y
+    elseif side == 3 then
+      x, y = center_x, center_y + 11
+    else
+      x, y = center_x - 15, center_y
+    end
   end
-  self.world:make_breach(x, y)
+  if not x or not self.world:make_breach(x, y) then
+    self:_emit("meteor_missed", { forced = not not forced })
+    return false
+  end
   local index = assert(self.world:index(x, y))
   self.world.fire[index] = forced and 4 or 2
   self.station.alerts[#self.station.alerts + 1] = {
@@ -617,6 +1119,7 @@ function Simulation:_trigger_meteor(forced)
     y = y,
     forced = not not forced,
   })
+  return true
 end
 
 function Simulation:_step_incidents()
@@ -636,9 +1139,10 @@ function Simulation:step()
 
   if self.tick % Constants.GAS_STEP_TICKS == 0 then
     self.world:step_atmosphere()
+    self:_step_atmos_fixtures()
   end
   if self.tick % Constants.POWER_STEP_TICKS == 0 then
-    self.world:step_power()
+    self:_step_power()
   end
   if self.tick % Constants.NEEDS_STEP_TICKS == 0 then
     self:_step_needs_and_health()
@@ -666,7 +1170,10 @@ function Simulation:render_snapshot()
     paused = self.paused,
     world = self.world,
     crew = self.crew,
+    machines = self.machines,
     tasks = self.tasks,
+    inventory = self.inventory,
+    scenario = self.scenario,
     economy = self.economy,
     station = self.station,
     metrics = self.metrics,
@@ -696,7 +1203,10 @@ function Simulation:snapshot()
     paused = self.paused,
     world = self.world:snapshot(),
     crew = Stable.deep_copy(self.crew),
+    machines = Stable.deep_copy(self.machines),
     tasks = Stable.deep_copy(self.tasks),
+    inventory = Stable.deep_copy(self.inventory),
+    scenario = Stable.deep_copy(self.scenario),
     next_entity_id = self.next_entity_id,
     next_task_id = self.next_task_id,
     rngs = rngs,
@@ -722,7 +1232,18 @@ function Simulation.from_snapshot(snapshot, options)
     paused = snapshot.paused,
     world = World.from_snapshot(snapshot.world),
     crew = Stable.deep_copy(snapshot.crew),
+    machines = Stable.deep_copy(snapshot.machines or {}),
     tasks = Stable.deep_copy(snapshot.tasks),
+    content = options.content or { by_id = {}, by_kind = {}, ids = {} },
+    inventory = Stable.deep_copy(snapshot.inventory or {}),
+    scenario = Stable.deep_copy(snapshot.scenario or {
+      id = snapshot.world.map_id
+        or "org.simstation.core:scenario/bootstrap-contract",
+      schema = 1,
+      map_format = "procedural-foundation-v1",
+      provenance = {},
+      meteor_targets = {},
+    }),
     next_entity_id = snapshot.next_entity_id,
     next_task_id = snapshot.next_task_id,
     rngs = {

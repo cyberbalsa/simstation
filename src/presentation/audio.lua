@@ -192,6 +192,10 @@ function Audio:_handle_event(snapshot, event, now)
     self:_play(self:_door_alias(snapshot, event.payload), now)
   elseif kind == "construction_completed" then
     self:_play("construction", now)
+  elseif kind == "manufacturing_queued" then
+    self:_play("ui_click", now)
+  elseif kind == "manufacturing_completed" then
+    self:_play("construction", now)
   elseif kind == "command_rejected" then
     self:_play("rejected", now)
   elseif kind == "crew_incapacitated" then

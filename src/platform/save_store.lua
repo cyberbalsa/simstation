@@ -13,6 +13,7 @@ function SaveStore.new(options)
     filename = options.filename or "quicksave.sssave",
     mod_lock = options.mod_lock or {},
     hooks = options.hooks or false,
+    content = options.content or { by_id = {}, by_kind = {}, ids = {} },
   }, SaveStore)
 end
 
@@ -24,10 +25,15 @@ function SaveStore:encode(simulation)
   local header = Json.encode({
     container_version = 1,
     schema_version = simulation.schema_version,
-    game_version = "0.0.1-foundation",
+    game_version = "0.1.0-atlas",
     tick = simulation.tick,
     seed = simulation.seed,
     station = simulation.station.name,
+    scenario = {
+      id = simulation.scenario.id,
+      schema = simulation.scenario.schema,
+      map_format = simulation.scenario.map_format,
+    },
     mods = self.mod_lock,
   })
   local payload = Json.encode(simulation:snapshot())
@@ -76,7 +82,7 @@ function SaveStore:decode(data)
   local restore_ok, simulation = pcall(
     Simulation.from_snapshot,
     snapshot,
-    { hooks = self.hooks }
+    { hooks = self.hooks, content = self.content }
   )
   if not restore_ok then
     return nil, "save restore failed: " .. tostring(simulation)

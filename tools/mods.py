@@ -15,7 +15,6 @@ import tomllib
 import unicodedata
 import zipfile
 
-
 ROOT = Path(__file__).resolve().parents[1]
 PACK_ID = re.compile(r"^[a-z0-9][a-z0-9-]*(?:\.[a-z0-9][a-z0-9-]*)+$")
 SEMVER = re.compile(
@@ -154,7 +153,9 @@ def archive_files(archive: Path) -> list[tuple[str, bytes]]:
                 raise ModError("archive expands beyond the 2 GiB package limit")
             if info.compress_size == 0:
                 if info.file_size > 0:
-                    raise ModError(f"archive entry has invalid compression size: {name}")
+                    raise ModError(
+                        f"archive entry has invalid compression size: {name}"
+                    )
             elif info.file_size / info.compress_size > MAX_RATIO:
                 raise ModError(f"archive entry exceeds compression ratio limit: {name}")
             data = package.read(info)
@@ -240,27 +241,471 @@ def glob_matches(pattern: str, names: list[str]) -> list[str]:
     return sorted(
         name
         for name in names
-        if fnmatch.fnmatchcase(name, pattern)
-        or PurePosixPath(name).match(pattern)
+        if fnmatch.fnmatchcase(name, pattern) or PurePosixPath(name).match(pattern)
     )
+
+
+def content_id_kind(value: object, expected: str, label: str) -> re.Match[str]:
+    match = CONTENT_ID.fullmatch(str(value or ""))
+    if not match or match.group("kind") != expected:
+        raise ModError(f"{label}: expected namespaced {expected} content ID")
+    return match
+
+
+def exact_integer(value: object) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
+def validate_scenario(definition: dict, path: str, index: int) -> None:
+    prefix = f"{path}/definitions/{index}"
+    allowed_definition = {
+        "id",
+        "kind",
+        "schema",
+        "name",
+        "description",
+        "replaces",
+        "provenance",
+        "areas",
+        "map",
+        "fixtures",
+        "spawns",
+        "meteor_targets",
+        "power_supply_w",
+        "starting_inventory",
+    }
+    unknown = sorted(set(definition) - allowed_definition)
+    if unknown:
+        raise ModError(f"{prefix}: unknown scenario keys: {', '.join(unknown)}")
+    if definition.get("kind") != "scenario" or definition.get("schema") != 1:
+        raise ModError(f"{prefix}: scenario maps require kind=scenario and schema=1")
+    scenario_match = content_id_kind(
+        definition.get("id"),
+        "scenario",
+        f"{prefix}/id",
+    )
+    nested_prefixes = {
+        kind: (
+            f"{scenario_match.group('pack')}:{kind}/"
+            f"{scenario_match.group('name')}/"
+        )
+        for kind in ("scenario-area", "scenario-fixture", "scenario-spawn")
+    }
+
+    def nested_id(value: object, kind: str, label: str) -> str:
+        content_id_kind(value, kind, label)
+        identifier = str(value)
+        if not identifier.startswith(nested_prefixes[kind]):
+            raise ModError(
+                f"{label}: ID must belong to scenario "
+                f"{definition.get('id')}"
+            )
+        return identifier
+
+    if not isinstance(definition.get("name"), str) or not definition["name"]:
+        raise ModError(f"{prefix}: scenario name is required")
+    map_data = definition.get("map")
+    if not isinstance(map_data, dict) or map_data.get("format") != "simstation-map-v1":
+        raise ModError(f"{prefix}: unsupported scenario map format")
+    unknown = sorted(
+        set(map_data)
+        - {
+            "format",
+            "width",
+            "height",
+            "default_palette",
+            "palette",
+            "runs",
+        }
+    )
+    if unknown:
+        raise ModError(f"{prefix}: unknown map keys: {', '.join(unknown)}")
+    width = map_data.get("width")
+    height = map_data.get("height")
+    if (
+        not exact_integer(width)
+        or not 16 <= width <= 256
+        or not exact_integer(height)
+        or not 16 <= height <= 256
+    ):
+        raise ModError(f"{prefix}: map dimensions must be integers from 16 to 256")
+    areas = definition.get("areas", [])
+    palette = map_data.get("palette")
+    runs = map_data.get("runs", [])
+    departments = {
+        "cargo",
+        "command",
+        "engineering",
+        "general",
+        "medical",
+        "science",
+        "security",
+        "service",
+    }
+    if not isinstance(areas, list) or len(areas) > 1024:
+        raise ModError(f"{prefix}: invalid area table")
+    area_keys: set[str] = set()
+    for area_index, area in enumerate(areas, 1):
+        if (
+            not isinstance(area, dict)
+            or set(area) - {"id", "key", "name", "department", "access", "source_path"}
+            or area.get("id") != area_index
+            or not isinstance(area.get("key"), str)
+            or not area["key"]
+            or not isinstance(area.get("name"), str)
+            or not area["name"]
+            or area.get("department") not in departments
+            or (
+                "source_path" in area
+                and not isinstance(area["source_path"], str)
+            )
+        ):
+            raise ModError(f"{prefix}: invalid area record {area_index}")
+        nested_id(
+            area["key"],
+            "scenario-area",
+            f"{prefix}/areas/{area_index}/key",
+        )
+        if area["key"] in area_keys:
+            raise ModError(f"{prefix}: duplicate area key: {area['key']}")
+        area_keys.add(area["key"])
+        if not isinstance(area.get("access", "public"), str) or not area.get(
+            "access", "public"
+        ):
+            raise ModError(f"{prefix}: invalid area access {area_index}")
+    if not isinstance(palette, list) or not palette or len(palette) > 2048:
+        raise ModError(f"{prefix}: invalid map palette")
+    palette_keys: set[str] = set()
+    palette_semantics: set[str] = set()
+    for palette_index, cell in enumerate(palette, 1):
+        if not isinstance(cell, dict) or set(cell) - {
+            "key",
+            "tile",
+            "structure",
+            "cable",
+            "pressurized",
+            "area",
+            "access",
+        }:
+            raise ModError(f"{prefix}: palette {palette_index} must be an object")
+        key = cell.get("key")
+        if not isinstance(key, str) or not key or key in palette_keys:
+            raise ModError(f"{prefix}: invalid/duplicate palette key")
+        palette_keys.add(key)
+        if cell.get("tile") not in {"space", "floor"}:
+            raise ModError(f"{prefix}: invalid palette tile")
+        if cell.get("structure", "empty") not in {
+            "empty",
+            "wall",
+            "door_closed",
+            "door_open",
+        }:
+            raise ModError(f"{prefix}: invalid palette structure")
+        for flag in ("cable", "pressurized"):
+            if flag in cell and not isinstance(cell[flag], bool):
+                raise ModError(f"{prefix}: palette {flag} must be boolean")
+        area_id = cell.get("area", 0)
+        if not exact_integer(area_id) or not 0 <= area_id <= len(areas):
+            raise ModError(f"{prefix}: invalid palette area")
+        structure = cell.get("structure", "empty")
+        if "access" in cell and (
+            not isinstance(cell["access"], str)
+            or not cell["access"]
+            or structure not in {"door_closed", "door_open"}
+        ):
+            raise ModError(f"{prefix}: palette access requires a door")
+        semantic = json.dumps(
+            {field: value for field, value in cell.items() if field != "key"},
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        if semantic in palette_semantics:
+            raise ModError(f"{prefix}: duplicate semantic palette record")
+        palette_semantics.add(semantic)
+    default_palette = map_data.get("default_palette", 1)
+    if not exact_integer(default_palette) or not 1 <= default_palette <= len(palette):
+        raise ModError(f"{prefix}: invalid default palette")
+    if not isinstance(runs, list) or len(runs) > 200_000:
+        raise ModError(f"{prefix}: invalid map runs")
+    previous_end = 0
+    previous_palette = 0
+    size = width * height
+    dense = [default_palette] * size
+    for run_index, run in enumerate(runs, 1):
+        if (
+            not isinstance(run, list)
+            or len(run) != 3
+            or any(not exact_integer(value) for value in run)
+        ):
+            raise ModError(f"{prefix}: invalid map run {run_index}")
+        start, length, palette_index = run
+        finish = start + length - 1
+        if (
+            start <= previous_end
+            or start < 1
+            or finish > size
+            or length < 1
+            or length > width
+            or (start - 1) // width != (finish - 1) // width
+            or not 1 <= palette_index <= len(palette)
+            or palette_index == default_palette
+        ):
+            raise ModError(f"{prefix}: out-of-order or invalid map run {run_index}")
+        if (
+            start == previous_end + 1
+            and palette_index == previous_palette
+            and (start - 1) // width == (previous_end - 1) // width
+        ):
+            raise ModError(f"{prefix}: adjacent map runs must be merged")
+        dense[start - 1 : finish] = [palette_index] * length
+        previous_end = finish
+        previous_palette = palette_index
+
+    def cell_at(x: int, y: int) -> dict:
+        return palette[dense[(y - 1) * width + x - 1] - 1]
+
+    def position(record: dict, label: str) -> tuple[int, int]:
+        x = record.get("x")
+        y = record.get("y")
+        if (
+            not exact_integer(x)
+            or not 1 <= x <= width
+            or not exact_integer(y)
+            or not 1 <= y <= height
+        ):
+            raise ModError(f"{prefix}: invalid {label} coordinate")
+        return x, y
+
+    def passable(cell: dict) -> bool:
+        return cell["tile"] == "floor" and cell.get("structure", "empty") not in {
+            "wall",
+            "door_closed",
+        }
+
+    def touches_cable(x: int, y: int) -> bool:
+        for candidate_x, candidate_y in (
+            (x, y),
+            (x - 1, y),
+            (x + 1, y),
+            (x, y - 1),
+            (x, y + 1),
+        ):
+            if (
+                1 <= candidate_x <= width
+                and 1 <= candidate_y <= height
+                and cell_at(candidate_x, candidate_y).get("cable", False)
+            ):
+                return True
+        return False
+
+    fixtures = definition.get("fixtures", [])
+    if not isinstance(fixtures, list) or len(fixtures) > 8192:
+        raise ModError(f"{prefix}: invalid fixtures")
+    fixture_ids: set[str] = set()
+    fixture_positions: set[tuple[int, int]] = set()
+    last_fixture_id = ""
+    fixture_kinds = {
+        "apc",
+        "battery",
+        "cargo_pad",
+        "fabricator",
+        "generator",
+        "generic",
+        "refinery",
+        "scrubber",
+        "vent",
+    }
+    for record_index, fixture in enumerate(fixtures, 1):
+        if not isinstance(fixture, dict) or set(fixture) - {
+            "id",
+            "kind",
+            "name",
+            "x",
+            "y",
+            "department",
+            "source_path",
+        }:
+            raise ModError(f"{prefix}: invalid fixture record {record_index}")
+        if (
+            fixture.get("department", "general") not in departments
+            or (
+                "name" in fixture
+                and (
+                    not isinstance(fixture["name"], str)
+                    or not fixture["name"]
+                )
+            )
+            or (
+                "source_path" in fixture
+                and not isinstance(fixture["source_path"], str)
+            )
+        ):
+            raise ModError(f"{prefix}: invalid fixture metadata {record_index}")
+        fixture_id = fixture.get("id")
+        nested_id(
+            fixture_id,
+            "scenario-fixture",
+            f"{prefix}/fixtures/{record_index}/id",
+        )
+        if (
+            fixture_id in fixture_ids
+            or fixture_id <= last_fixture_id
+            or fixture.get("kind") not in fixture_kinds
+        ):
+            raise ModError(f"{prefix}: invalid/unsorted fixture {record_index}")
+        fixture_ids.add(fixture_id)
+        last_fixture_id = fixture_id
+        x, y = position(fixture, f"fixture {record_index}")
+        if (x, y) in fixture_positions or not passable(cell_at(x, y)):
+            raise ModError(f"{prefix}: invalid fixture anchor at {x},{y}")
+        fixture_positions.add((x, y))
+        if fixture["kind"] == "apc":
+            if cell_at(x, y).get("area", 0) == 0 or not touches_cable(x, y):
+                raise ModError(f"{prefix}: invalid APC service at {x},{y}")
+        elif fixture["kind"] == "generator" and not touches_cable(x, y):
+            raise ModError(f"{prefix}: unwired generator at {x},{y}")
+
+    spawns = definition.get("spawns", [])
+    if not isinstance(spawns, list) or len(spawns) > 1024:
+        raise ModError(f"{prefix}: invalid spawns")
+    spawn_ids: set[str] = set()
+    spawn_positions: set[tuple[int, int]] = set()
+    last_spawn_id = ""
+    for record_index, spawn in enumerate(spawns, 1):
+        if not isinstance(spawn, dict) or set(spawn) - {
+            "id",
+            "x",
+            "y",
+            "job",
+            "department",
+            "source_path",
+        }:
+            raise ModError(f"{prefix}: invalid spawn record {record_index}")
+        if (
+            spawn.get("department", "general") not in departments
+            or (
+                "source_path" in spawn
+                and not isinstance(spawn["source_path"], str)
+            )
+        ):
+            raise ModError(f"{prefix}: invalid spawn metadata {record_index}")
+        spawn_id = spawn.get("id")
+        nested_id(
+            spawn_id,
+            "scenario-spawn",
+            f"{prefix}/spawns/{record_index}/id",
+        )
+        if spawn_id in spawn_ids or spawn_id <= last_spawn_id:
+            raise ModError(f"{prefix}: invalid/unsorted spawn {record_index}")
+        spawn_ids.add(spawn_id)
+        last_spawn_id = spawn_id
+        if "job" in spawn:
+            content_id_kind(
+                spawn["job"],
+                "job",
+                f"{prefix}/spawns/{record_index}/job",
+            )
+        x, y = position(spawn, f"spawn {record_index}")
+        if (x, y) in spawn_positions or not passable(cell_at(x, y)):
+            raise ModError(f"{prefix}: invalid spawn anchor at {x},{y}")
+        spawn_positions.add((x, y))
+
+    targets = definition.get("meteor_targets", [])
+    if not isinstance(targets, list) or len(targets) > 1024:
+        raise ModError(f"{prefix}: invalid meteor targets")
+    target_positions: set[tuple[int, int]] = set()
+    last_target = (0, 0)
+    for target_index, target in enumerate(targets, 1):
+        if not isinstance(target, dict) or set(target) != {"x", "y"}:
+            raise ModError(f"{prefix}: invalid meteor target {target_index}")
+        x, y = position(target, f"meteor target {target_index}")
+        order_key = (y, x)
+        cell = cell_at(x, y)
+        neighbors = (
+            (x - 1, y),
+            (x + 1, y),
+            (x, y - 1),
+            (x, y + 1),
+        )
+        exposed = any(
+            candidate_x < 1
+            or candidate_x > width
+            or candidate_y < 1
+            or candidate_y > height
+            or cell_at(candidate_x, candidate_y)["tile"] == "space"
+            for candidate_x, candidate_y in neighbors
+        )
+        if (
+            order_key <= last_target
+            or (x, y) in target_positions
+            or cell["tile"] != "floor"
+            or cell.get("structure", "empty") != "wall"
+            or not exposed
+        ):
+            raise ModError(f"{prefix}: invalid meteor target at {x},{y}")
+        target_positions.add((x, y))
+        last_target = order_key
+
+    power_supply = definition.get("power_supply_w", 0)
+    if not exact_integer(power_supply) or not 0 <= power_supply <= 1_000_000_000:
+        raise ModError(f"{prefix}: invalid power supply")
+    inventory = definition.get("starting_inventory", {})
+    if not isinstance(inventory, dict):
+        raise ModError(f"{prefix}: invalid starting inventory")
+    for item_id, quantity in inventory.items():
+        content_id_kind(item_id, "item", f"{prefix}/starting_inventory")
+        if not exact_integer(quantity) or not 0 <= quantity <= 1_000_000_000:
+            raise ModError(f"{prefix}: invalid inventory quantity for {item_id}")
+
+    provenance = definition.get("provenance")
+    if provenance is not None:
+        if (
+            not isinstance(provenance, dict)
+            or provenance.get("schema") != 1
+            or not isinstance(provenance.get("method"), str)
+            or not provenance["method"]
+            or not isinstance(provenance.get("sources"), list)
+            or not provenance["sources"]
+            or not isinstance(provenance.get("tool"), dict)
+        ):
+            raise ModError(f"{prefix}: invalid scenario provenance")
+        for source_index, source in enumerate(provenance["sources"], 1):
+            if (
+                not isinstance(source, dict)
+                or not re.fullmatch(r"[0-9a-f]{40}", str(source.get("commit", "")))
+                or not re.fullmatch(r"[0-9a-f]{40}", str(source.get("git_blob", "")))
+                or not re.fullmatch(r"[0-9a-f]{64}", str(source.get("sha256", "")))
+                or not isinstance(source.get("path"), str)
+                or source["path"].startswith("/")
+                or ".." in PurePosixPath(source["path"]).parts
+            ):
+                raise ModError(f"{prefix}: invalid provenance source {source_index}")
 
 
 def validate_content(manifest: dict, files: dict[str, bytes]) -> dict:
     names = sorted(files)
-    selected: list[str] = []
+    selected_by_field: dict[str, list[str]] = {
+        "content": [],
+        "scenario_maps": [],
+    }
     definitions = 0
     seen_ids: set[str] = set()
     declared_replacements = set(manifest.get("replaces", []))
-    for pattern in manifest.get("content", []):
-        if not isinstance(pattern, str):
-            raise ModError("content patterns must be strings")
-        matches = glob_matches(pattern, names)
-        if not matches:
-            raise ModError(f"content pattern matched no files: {pattern}")
-        selected.extend(matches)
-    for path in sorted(set(selected)):
+    for field in ("content", "scenario_maps"):
+        for pattern in manifest.get(field, []):
+            if not isinstance(pattern, str):
+                raise ModError(f"{field} patterns must be strings")
+            matches = glob_matches(pattern, names)
+            if not matches:
+                raise ModError(f"{field} pattern matched no files: {pattern}")
+            selected_by_field[field].extend(matches)
+    selected = sorted(
+        set(selected_by_field["content"]) | set(selected_by_field["scenario_maps"])
+    )
+    scenario_paths = set(selected_by_field["scenario_maps"])
+    for path in selected:
         if not path.endswith(".json"):
-            raise ModError(f"content file must be JSON: {path}")
+            raise ModError(f"content/scenario file must be JSON: {path}")
         try:
             document = json.loads(files[path])
         except (UnicodeDecodeError, json.JSONDecodeError) as error:
@@ -284,11 +729,19 @@ def validate_content(manifest: dict, files: dict[str, bytes]) -> dict:
             if definition.get("kind", match.group("kind")) != match.group("kind"):
                 raise ModError(f"kind does not match content ID: {content_id}")
             if replacement:
-                if replacement != content_id or replacement not in declared_replacements:
-                    raise ModError(f"undeclared or mismatched replacement: {content_id}")
+                if (
+                    replacement != content_id
+                    or replacement not in declared_replacements
+                ):
+                    raise ModError(
+                        f"undeclared or mismatched replacement: {content_id}"
+                    )
+            if path in scenario_paths:
+                validate_scenario(definition, path, index)
             definitions += 1
     return {
-        "content_files": sorted(set(selected)),
+        "content_files": sorted(set(selected_by_field["content"])),
+        "scenario_map_files": sorted(scenario_paths),
         "definition_count": definitions,
         "content_ids": sorted(seen_ids),
     }
@@ -325,9 +778,8 @@ def validate_path(path: Path) -> dict:
     manifest = parse_manifest(files)
     for name in files:
         first = PurePosixPath(name).parts[0]
-        allowed_root_file = (
-            name == "mod.toml"
-            or first.startswith(("README", "LICENSE", "NOTICE", "CREDITS"))
+        allowed_root_file = name == "mod.toml" or first.startswith(
+            ("README", "LICENSE", "NOTICE", "CREDITS")
         )
         if not allowed_root_file and first not in DECLARED_ROOTS:
             raise ModError(f"undeclared package root entry: {first}")
@@ -360,10 +812,7 @@ def package_folder(folder: Path, output: Path | None) -> tuple[Path, dict]:
     manifest = tomllib.loads((folder / "mod.toml").read_text(encoding="utf-8"))
     if output is None:
         output = (
-            ROOT
-            / "dist"
-            / "mods"
-            / f"{manifest['id']}-{manifest['version']}.simmod"
+            ROOT / "dist" / "mods" / f"{manifest['id']}-{manifest['version']}.simmod"
         )
     output.parent.mkdir(parents=True, exist_ok=True)
     records = folder_files(folder)
@@ -420,12 +869,14 @@ def main() -> None:
             output, packaged = package_folder(args.path.resolve(), None)
             if source["content_ids"] != packaged["content_ids"]:
                 raise ModError("folder/archive registries differ")
-            print_report({
-                "ok": True,
-                "folder": source,
-                "archive": packaged,
-                "temporary_output": str(output),
-            })
+            print_report(
+                {
+                    "ok": True,
+                    "folder": source,
+                    "archive": packaged,
+                    "temporary_output": str(output),
+                }
+            )
     except (OSError, ModError, zipfile.BadZipFile) as error:
         print(f"mod error: {error}", file=sys.stderr)
         raise SystemExit(1) from error
