@@ -502,24 +502,32 @@ def validate_scenario(definition: dict, path: str, index: int) -> None:
     if not isinstance(fixtures, list) or len(fixtures) > 8192:
         raise ModError(f"{prefix}: invalid fixtures")
     fixture_ids: set[str] = set()
-    fixture_positions: set[tuple[int, int]] = set()
     last_fixture_id = ""
     fixture_kinds = {
         "apc",
+        "barcode_computer",
         "battery",
         "cargo_pad",
+        "circulator",
         "fabricator",
         "generator",
         "generic",
+        "nanofab",
+        "portable_scrubber",
+        "reclaimer",
         "refinery",
         "scrubber",
+        "supply_console",
         "vent",
+        "vent_pump",
     }
     for record_index, fixture in enumerate(fixtures, 1):
         if not isinstance(fixture, dict) or set(fixture) - {
+            "definition_id",
             "id",
             "kind",
             "name",
+            "source_overrides",
             "x",
             "y",
             "department",
@@ -539,8 +547,36 @@ def validate_scenario(definition: dict, path: str, index: int) -> None:
                 "source_path" in fixture
                 and not isinstance(fixture["source_path"], str)
             )
+            or (
+                "definition_id" in fixture
+                and (
+                    not CONTENT_ID.fullmatch(str(fixture["definition_id"]))
+                    or CONTENT_ID.fullmatch(
+                        str(fixture["definition_id"])
+                    ).group("kind")
+                    != "machine"
+                )
+            )
         ):
             raise ModError(f"{prefix}: invalid fixture metadata {record_index}")
+        source_overrides = fixture.get("source_overrides", {})
+        if not isinstance(source_overrides, dict):
+            raise ModError(f"{prefix}: invalid fixture source overrides {record_index}")
+        for override_name, override_value in source_overrides.items():
+            if (
+                not isinstance(override_name, str)
+                or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", override_name)
+                or not isinstance(override_value, (str, int, bool))
+                or isinstance(override_value, float)
+                or (
+                    isinstance(override_value, int)
+                    and not isinstance(override_value, bool)
+                    and abs(override_value) > 9_007_199_254_740_991
+                )
+            ):
+                raise ModError(
+                    f"{prefix}: unsafe fixture source override {record_index}"
+                )
         fixture_id = fixture.get("id")
         nested_id(
             fixture_id,
@@ -556,9 +592,8 @@ def validate_scenario(definition: dict, path: str, index: int) -> None:
         fixture_ids.add(fixture_id)
         last_fixture_id = fixture_id
         x, y = position(fixture, f"fixture {record_index}")
-        if (x, y) in fixture_positions or not passable(cell_at(x, y)):
+        if not passable(cell_at(x, y)):
             raise ModError(f"{prefix}: invalid fixture anchor at {x},{y}")
-        fixture_positions.add((x, y))
         if fixture["kind"] == "apc":
             if cell_at(x, y).get("area", 0) == 0 or not touches_cable(x, y):
                 raise ModError(f"{prefix}: invalid APC service at {x},{y}")
@@ -682,6 +717,344 @@ def validate_scenario(definition: dict, path: str, index: int) -> None:
                 raise ModError(f"{prefix}: invalid provenance source {source_index}")
 
 
+def _validate_machine_state(value: object, label: str, depth: int = 0) -> None:
+    if depth > 8:
+        raise ModError(f"{label}: machine state is nested too deeply")
+    if value is None or isinstance(value, (str, bool)):
+        return
+    if exact_integer(value):
+        if abs(value) > 9_007_199_254_740_991:
+            raise ModError(f"{label}: machine state integer is out of range")
+        return
+    if isinstance(value, list):
+        if len(value) > 4096:
+            raise ModError(f"{label}: machine state array is too large")
+        for child_index, child in enumerate(value, 1):
+            _validate_machine_state(child, f"{label}/{child_index}", depth + 1)
+        return
+    if isinstance(value, dict):
+        if len(value) > 4096:
+            raise ModError(f"{label}: machine state object is too large")
+        for key, child in value.items():
+            if (
+                not isinstance(key, str)
+                or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_.-]*", key)
+            ):
+                raise ModError(f"{label}: invalid machine state key")
+            _validate_machine_state(child, f"{label}/{key}", depth + 1)
+        return
+    raise ModError(f"{label}: machine state must use JSON integer primitives")
+
+
+def validate_machine(definition: dict, path: str, index: int) -> None:
+    prefix = f"{path}/definitions/{index}"
+    allowed = {
+        "actions",
+        "behavior",
+        "fidelity",
+        "fixture_kind",
+        "health",
+        "id",
+        "kind",
+        "map_override_fields",
+        "name_key",
+        "power",
+        "process",
+        "replaces",
+        "schema",
+        "source",
+        "state_defaults",
+        "tags",
+        "wires",
+    }
+    unknown = sorted(set(definition) - allowed)
+    if unknown:
+        raise ModError(f"{prefix}: unknown machine keys: {', '.join(unknown)}")
+    if definition.get("kind") != "machine" or definition.get("schema") != 2:
+        raise ModError(f"{prefix}: machine definitions require kind=machine/schema=2")
+    content_id_kind(definition.get("id"), "machine", f"{prefix}/id")
+    if (
+        not isinstance(definition.get("name_key"), str)
+        or not definition["name_key"]
+        or not isinstance(definition.get("fixture_kind"), str)
+        or not re.fullmatch(r"[a-z][a-z0-9_]*", definition["fixture_kind"])
+        or not isinstance(definition.get("behavior"), str)
+        or not re.fullmatch(
+            r"[a-z0-9.-]+:machine-behavior/[a-z0-9/_-]+",
+            definition["behavior"],
+        )
+    ):
+        raise ModError(f"{prefix}: invalid machine identity")
+
+    source = definition.get("source")
+    if (
+        not isinstance(source, dict)
+        or set(source) - {"commit", "files", "repository", "type_path"}
+        or source.get("repository") != "goonstation/goonstation"
+        or not re.fullmatch(r"[0-9a-f]{40}", str(source.get("commit", "")))
+        or not isinstance(source.get("type_path"), str)
+        or not source["type_path"].startswith("/")
+        or not isinstance(source.get("files"), list)
+        or not source["files"]
+        or not all(
+            isinstance(file, str)
+            and file
+            and not file.startswith("/")
+            and ".." not in PurePosixPath(file).parts
+            for file in source["files"]
+        )
+    ):
+        raise ModError(f"{prefix}: invalid machine source provenance")
+
+    process = definition.get("process")
+    if (
+        not isinstance(process, dict)
+        or set(process)
+        - {
+            "class",
+            "interval_ds",
+            "mult_base_ds",
+            "mult_cap_ds",
+            "tier",
+        }
+        or process.get("class") not in {"atmos", "general", "none"}
+        or not exact_integer(process.get("tier"))
+        or not 0 <= process["tier"] <= 6
+        or not exact_integer(process.get("interval_ds"))
+        or not 0 <= process["interval_ds"] <= 1_000_000
+        or not exact_integer(process.get("mult_base_ds"))
+        or not 0 <= process["mult_base_ds"] <= 10_000_000
+        or not exact_integer(process.get("mult_cap_ds"))
+        or not process["mult_base_ds"] <= process["mult_cap_ds"] <= 100_000_000
+    ):
+        raise ModError(f"{prefix}: invalid machine process contract")
+
+    power = definition.get("power")
+    if (
+        not isinstance(power, dict)
+        or set(power)
+        - {"channel", "idle_w", "priority", "requires_power"}
+        or not isinstance(power.get("requires_power"), bool)
+        or power.get("channel")
+        not in {"environment", "equipment", "lighting", "none"}
+        or not exact_integer(power.get("idle_w"))
+        or not 0 <= power["idle_w"] <= 1_000_000_000
+        or not exact_integer(power.get("priority"))
+        or not 0 <= power["priority"] <= 1000
+    ):
+        raise ModError(f"{prefix}: invalid machine power contract")
+
+    health = definition.get("health")
+    if health is not None:
+        if (
+            not isinstance(health, dict)
+            or set(health) - {"break_at", "maximum", "repair_at"}
+            or not exact_integer(health.get("maximum"))
+            or not 1 <= health["maximum"] <= 1_000_000
+            or not exact_integer(health.get("break_at"))
+            or not 0 <= health["break_at"] <= health["maximum"]
+            or not exact_integer(health.get("repair_at"))
+            or not health["break_at"]
+            <= health["repair_at"]
+            <= health["maximum"]
+        ):
+            raise ModError(f"{prefix}: invalid machine health contract")
+
+    tags = definition.get("tags", [])
+    if (
+        not isinstance(tags, list)
+        or tags != sorted(set(tags))
+        or not all(
+            isinstance(tag, str) and re.fullmatch(r"[a-z][a-z0-9_-]*", tag)
+            for tag in tags
+        )
+    ):
+        raise ModError(f"{prefix}: machine tags must be sorted and unique")
+    overrides = definition.get("map_override_fields", [])
+    if (
+        not isinstance(overrides, list)
+        or overrides != sorted(set(overrides))
+        or not all(
+            isinstance(field, str)
+            and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", field)
+            for field in overrides
+        )
+    ):
+        raise ModError(f"{prefix}: invalid machine map override fields")
+    _validate_machine_state(
+        definition.get("state_defaults", {}),
+        f"{prefix}/state_defaults",
+    )
+
+    wires = definition.get("wires", [])
+    wire_ids: set[str] = set()
+    wire_indexes: set[int] = set()
+    if not isinstance(wires, list) or len(wires) > 64:
+        raise ModError(f"{prefix}: invalid machine wire harness")
+    for wire_index, wire in enumerate(wires, 1):
+        if (
+            not isinstance(wire, dict)
+            or set(wire) - {"id", "index", "source_symbol"}
+            or not isinstance(wire.get("id"), str)
+            or not re.fullmatch(r"[a-z][a-z0-9-]*", wire["id"])
+            or not exact_integer(wire.get("index"))
+            or not 1 <= wire["index"] <= 64
+            or not isinstance(wire.get("source_symbol"), str)
+            or not wire["source_symbol"]
+            or wire["id"] in wire_ids
+            or wire["index"] in wire_indexes
+        ):
+            raise ModError(f"{prefix}: invalid wire record {wire_index}")
+        wire_ids.add(wire["id"])
+        wire_indexes.add(wire["index"])
+
+    actions = definition.get("actions", [])
+    action_ids: set[str] = set()
+    allowed_requirement_keys = {
+        "access_any",
+        "allow_remote",
+        "modes",
+        "not_broken",
+        "panel_open",
+        "power",
+        "tools_all",
+        "tools_any",
+    }
+    if not isinstance(actions, list) or len(actions) > 256:
+        raise ModError(f"{prefix}: invalid machine actions")
+    for action_index, action in enumerate(actions, 1):
+        if (
+            not isinstance(action, dict)
+            or set(action)
+            - {
+                "duration_ds",
+                "handler",
+                "id",
+                "implemented",
+                "parameters",
+                "range",
+                "requires",
+                "source_symbol",
+                "tags",
+            }
+            or not isinstance(action.get("id"), str)
+            or not re.fullmatch(r"[a-z][a-z0-9-]*", action["id"])
+            or action["id"] in action_ids
+            or not isinstance(action.get("handler"), str)
+            or not re.fullmatch(r"[a-z][a-z0-9_.-]*", action["handler"])
+            or not isinstance(action.get("source_symbol"), str)
+            or not action["source_symbol"]
+            or not isinstance(action.get("implemented"), bool)
+            or action.get("range") not in {"adjacent", "none", "remote-or-adjacent"}
+            or not exact_integer(action.get("duration_ds"))
+            or not 0 <= action["duration_ds"] <= 10_000_000
+        ):
+            raise ModError(f"{prefix}: invalid machine action {action_index}")
+        action_ids.add(action["id"])
+        requirements = action.get("requires", {})
+        if (
+            not isinstance(requirements, dict)
+            or set(requirements) - allowed_requirement_keys
+        ):
+            raise ModError(f"{prefix}: invalid action requirements {action_index}")
+        for boolean_key in (
+            "allow_remote",
+            "not_broken",
+            "panel_open",
+            "power",
+        ):
+            if boolean_key in requirements and not isinstance(
+                requirements[boolean_key], bool
+            ):
+                raise ModError(
+                    f"{prefix}: invalid {boolean_key} requirement {action_index}"
+                )
+        for list_key in ("access_any", "modes", "tools_all", "tools_any"):
+            values = requirements.get(list_key, [])
+            if (
+                not isinstance(values, list)
+                or values != sorted(set(values))
+                or not all(isinstance(value, str) and value for value in values)
+            ):
+                raise ModError(
+                    f"{prefix}: invalid {list_key} requirement {action_index}"
+                )
+        parameters = action.get("parameters", {})
+        if not isinstance(parameters, dict):
+            raise ModError(f"{prefix}: invalid action parameters {action_index}")
+        for parameter_name, parameter in parameters.items():
+            if (
+                not re.fullmatch(r"[a-z][a-z0-9_]*", str(parameter_name))
+                or not isinstance(parameter, dict)
+                or set(parameter) - {"maximum", "minimum", "type", "values"}
+                or parameter.get("type")
+                not in {"boolean", "content-id", "enum", "integer"}
+            ):
+                raise ModError(
+                    f"{prefix}: invalid action parameter {action_index}"
+                )
+            if parameter["type"] == "integer":
+                if (
+                    not exact_integer(parameter.get("minimum"))
+                    or not exact_integer(parameter.get("maximum"))
+                    or parameter["minimum"] > parameter["maximum"]
+                ):
+                    raise ModError(
+                        f"{prefix}: invalid integer parameter {action_index}"
+                    )
+            elif parameter["type"] == "enum":
+                values = parameter.get("values")
+                if (
+                    not isinstance(values, list)
+                    or not values
+                    or values != sorted(set(values), key=str)
+                    or not all(isinstance(value, (str, int)) for value in values)
+                ):
+                    raise ModError(
+                        f"{prefix}: invalid enum parameter {action_index}"
+                    )
+        action_tags = action.get("tags", [])
+        if (
+            not isinstance(action_tags, list)
+            or action_tags != sorted(set(action_tags))
+            or not all(isinstance(tag, str) and tag for tag in action_tags)
+        ):
+            raise ModError(f"{prefix}: invalid action tags {action_index}")
+
+    fidelity = definition.get("fidelity")
+    if (
+        not isinstance(fidelity, dict)
+        or set(fidelity) - {"ledger", "profile"}
+        or fidelity.get("profile") != "goon-near-1"
+        or not isinstance(fidelity.get("ledger"), list)
+        or not fidelity["ledger"]
+    ):
+        raise ModError(f"{prefix}: invalid machine fidelity ledger")
+    ledger_features: set[str] = set()
+    for ledger_index, record in enumerate(fidelity["ledger"], 1):
+        if (
+            not isinstance(record, dict)
+            or set(record) - {"feature", "note", "source", "status"}
+            or not isinstance(record.get("feature"), str)
+            or not record["feature"]
+            or record["feature"] in ledger_features
+            or record.get("status")
+            not in {
+                "deferred",
+                "deterministic-equivalent",
+                "engine-adapted",
+                "exact",
+                "intentional-fix",
+                "not-applicable",
+            }
+            or not isinstance(record.get("source"), str)
+            or not record["source"]
+            or ("note" in record and not isinstance(record["note"], str))
+        ):
+            raise ModError(f"{prefix}: invalid fidelity record {ledger_index}")
+        ledger_features.add(record["feature"])
+
+
 def validate_content(manifest: dict, files: dict[str, bytes]) -> dict:
     names = sorted(files)
     selected_by_field: dict[str, list[str]] = {
@@ -738,6 +1111,8 @@ def validate_content(manifest: dict, files: dict[str, bytes]) -> dict:
                     )
             if path in scenario_paths:
                 validate_scenario(definition, path, index)
+            elif match.group("kind") == "machine":
+                validate_machine(definition, path, index)
             definitions += 1
     return {
         "content_files": sorted(set(selected_by_field["content"])),

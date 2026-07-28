@@ -26,6 +26,102 @@
       ]
     },
     {
+      "canonical_task": "/root/architecture_scope",
+      "display_name": "Faraday",
+      "archive": "machine-fidelity-architecture.md",
+      "last_observed_status": "completed",
+      "assignment_evidence": "reconstruction from the user request, parent task, and visible final report",
+      "report_evidence": "normalized visible final report with a separately identified post-report Atlas census correction",
+      "topics": [
+        "Goon-compatible machinery",
+        "decisecond event calendar",
+        "machine definitions and behaviors",
+        "typed machine verbs",
+        "NPC work affordances",
+        "fidelity ledger",
+        "save and replay"
+      ]
+    },
+    {
+      "canonical_task": "/root/architecture_scope/power_machine_research",
+      "display_name": null,
+      "archive": "power-machine-fidelity.md",
+      "last_observed_status": "completed",
+      "assignment_evidence": "reconstruction from the parent task and delivered report",
+      "report_evidence": "consolidated visible completion report",
+      "topics": [
+        "Atlas power census",
+        "APC",
+        "SMES",
+        "TEG and circulators",
+        "power machine cadence",
+        "maintenance and hazards"
+      ]
+    },
+    {
+      "canonical_task": "/root/architecture_scope/atmos_prod_cargo_research",
+      "display_name": null,
+      "archive": "atmos-production-cargo-fidelity.md",
+      "last_observed_status": "completed",
+      "assignment_evidence": "reconstruction from the parent task and delivered report",
+      "report_evidence": "normalized visible final report with a separately identified post-report portable-scrubber correction",
+      "topics": [
+        "Atlas atmosphere census",
+        "passive vents and pumps",
+        "portable scrubbers",
+        "manufacturers",
+        "reclaimers and nanofabs",
+        "physical Atlas cargo"
+      ]
+    },
+    {
+      "canonical_task": "/root/archive_machine_research",
+      "display_name": null,
+      "archive": "machine-research-archive.md",
+      "last_observed_status": "documentation and follow-up archive completed; validation passed; transient concurrent Lua failure resolved",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "observable work record with validation results",
+      "topics": [
+        "agent research archive",
+        "machine-fidelity technical contract",
+        "Atlas census correction",
+        "documentation validation"
+      ]
+    },
+    {
+      "canonical_task": "/root/machine_fidelity_tests",
+      "display_name": null,
+      "archive": "machine-fidelity-tests.md",
+      "last_observed_status": "completed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "verbatim final report with subsequent shared-suite resolution recorded separately",
+      "topics": [
+        "Atlas fixture tests",
+        "machine schema validation",
+        "decisecond scheduler tests",
+        "machine action and NPC affordance tests",
+        "manufacturer and wire tests",
+        "save-load continuation",
+        "benchmark checkpoints and reviewed baseline resolution"
+      ]
+    },
+    {
+      "canonical_task": "/root/machine_docs_renderer",
+      "display_name": null,
+      "archive": "machine-docs-renderer.md",
+      "last_observed_status": "completed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "verbatim final report with subsequent shared-suite resolution recorded separately",
+      "topics": [
+        "machine renderer aliases",
+        "Atlas documentation counts",
+        "schema-2 machine documentation",
+        "typed NPC affordances",
+        "modding hooks and fidelity ledger",
+        "department-sorted machine module ownership"
+      ]
+    },
+    {
       "canonical_task": "/root/goon_graphics_pipeline",
       "display_name": "Harvey",
       "archive": "goon-graphics-pipeline.md",

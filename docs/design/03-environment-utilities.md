@@ -66,6 +66,14 @@ filter, tank, sensor, and machinery work. Crew perceive breathing difficulty,
 wind, heat/cold, smell-capable gases, smoke, and alarms, then seek safety or
 protective equipment according to knowledge and policy.
 
+The Goon-derived devices remain distinct machines rather than one generic
+“atmos fixture.” A passive vent is an unpowered equalizer between the room and
+its connected reservoir; it never synthesizes oxygen or nitrogen. A vent pump
+has on/off, direction, and pressure-bound controls. A portable scrubber has
+power, flow, internal contents, and selected gas-removal behavior. Their
+source-pinned controllers run on the 16 `ds` machine tier and enqueue conserved
+gas transfers for the atmosphere solve.
+
 ### Inputs, outputs, and dependencies
 
 Inputs: world seals/volume, utility machines, power, pipe networks, doors, fire,
@@ -301,7 +309,11 @@ brownout. Allocation never depends on iteration order.
 ### Cadence and ordering
 
 - Connector/breaker topology commits before the due solve.
-- Generation, storage, allocation, and protection solve at `5t`.
+- Source-pinned APC, SMES, and TEG callbacks run on their declared machine
+  subcalendar. Ordinary power machinery uses 32 `ds`; the power-net reset
+  event retains its `+8 ds` phase.
+- Broader generation, storage, allocation, and protection aggregation may run
+  at `5t` only where that batching is not observable to a machine interaction.
 - Fast faults/arcs created by interactions are applied immediately and force a
   solve that tick.
 - Energy meters and cost attribution aggregate at `60t`.
@@ -319,6 +331,12 @@ Generators follow setpoints and fuel/cooling availability. Protection trips unde
 defined faults. Engineers inspect, refuel, repair, reset, and upgrade networks.
 Machines enter deterministic brownout/fail-safe modes. Crew report dark or failed
 areas.
+
+Goon-derived APCs preserve cell, channel, cover/lock, wire, charging, and
+operating state; SMES units preserve stored charge plus independent input and
+output controls. TEG output remains coupled to the two circulators and their
+pressure/temperature state. Feature-level fidelity ledgers distinguish exact
+behavior from deterministic engine adaptations and work still deferred.
 
 ### Inputs, outputs, and dependencies
 

@@ -25,6 +25,15 @@ Cadence notation in these documents means:
 | `300t` | 5 minutes | maintenance forecast, disease progression |
 | `shift` | 28,800 ticks | payroll settlement, grading, contract rotation |
 
+Goon-derived machines also use an authoritative decisecond (`ds`) subcalendar.
+Each one-second tick drains exactly ten ordered `ds` slots; commands still enter
+only at the outer tick boundary. Source process tiers are represented directly
+as 4/8/16/32/64/128 `ds`, with ordinary machinery defaulting to 32 `ds`.
+Atmospheric machinery uses its source 16 `ds` cadence, and phase offsets such as
+pipe processing at `+4 ds` and power-net reset at `+8 ds` remain explicit
+calendar events. A source `mult` base controls lag compensation for one callback;
+it never silently changes when that callback is due.
+
 Systems execute in this order within a tick:
 
 1. validate and commit queued `GameCommand`s;
@@ -47,7 +56,7 @@ Authoritative state avoids binary floating-point where a value affects outcomes.
 | Quantity | Unit and representation |
 |---|---|
 | Position | integer `map_id`, tile `x`, tile `y`; optional pixel offset in 1/256 tile |
-| Time | integer ticks; durations are integer ticks |
+| Time | integer ticks plus integer `ds` machine deadlines; 10 `ds` = 1 tick |
 | Money | integer credits in hundredths (`cr¢`) |
 | Mass | integer grams (`g`) |
 | Material quantity | integer grams; indivisible parts use integer count |

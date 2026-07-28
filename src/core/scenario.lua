@@ -27,14 +27,21 @@ local STRUCTURE_VALUES = {
 
 local FIXTURE_KINDS = {
   apc = true,
+  barcode_computer = true,
   battery = true,
   cargo_pad = true,
+  circulator = true,
   fabricator = true,
   generator = true,
   generic = true,
+  nanofab = true,
+  portable_scrubber = true,
+  reclaimer = true,
   refinery = true,
   scrubber = true,
+  supply_console = true,
   vent = true,
+  vent_pump = true,
 }
 
 local EXPECTED_NESTED_KINDS = {
@@ -100,10 +107,12 @@ local PALETTE_KEYS = {
 }
 
 local FIXTURE_KEYS = {
+  definition_id = true,
   department = true,
   id = true,
   kind = true,
   name = true,
+  source_overrides = true,
   source_path = true,
   x = true,
   y = true,
@@ -312,6 +321,12 @@ local function validate_fixtures(definition, width, height, scenario_id)
     ids[id] = true
     assert(FIXTURE_KINDS[fixture.kind],
       "unknown fixture kind: " .. tostring(fixture.kind))
+    if fixture.definition_id ~= nil then
+      local parsed, definition_error = ContentId.parse(fixture.definition_id)
+      assert(parsed, definition_error)
+      assert(parsed.kind == "machine",
+        "fixture.definition_id must name machine content")
+    end
     if fixture.department ~= nil then
       assert(DEPARTMENTS[fixture.department], "unknown fixture department")
     end
@@ -320,6 +335,26 @@ local function validate_fixtures(definition, width, height, scenario_id)
     end
     if fixture.source_path ~= nil then
       nonempty_string(fixture.source_path, "fixture.source_path", 1024)
+    end
+    if fixture.source_overrides ~= nil then
+      assert(type(fixture.source_overrides) == "table",
+        "fixture.source_overrides must be an object")
+      for key, value in pairs(fixture.source_overrides) do
+        assert(type(key) == "string" and key:match("^[A-Za-z_][A-Za-z0-9_]*$"),
+          "invalid fixture source override name")
+        local value_type = type(value)
+        assert(
+          value_type == "string"
+            or value_type == "boolean"
+            or (
+              value_type == "number"
+              and value == math.floor(value)
+              and value >= -9007199254740991
+              and value <= 9007199254740991
+            ),
+          "fixture source overrides must be safe scalar literals"
+        )
+      end
     end
   end
   return fixtures
@@ -420,6 +455,15 @@ function Scenario.validate(definition, content)
     end
   end
   if content and content.by_id then
+    local fixtures = definition.fixtures or {}
+    for index = 1, #fixtures do
+      local definition_id = fixtures[index].definition_id
+      if definition_id then
+        local machine = content.by_id[definition_id]
+        assert(machine and machine.kind == "machine",
+          "unknown fixture machine definition: " .. definition_id)
+      end
+    end
     local spawns = definition.spawns or {}
     for index = 1, #spawns do
       local job_id = spawns[index].job
@@ -489,15 +533,11 @@ local function touches_cable(world, index)
 end
 
 local function validate_expanded(definition, world, fixtures, spawns, targets)
-  local occupied = {}
   for index = 1, #fixtures do
     local fixture = fixtures[index]
     local tile_index = fixture.index
     assert(world:is_passable(tile_index),
       "fixture is not on a passable floor: " .. fixture.id)
-    assert(not occupied[tile_index],
-      "fixture collision: " .. fixture.id .. " and " .. tostring(occupied[tile_index]))
-    occupied[tile_index] = fixture.id
     if fixture.kind == "apc" then
       assert(world.area[tile_index] > 0, "APC has no area: " .. fixture.id)
       assert(touches_cable(world, tile_index),
@@ -505,7 +545,12 @@ local function validate_expanded(definition, world, fixtures, spawns, targets)
     elseif fixture.kind == "generator" then
       assert(touches_cable(world, tile_index),
         "generator does not touch a cable: " .. fixture.id)
-    elseif fixture.kind == "vent" or fixture.kind == "scrubber" then
+    elseif fixture.kind == "vent"
+      or fixture.kind == "vent_pump"
+      or fixture.kind == "scrubber"
+      or fixture.kind == "portable_scrubber"
+      or fixture.kind == "circulator"
+    then
       assert(world:is_gas_cell(tile_index),
         "atmos fixture is not in a gas cell: " .. fixture.id)
     end

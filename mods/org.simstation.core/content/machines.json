@@ -1,0 +1,2160 @@
+{
+  "schema": 1,
+  "definitions": [
+    {
+      "id": "org.simstation.core:machine/goon-apc",
+      "kind": "machine",
+      "schema": 2,
+      "name_key": "machine.goon-apc",
+      "fixture_kind": "apc",
+      "behavior": "org.simstation.core:machine-behavior/goon-apc-v1",
+      "source": {
+        "repository": "goonstation/goonstation",
+        "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+        "type_path": "/obj/machinery/power/apc",
+        "files": [
+          "code/modules/power/apc.dm",
+          "code/obj/machinery.dm"
+        ]
+      },
+      "process": {
+        "class": "general",
+        "tier": 4,
+        "interval_ds": 32,
+        "mult_base_ds": 48,
+        "mult_cap_ds": 480
+      },
+      "power": {
+        "requires_power": false,
+        "channel": "none",
+        "idle_w": 0,
+        "priority": 1
+      },
+      "tags": [
+        "access-controlled",
+        "area-power",
+        "npc-operable",
+        "power",
+        "wired"
+      ],
+      "map_override_fields": [
+        "areastring",
+        "dir",
+        "name",
+        "pixel_x"
+      ],
+      "state_defaults": {
+        "aidisabled": false,
+        "cell_capacity": 2500,
+        "cell_charge": 2250,
+        "cell_present": true,
+        "chargecount": 0,
+        "chargemode": true,
+        "charging": 0,
+        "circuit_disabled": false,
+        "coverlocked": true,
+        "do_not_operate": false,
+        "emagged": false,
+        "environ": 3,
+        "equipment": 3,
+        "lastused_environ": 0,
+        "lastused_equip": 0,
+        "lastused_light": 0,
+        "lastused_total": 0,
+        "lighting": 3,
+        "locked": true,
+        "main_status": 0,
+        "noalerts": false,
+        "opened": false,
+        "operating": true,
+        "repair_status": 0,
+        "setup_networkapc": 1,
+        "shorted": false,
+        "terminal_present": true,
+        "terminal_repair_status": 0,
+        "wiresexposed": false
+      },
+      "wires": [
+        {
+          "id": "id-scan",
+          "index": 1,
+          "source_symbol": "APC_WIRE_IDSCAN"
+        },
+        {
+          "id": "main-power-1",
+          "index": 2,
+          "source_symbol": "APC_WIRE_MAIN_POWER1"
+        },
+        {
+          "id": "main-power-2",
+          "index": 3,
+          "source_symbol": "APC_WIRE_MAIN_POWER2"
+        },
+        {
+          "id": "ai-control",
+          "index": 4,
+          "source_symbol": "APC_WIRE_AI_CONTROL"
+        }
+      ],
+      "actions": [
+        {
+          "id": "inspect",
+          "handler": "common.inspect",
+          "source_symbol": "examine",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "diagnose"
+          ]
+        },
+        {
+          "id": "swipe-id",
+          "handler": "apc.swipe-id",
+          "source_symbol": "attackby(/obj/item/card/id)",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "access_any": [
+              "engineering",
+              "engineering_power"
+            ],
+            "not_broken": true
+          },
+          "parameters": {},
+          "tags": [
+            "access",
+            "operate"
+          ]
+        },
+        {
+          "id": "pry-cover",
+          "handler": "apc.pry-cover",
+          "source_symbol": "attackby(TOOL_PRYING)",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "not_broken": true,
+            "tools_any": [
+              "crowbar",
+              "prying"
+            ]
+          },
+          "parameters": {},
+          "tags": [
+            "maintenance"
+          ]
+        },
+        {
+          "id": "toggle-wire-panel",
+          "handler": "apc.toggle-wire-panel",
+          "source_symbol": "attackby(TOOL_SCREWING)",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "not_broken": true,
+            "tools_any": [
+              "screwdriver",
+              "screwing"
+            ]
+          },
+          "parameters": {},
+          "tags": [
+            "maintenance",
+            "sabotage"
+          ]
+        },
+        {
+          "id": "set-cover-lock",
+          "handler": "apc.set-cover-lock",
+          "source_symbol": "onCoverLockedChange",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true,
+            "not_broken": true
+          },
+          "parameters": {
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "tags": [
+            "operate"
+          ]
+        },
+        {
+          "id": "set-operating",
+          "handler": "apc.set-operating",
+          "source_symbol": "onOperatingChange",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true,
+            "not_broken": true
+          },
+          "parameters": {
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "tags": [
+            "operate",
+            "power"
+          ]
+        },
+        {
+          "id": "set-charge-mode",
+          "handler": "apc.set-charge-mode",
+          "source_symbol": "onChargeModeChange",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true,
+            "not_broken": true
+          },
+          "parameters": {
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "tags": [
+            "operate",
+            "power"
+          ]
+        },
+        {
+          "id": "set-channel",
+          "handler": "apc.set-channel",
+          "source_symbol": "onPowerChannel*StatusChange",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true,
+            "not_broken": true
+          },
+          "parameters": {
+            "channel": {
+              "type": "enum",
+              "values": [
+                "environment",
+                "equipment",
+                "lighting"
+              ]
+            },
+            "value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3
+            }
+          },
+          "tags": [
+            "operate",
+            "power"
+          ]
+        },
+        {
+          "id": "cut-wire",
+          "handler": "wire.cut",
+          "source_symbol": "cut",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "panel_open": true,
+            "tools_any": [
+              "snipping",
+              "wirecutters"
+            ]
+          },
+          "parameters": {
+            "wire": {
+              "type": "enum",
+              "values": [
+                "dark-red",
+                "orange",
+                "white",
+                "yellow"
+              ]
+            }
+          },
+          "tags": [
+            "maintenance",
+            "sabotage"
+          ]
+        },
+        {
+          "id": "mend-wire",
+          "handler": "wire.mend",
+          "source_symbol": "mend",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "panel_open": true,
+            "tools_any": [
+              "snipping",
+              "wirecutters"
+            ]
+          },
+          "parameters": {
+            "wire": {
+              "type": "enum",
+              "values": [
+                "dark-red",
+                "orange",
+                "white",
+                "yellow"
+              ]
+            }
+          },
+          "tags": [
+            "maintenance"
+          ]
+        },
+        {
+          "id": "pulse-wire",
+          "handler": "wire.pulse",
+          "source_symbol": "pulse",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "panel_open": true,
+            "tools_any": [
+              "multitool",
+              "pulsing"
+            ]
+          },
+          "parameters": {
+            "wire": {
+              "type": "enum",
+              "values": [
+                "dark-red",
+                "orange",
+                "white",
+                "yellow"
+              ]
+            }
+          },
+          "tags": [
+            "diagnose",
+            "sabotage"
+          ]
+        },
+        {
+          "id": "repair-controller",
+          "handler": "apc.repair-controller",
+          "source_symbol": "repair_status",
+          "implemented": false,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "maintenance",
+            "repair"
+          ]
+        }
+      ],
+      "fidelity": {
+        "profile": "goon-near-1",
+        "ledger": [
+          {
+            "feature": "defaults",
+            "status": "exact",
+            "source": "code/modules/power/apc.dm:36-89"
+          },
+          {
+            "feature": "controls",
+            "status": "engine-adapted",
+            "source": "code/modules/power/apc.dm:639-970"
+          },
+          {
+            "feature": "wire-effects",
+            "status": "deterministic-equivalent",
+            "source": "code/modules/power/apc.dm:1131-1244"
+          },
+          {
+            "feature": "cell-grid-accounting",
+            "status": "deferred",
+            "source": "code/modules/power/apc.dm:1262-1477"
+          },
+          {
+            "feature": "ordered-repair",
+            "status": "deferred",
+            "source": "code/modules/power/apc.dm:406-630"
+          }
+        ]
+      }
+    },
+    {
+      "id": "org.simstation.core:machine/goon-cargo-pad",
+      "kind": "machine",
+      "schema": 2,
+      "name_key": "machine.goon-cargo-pad",
+      "fixture_kind": "cargo_pad",
+      "behavior": "org.simstation.core:machine-behavior/goon-cargo-pad-v1",
+      "source": {
+        "repository": "goonstation/goonstation",
+        "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+        "type_path": "/obj/submachine/cargopad",
+        "files": [
+          "code/obj/item/device/cargotransporter.dm"
+        ]
+      },
+      "process": {
+        "class": "none",
+        "tier": 0,
+        "interval_ds": 0,
+        "mult_base_ds": 0,
+        "mult_cap_ds": 0
+      },
+      "power": {
+        "requires_power": false,
+        "channel": "none",
+        "idle_w": 0,
+        "priority": 6
+      },
+      "tags": [
+        "cargo",
+        "npc-operable",
+        "receiver"
+      ],
+      "map_override_fields": [
+        "dir",
+        "name"
+      ],
+      "state_defaults": {
+        "active": true,
+        "occupied": false
+      },
+      "wires": [],
+      "actions": [
+        {
+          "id": "inspect",
+          "handler": "common.inspect",
+          "source_symbol": "examine",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "diagnose"
+          ]
+        },
+        {
+          "id": "toggle-receiver",
+          "handler": "cargo-pad.toggle",
+          "source_symbol": "attack_hand",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "cargo",
+            "operate"
+          ]
+        },
+        {
+          "id": "receive-cargo",
+          "handler": "cargo-pad.receive",
+          "source_symbol": "cargotransporter",
+          "implemented": false,
+          "range": "none",
+          "duration_ds": 30,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "cargo",
+            "transport"
+          ]
+        }
+      ],
+      "fidelity": {
+        "profile": "goon-near-1",
+        "ledger": [
+          {
+            "feature": "receiver-state",
+            "status": "engine-adapted",
+            "source": "code/obj/item/device/cargotransporter.dm"
+          },
+          {
+            "feature": "cell-powered-transport",
+            "status": "deferred",
+            "source": "code/obj/item/device/cargotransporter.dm"
+          }
+        ]
+      }
+    },
+    {
+      "id": "org.simstation.core:machine/goon-manufacturer",
+      "kind": "machine",
+      "schema": 2,
+      "name_key": "machine.goon-manufacturer",
+      "fixture_kind": "fabricator",
+      "behavior": "org.simstation.core:machine-behavior/goon-manufacturer-v1",
+      "source": {
+        "repository": "goonstation/goonstation",
+        "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+        "type_path": "/obj/machinery/manufacturer",
+        "files": [
+          "code/datums/manufacturing.dm",
+          "code/datums/manufacturing_requirements.dm",
+          "code/obj/machinery/manufacturer.dm",
+          "code/obj/machinery/manufacturer_subtypes.dm"
+        ]
+      },
+      "process": {
+        "class": "general",
+        "tier": 4,
+        "interval_ds": 32,
+        "mult_base_ds": 48,
+        "mult_cap_ds": 480
+      },
+      "power": {
+        "requires_power": true,
+        "channel": "equipment",
+        "idle_w": 200,
+        "priority": 5
+      },
+      "health": {
+        "maximum": 100,
+        "break_at": 25,
+        "repair_at": 60
+      },
+      "tags": [
+        "damageable",
+        "manufacturing",
+        "materials",
+        "npc-operable",
+        "wired"
+      ],
+      "map_override_fields": [
+        "dir",
+        "name",
+        "share_id"
+      ],
+      "state_defaults": {
+        "accept_blueprints": true,
+        "active_power_consumption": 0,
+        "dismantle_stage": 0,
+        "electrified": 0,
+        "emagged": false,
+        "error": false,
+        "hacked": false,
+        "malfunction": false,
+        "mode": "ready",
+        "next_begin_ds": 0,
+        "original_duration_ds": 0,
+        "output_cap": 20,
+        "panel_open": false,
+        "paused_reason": false,
+        "power_wire_cut": false,
+        "queue": [],
+        "repeat": false,
+        "speed": 3,
+        "time_left_ds": 0,
+        "time_left_electrified": 0,
+        "time_started_ds": 0,
+        "work_finish_ds": 0
+      },
+      "wires": [
+        {
+          "id": "extend",
+          "index": 1,
+          "source_symbol": "WIRE_EXTEND"
+        },
+        {
+          "id": "power",
+          "index": 2,
+          "source_symbol": "WIRE_POWER"
+        },
+        {
+          "id": "malfunction",
+          "index": 3,
+          "source_symbol": "WIRE_MALF"
+        },
+        {
+          "id": "shock",
+          "index": 4,
+          "source_symbol": "WIRE_SHOCK"
+        }
+      ],
+      "actions": [
+        {
+          "id": "inspect",
+          "handler": "common.inspect",
+          "source_symbol": "get_desc",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "diagnose"
+          ]
+        },
+        {
+          "id": "queue-product",
+          "handler": "manufacturer.queue-product",
+          "source_symbol": "ui_act(request_product)",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true,
+            "not_broken": true,
+            "power": true
+          },
+          "parameters": {
+            "recipe_id": {
+              "type": "content-id"
+            }
+          },
+          "tags": [
+            "manufacture",
+            "operate"
+          ]
+        },
+        {
+          "id": "set-speed",
+          "handler": "manufacturer.set-speed",
+          "source_symbol": "ui_act(speed)",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true,
+            "modes": [
+              "halt",
+              "ready"
+            ],
+            "not_broken": true,
+            "power": true
+          },
+          "parameters": {
+            "value": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 8
+            }
+          },
+          "tags": [
+            "configure",
+            "manufacture"
+          ]
+        },
+        {
+          "id": "toggle-repeat",
+          "handler": "manufacturer.toggle-repeat",
+          "source_symbol": "ui_act(repeat)",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true,
+            "not_broken": true,
+            "power": true
+          },
+          "parameters": {},
+          "tags": [
+            "configure",
+            "manufacture"
+          ]
+        },
+        {
+          "id": "pause",
+          "handler": "manufacturer.pause",
+          "source_symbol": "ui_act(pause_toggle/pause)",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true,
+            "modes": [
+              "working"
+            ],
+            "not_broken": true,
+            "power": true
+          },
+          "parameters": {},
+          "tags": [
+            "manufacture",
+            "operate"
+          ]
+        },
+        {
+          "id": "continue",
+          "handler": "manufacturer.continue",
+          "source_symbol": "ui_act(pause_toggle/continue)",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true,
+            "modes": [
+              "halt",
+              "ready"
+            ],
+            "not_broken": true,
+            "power": true
+          },
+          "parameters": {},
+          "tags": [
+            "manufacture",
+            "operate"
+          ]
+        },
+        {
+          "id": "clear-queue",
+          "handler": "manufacturer.clear",
+          "source_symbol": "ui_act(clear)",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true,
+            "not_broken": true,
+            "power": true
+          },
+          "parameters": {},
+          "tags": [
+            "manufacture",
+            "operate"
+          ]
+        },
+        {
+          "id": "remove-queue-entry",
+          "handler": "manufacturer.remove",
+          "source_symbol": "ui_act(remove)",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true,
+            "not_broken": true,
+            "power": true
+          },
+          "parameters": {
+            "index": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20
+            }
+          },
+          "tags": [
+            "manufacture",
+            "operate"
+          ]
+        },
+        {
+          "id": "toggle-panel",
+          "handler": "common.toggle-panel",
+          "source_symbol": "attackby(TOOL_SCREWING)",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "tools_any": [
+              "screwdriver",
+              "screwing"
+            ]
+          },
+          "parameters": {},
+          "tags": [
+            "maintenance",
+            "sabotage"
+          ]
+        },
+        {
+          "id": "cut-wire",
+          "handler": "wire.cut",
+          "source_symbol": "cut",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "panel_open": true,
+            "tools_any": [
+              "snipping",
+              "wirecutters"
+            ]
+          },
+          "parameters": {
+            "wire": {
+              "type": "enum",
+              "values": [
+                "dark-red",
+                "orange",
+                "white",
+                "yellow"
+              ]
+            }
+          },
+          "tags": [
+            "maintenance",
+            "sabotage"
+          ]
+        },
+        {
+          "id": "mend-wire",
+          "handler": "wire.mend",
+          "source_symbol": "mend",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "panel_open": true,
+            "tools_any": [
+              "snipping",
+              "wirecutters"
+            ]
+          },
+          "parameters": {
+            "wire": {
+              "type": "enum",
+              "values": [
+                "dark-red",
+                "orange",
+                "white",
+                "yellow"
+              ]
+            }
+          },
+          "tags": [
+            "maintenance"
+          ]
+        },
+        {
+          "id": "pulse-wire",
+          "handler": "wire.pulse",
+          "source_symbol": "pulse",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true,
+            "panel_open": true,
+            "tools_any": [
+              "multitool",
+              "pulsing"
+            ]
+          },
+          "parameters": {
+            "wire": {
+              "type": "enum",
+              "values": [
+                "dark-red",
+                "orange",
+                "white",
+                "yellow"
+              ]
+            }
+          },
+          "tags": [
+            "diagnose",
+            "sabotage"
+          ]
+        },
+        {
+          "id": "load-material",
+          "handler": "manufacturer.load-material",
+          "source_symbol": "attackby(material_piece)",
+          "implemented": false,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "haul",
+            "manufacture"
+          ]
+        },
+        {
+          "id": "insert-manudrive",
+          "handler": "manufacturer.insert-manudrive",
+          "source_symbol": "attackby(manudrive)",
+          "implemented": false,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "configure",
+            "manufacture"
+          ]
+        }
+      ],
+      "fidelity": {
+        "profile": "goon-near-1",
+        "ledger": [
+          {
+            "feature": "queue-speed-power",
+            "status": "deterministic-equivalent",
+            "source": "code/obj/machinery/manufacturer.dm:1-129,1716-1869"
+          },
+          {
+            "feature": "material-check-consume",
+            "status": "engine-adapted",
+            "source": "code/obj/machinery/manufacturer.dm:1631-1869"
+          },
+          {
+            "feature": "wire-effects",
+            "status": "deterministic-equivalent",
+            "source": "code/obj/machinery/manufacturer.dm:1544-1613"
+          },
+          {
+            "feature": "physical-materials-drives-banking",
+            "status": "deferred",
+            "source": "code/obj/machinery/manufacturer.dm:328-1148"
+          },
+          {
+            "feature": "subtype-recipe-catalogs",
+            "status": "deferred",
+            "source": "code/obj/machinery/manufacturer_subtypes.dm:4-730"
+          }
+        ]
+      }
+    },
+    {
+      "id": "org.simstation.core:machine/goon-nanofab",
+      "kind": "machine",
+      "schema": 2,
+      "name_key": "machine.goon-nanofab",
+      "fixture_kind": "nanofab",
+      "behavior": "org.simstation.core:machine-behavior/goon-nanofab-v1",
+      "source": {
+        "repository": "goonstation/goonstation",
+        "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+        "type_path": "/obj/machinery/nanofab",
+        "files": [
+          "code/modules/materials/Mat_FabParts.dm",
+          "code/modules/materials/Mat_FabRecipes.dm",
+          "code/modules/materials/Mat_Fabrication.dm"
+        ]
+      },
+      "process": {
+        "class": "none",
+        "tier": 0,
+        "interval_ds": 0,
+        "mult_base_ds": 0,
+        "mult_cap_ds": 0
+      },
+      "power": {
+        "requires_power": false,
+        "channel": "none",
+        "idle_w": 0,
+        "priority": 5
+      },
+      "tags": [
+        "manufacturing",
+        "materials",
+        "nanofab",
+        "npc-operable"
+      ],
+      "map_override_fields": [
+        "dir",
+        "name"
+      ],
+      "state_defaults": {
+        "bound_slots": {},
+        "selected_amount": 1,
+        "selected_recipe": false
+      },
+      "wires": [],
+      "actions": [
+        {
+          "id": "inspect",
+          "handler": "common.inspect",
+          "source_symbol": "examine",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "diagnose"
+          ]
+        },
+        {
+          "id": "fabricate",
+          "handler": "nanofab.fabricate",
+          "source_symbol": "ui_act(create)",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {
+            "recipe_id": {
+              "type": "content-id"
+            }
+          },
+          "tags": [
+            "manufacture",
+            "operate"
+          ]
+        },
+        {
+          "id": "bind-material-slot",
+          "handler": "nanofab.bind-material-slot",
+          "source_symbol": "ui_act(material)",
+          "implemented": false,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "configure",
+            "manufacture"
+          ]
+        }
+      ],
+      "fidelity": {
+        "profile": "goon-near-1",
+        "ledger": [
+          {
+            "feature": "immediate-production",
+            "status": "engine-adapted",
+            "source": "code/modules/materials/Mat_Fabrication.dm:110-406"
+          },
+          {
+            "feature": "slot-binding-material-inheritance",
+            "status": "deferred",
+            "source": "code/modules/materials/Mat_FabParts.dm:1-231"
+          }
+        ]
+      }
+    },
+    {
+      "id": "org.simstation.core:machine/goon-passive-vent",
+      "kind": "machine",
+      "schema": 2,
+      "name_key": "machine.goon-passive-vent",
+      "fixture_kind": "vent",
+      "behavior": "org.simstation.core:machine-behavior/goon-passive-vent-v1",
+      "source": {
+        "repository": "goonstation/goonstation",
+        "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+        "type_path": "/obj/machinery/atmospherics/unary/vent",
+        "files": [
+          "code/modules/atmospherics/machinery/unary/vent.dm"
+        ]
+      },
+      "process": {
+        "class": "atmos",
+        "tier": 0,
+        "interval_ds": 16,
+        "mult_base_ds": 0,
+        "mult_cap_ds": 0
+      },
+      "power": {
+        "requires_power": false,
+        "channel": "none",
+        "idle_w": 0,
+        "priority": 2
+      },
+      "tags": [
+        "atmospherics",
+        "gas-port",
+        "passive"
+      ],
+      "map_override_fields": [
+        "dir"
+      ],
+      "state_defaults": {
+        "internal_volume_l": 250,
+        "network_connected": false
+      },
+      "wires": [],
+      "actions": [
+        {
+          "id": "inspect",
+          "handler": "common.inspect",
+          "source_symbol": "examine",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "diagnose"
+          ]
+        }
+      ],
+      "fidelity": {
+        "profile": "goon-near-1",
+        "ledger": [
+          {
+            "feature": "passive-gas-conservation",
+            "status": "deferred",
+            "source": "code/modules/atmospherics/machinery/unary/vent.dm:1-71",
+            "note": "The definition prevents the former powered O2/N2 synthesis; pipe reservoirs are the next operational slice."
+          },
+          {
+            "feature": "zero-power",
+            "status": "exact",
+            "source": "code/modules/atmospherics/machinery/unary/vent.dm:1-71"
+          }
+        ]
+      }
+    },
+    {
+      "id": "org.simstation.core:machine/goon-portable-reclaimer",
+      "kind": "machine",
+      "schema": 2,
+      "name_key": "machine.goon-portable-reclaimer",
+      "fixture_kind": "reclaimer",
+      "behavior": "org.simstation.core:machine-behavior/goon-portable-reclaimer-v1",
+      "source": {
+        "repository": "goonstation/goonstation",
+        "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+        "type_path": "/obj/machinery/portable_reclaimer",
+        "files": [
+          "code/obj/item/material.dm"
+        ]
+      },
+      "process": {
+        "class": "none",
+        "tier": 0,
+        "interval_ds": 0,
+        "mult_base_ds": 0,
+        "mult_cap_ds": 0
+      },
+      "power": {
+        "requires_power": false,
+        "channel": "none",
+        "idle_w": 0,
+        "priority": 5
+      },
+      "tags": [
+        "materials",
+        "npc-operable",
+        "portable",
+        "recycling"
+      ],
+      "map_override_fields": [
+        "dir",
+        "name"
+      ],
+      "state_defaults": {
+        "active": false,
+        "anchored": false,
+        "contents": [],
+        "material_remainders": {}
+      },
+      "wires": [],
+      "actions": [
+        {
+          "id": "inspect",
+          "handler": "common.inspect",
+          "source_symbol": "examine",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "diagnose"
+          ]
+        },
+        {
+          "id": "load-item",
+          "handler": "reclaimer.load-item",
+          "source_symbol": "attackby",
+          "implemented": false,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "haul",
+            "recycle"
+          ]
+        },
+        {
+          "id": "activate",
+          "handler": "reclaimer.activate",
+          "source_symbol": "attack_hand",
+          "implemented": false,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "operate",
+            "recycle"
+          ]
+        }
+      ],
+      "fidelity": {
+        "profile": "goon-near-1",
+        "ledger": [
+          {
+            "feature": "portable-zero-power",
+            "status": "exact",
+            "source": "code/obj/item/material.dm:905-1243"
+          },
+          {
+            "feature": "composition-remainders",
+            "status": "deferred",
+            "source": "code/obj/item/material.dm:905-1243"
+          }
+        ]
+      }
+    },
+    {
+      "id": "org.simstation.core:machine/goon-portable-scrubber",
+      "kind": "machine",
+      "schema": 2,
+      "name_key": "machine.goon-portable-scrubber",
+      "fixture_kind": "portable_scrubber",
+      "behavior": "org.simstation.core:machine-behavior/goon-portable-scrubber-v1",
+      "source": {
+        "repository": "goonstation/goonstation",
+        "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+        "type_path": "/obj/machinery/portable_atmospherics/scrubber",
+        "files": [
+          "code/modules/atmospherics/portable/portable_atmospherics.dm",
+          "code/modules/atmospherics/portable/scrubber.dm"
+        ]
+      },
+      "process": {
+        "class": "atmos",
+        "tier": 0,
+        "interval_ds": 16,
+        "mult_base_ds": 0,
+        "mult_cap_ds": 0
+      },
+      "power": {
+        "requires_power": true,
+        "channel": "environment",
+        "idle_w": 1000,
+        "priority": 2
+      },
+      "tags": [
+        "atmospherics",
+        "gas-storage",
+        "npc-operable",
+        "portable"
+      ],
+      "map_override_fields": [
+        "dir",
+        "name"
+      ],
+      "state_defaults": {
+        "anchored": false,
+        "connected": false,
+        "flow_percent": 100,
+        "gas_capacity_l": 1000,
+        "gas_storage": {},
+        "on": false,
+        "reagent_capacity_u": 500,
+        "reagents": {},
+        "tank_present": false
+      },
+      "wires": [],
+      "actions": [
+        {
+          "id": "inspect",
+          "handler": "common.inspect",
+          "source_symbol": "ui_data",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true
+          },
+          "parameters": {},
+          "tags": [
+            "diagnose"
+          ]
+        },
+        {
+          "id": "set-power",
+          "handler": "portable-scrubber.set-power",
+          "source_symbol": "ui_act(power)",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true,
+            "not_broken": true,
+            "power": true
+          },
+          "parameters": {
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "tags": [
+            "atmospherics",
+            "operate"
+          ]
+        },
+        {
+          "id": "set-flow",
+          "handler": "portable-scrubber.set-flow",
+          "source_symbol": "ui_act(flow)",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true,
+            "not_broken": true,
+            "power": true
+          },
+          "parameters": {
+            "value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            }
+          },
+          "tags": [
+            "atmospherics",
+            "configure"
+          ]
+        },
+        {
+          "id": "connect-port",
+          "handler": "portable-scrubber.connect",
+          "source_symbol": "attackby(TOOL_WRENCHING)",
+          "implemented": false,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "atmospherics",
+            "maintenance"
+          ]
+        }
+      ],
+      "fidelity": {
+        "profile": "goon-near-1",
+        "ledger": [
+          {
+            "feature": "defaults-controls-power",
+            "status": "engine-adapted",
+            "source": "code/modules/atmospherics/portable/scrubber.dm:4-197"
+          },
+          {
+            "feature": "gas-reagent-conservation",
+            "status": "deferred",
+            "source": "code/modules/atmospherics/portable/scrubber.dm:4-197"
+          }
+        ]
+      }
+    },
+    {
+      "id": "org.simstation.core:machine/goon-qm-barcode-computer",
+      "kind": "machine",
+      "schema": 2,
+      "name_key": "machine.goon-qm-barcode-computer",
+      "fixture_kind": "barcode_computer",
+      "behavior": "org.simstation.core:machine-behavior/goon-qm-barcode-v1",
+      "source": {
+        "repository": "goonstation/goonstation",
+        "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+        "type_path": "/obj/machinery/computer/barcode/qm",
+        "files": [
+          "code/obj/machinery/launcherloader.dm"
+        ]
+      },
+      "process": {
+        "class": "general",
+        "tier": 4,
+        "interval_ds": 32,
+        "mult_base_ds": 48,
+        "mult_cap_ds": 480
+      },
+      "power": {
+        "requires_power": true,
+        "channel": "equipment",
+        "idle_w": 250,
+        "priority": 4
+      },
+      "tags": [
+        "cargo",
+        "computer",
+        "npc-operable"
+      ],
+      "map_override_fields": [
+        "dir",
+        "name"
+      ],
+      "state_defaults": {
+        "label_count": 1,
+        "personal_split": false,
+        "selected_destination": "shipping-market"
+      },
+      "wires": [],
+      "actions": [
+        {
+          "id": "inspect",
+          "handler": "common.inspect",
+          "source_symbol": "examine",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "diagnose"
+          ]
+        },
+        {
+          "id": "print-labels",
+          "handler": "barcode.print",
+          "source_symbol": "ui_act(print)",
+          "implemented": false,
+          "range": "adjacent",
+          "duration_ds": 18,
+          "requires": {
+            "not_broken": true,
+            "power": true
+          },
+          "parameters": {
+            "count": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            }
+          },
+          "tags": [
+            "cargo",
+            "operate"
+          ]
+        }
+      ],
+      "fidelity": {
+        "profile": "goon-near-1",
+        "ledger": [
+          {
+            "feature": "label-workflow",
+            "status": "deferred",
+            "source": "code/obj/machinery/launcherloader.dm:338-468"
+          },
+          {
+            "feature": "fixture-identity",
+            "status": "exact",
+            "source": "maps/atlas.dmm"
+          }
+        ]
+      }
+    },
+    {
+      "id": "org.simstation.core:machine/goon-smes",
+      "kind": "machine",
+      "schema": 2,
+      "name_key": "machine.goon-smes",
+      "fixture_kind": "battery",
+      "behavior": "org.simstation.core:machine-behavior/goon-smes-v1",
+      "source": {
+        "repository": "goonstation/goonstation",
+        "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+        "type_path": "/obj/machinery/power/smes",
+        "files": [
+          "code/modules/power/smes.dm"
+        ]
+      },
+      "process": {
+        "class": "general",
+        "tier": 4,
+        "interval_ds": 32,
+        "mult_base_ds": 48,
+        "mult_cap_ds": 480
+      },
+      "power": {
+        "requires_power": false,
+        "channel": "none",
+        "idle_w": 0,
+        "priority": 3
+      },
+      "tags": [
+        "energy-storage",
+        "npc-operable",
+        "power",
+        "wired"
+      ],
+      "map_override_fields": [
+        "charge",
+        "chargelevel",
+        "dir",
+        "name",
+        "output"
+      ],
+      "state_defaults": {
+        "capacity": 100000000,
+        "charge": 20000000,
+        "chargecount": 0,
+        "chargelevel": 30000,
+        "chargemode": true,
+        "charging": false,
+        "lastout": 0,
+        "lastexcess": 0,
+        "loaddemand": 0,
+        "online": true,
+        "output": 30000,
+        "terminal_present": true
+      },
+      "wires": [],
+      "actions": [
+        {
+          "id": "inspect",
+          "handler": "common.inspect",
+          "source_symbol": "ui_data",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "diagnose"
+          ]
+        },
+        {
+          "id": "toggle-input",
+          "handler": "smes.toggle-input",
+          "source_symbol": "ui_act(toggle-input)",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "not_broken": true
+          },
+          "parameters": {},
+          "tags": [
+            "operate",
+            "power"
+          ]
+        },
+        {
+          "id": "toggle-output",
+          "handler": "smes.toggle-output",
+          "source_symbol": "ui_act(toggle-output)",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "not_broken": true
+          },
+          "parameters": {},
+          "tags": [
+            "operate",
+            "power"
+          ]
+        },
+        {
+          "id": "set-input",
+          "handler": "smes.set-input",
+          "source_symbol": "ui_act(set-input)",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "not_broken": true
+          },
+          "parameters": {
+            "value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 200000
+            }
+          },
+          "tags": [
+            "configure",
+            "power"
+          ]
+        },
+        {
+          "id": "set-output",
+          "handler": "smes.set-output",
+          "source_symbol": "ui_act(set-output)",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "not_broken": true
+          },
+          "parameters": {
+            "value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 200000
+            }
+          },
+          "tags": [
+            "configure",
+            "power"
+          ]
+        },
+        {
+          "id": "repair-short",
+          "handler": "smes.repair-short",
+          "source_symbol": "equipment_fault/dangerously_shorted",
+          "implemented": false,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "maintenance",
+            "repair"
+          ]
+        }
+      ],
+      "fidelity": {
+        "profile": "goon-near-1",
+        "ledger": [
+          {
+            "feature": "defaults-map-overrides",
+            "status": "exact",
+            "source": "code/modules/power/smes.dm:21-86; maps/atlas.dmm"
+          },
+          {
+            "feature": "controls",
+            "status": "engine-adapted",
+            "source": "code/modules/power/smes.dm:317-388"
+          },
+          {
+            "feature": "two-network-accounting",
+            "status": "deferred",
+            "source": "code/modules/power/smes.dm:212-315"
+          },
+          {
+            "feature": "failure-repair",
+            "status": "deferred",
+            "source": "code/modules/power/smes.dm:88-185"
+          }
+        ]
+      }
+    },
+    {
+      "id": "org.simstation.core:machine/goon-supply-console",
+      "kind": "machine",
+      "schema": 2,
+      "name_key": "machine.goon-supply-console",
+      "fixture_kind": "supply_console",
+      "behavior": "org.simstation.core:machine-behavior/goon-supply-console-v1",
+      "source": {
+        "repository": "goonstation/goonstation",
+        "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+        "type_path": "/obj/machinery/computer/supplycomp",
+        "files": [
+          "code/modules/economy/shippingmarket.dm",
+          "code/obj/machinery/computer/QM_supply.dm"
+        ]
+      },
+      "process": {
+        "class": "general",
+        "tier": 4,
+        "interval_ds": 32,
+        "mult_base_ds": 48,
+        "mult_cap_ds": 480
+      },
+      "power": {
+        "requires_power": true,
+        "channel": "equipment",
+        "idle_w": 250,
+        "priority": 4
+      },
+      "tags": [
+        "access-controlled",
+        "cargo",
+        "computer",
+        "economy",
+        "npc-operable"
+      ],
+      "map_override_fields": [
+        "dir",
+        "name"
+      ],
+      "state_defaults": {
+        "cart": [],
+        "emagged": false,
+        "selected_market": "shipping-market"
+      },
+      "wires": [],
+      "actions": [
+        {
+          "id": "inspect",
+          "handler": "common.inspect",
+          "source_symbol": "ui_data",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "diagnose"
+          ]
+        },
+        {
+          "id": "approve-order",
+          "handler": "supply.approve-order",
+          "source_symbol": "ui_act(order)",
+          "implemented": false,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "access_any": [
+              "cargo",
+              "supply"
+            ],
+            "not_broken": true,
+            "power": true
+          },
+          "parameters": {},
+          "tags": [
+            "cargo",
+            "economy",
+            "operate"
+          ]
+        }
+      ],
+      "fidelity": {
+        "profile": "goon-near-1",
+        "ledger": [
+          {
+            "feature": "fixture-access-contract",
+            "status": "engine-adapted",
+            "source": "code/obj/machinery/computer/QM_supply.dm:23-380"
+          },
+          {
+            "feature": "market-ledger-shipments",
+            "status": "deferred",
+            "source": "code/modules/economy/shippingmarket.dm:20-721"
+          }
+        ]
+      }
+    },
+    {
+      "id": "org.simstation.core:machine/goon-teg-circulator",
+      "kind": "machine",
+      "schema": 2,
+      "name_key": "machine.goon-teg-circulator",
+      "fixture_kind": "circulator",
+      "behavior": "org.simstation.core:machine-behavior/goon-teg-circulator-v1",
+      "source": {
+        "repository": "goonstation/goonstation",
+        "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+        "type_path": "/obj/machinery/atmospherics/binary/circulatorTemp",
+        "files": [
+          "code/modules/power/TEG.dm"
+        ]
+      },
+      "process": {
+        "class": "atmos",
+        "tier": 0,
+        "interval_ds": 16,
+        "mult_base_ds": 0,
+        "mult_cap_ds": 0
+      },
+      "power": {
+        "requires_power": true,
+        "channel": "equipment",
+        "idle_w": 0,
+        "priority": 2
+      },
+      "tags": [
+        "atmospherics",
+        "gas-port",
+        "npc-operable",
+        "power"
+      ],
+      "map_override_fields": [
+        "dir",
+        "name"
+      ],
+      "state_defaults": {
+        "backflow_protection": true,
+        "fan_efficiency_ppm": 900000,
+        "lubricant_capacity_u": 400,
+        "lubricant_volume_u": 200,
+        "minimum_pressure_pa": 75000,
+        "panel_open": false,
+        "pressure_override": false,
+        "target_pressure_pa": 75000,
+        "warning_active": 0
+      },
+      "wires": [],
+      "actions": [
+        {
+          "id": "inspect",
+          "handler": "common.inspect",
+          "source_symbol": "examine",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "diagnose"
+          ]
+        },
+        {
+          "id": "toggle-pressure-override",
+          "handler": "circulator.toggle-override",
+          "source_symbol": "mechanics(Toggle Active)",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "not_broken": true
+          },
+          "parameters": {},
+          "tags": [
+            "atmospherics",
+            "configure"
+          ]
+        },
+        {
+          "id": "set-target-pressure",
+          "handler": "circulator.set-pressure",
+          "source_symbol": "mechanics(Set Target Pressure)",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "not_broken": true
+          },
+          "parameters": {
+            "value": {
+              "type": "integer",
+              "minimum": 75000,
+              "maximum": 100000000
+            }
+          },
+          "tags": [
+            "atmospherics",
+            "configure"
+          ]
+        },
+        {
+          "id": "repair-leak",
+          "handler": "circulator.repair-leak",
+          "source_symbol": "semiconductor_state",
+          "implemented": false,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "maintenance",
+            "repair"
+          ]
+        }
+      ],
+      "fidelity": {
+        "profile": "goon-near-1",
+        "ledger": [
+          {
+            "feature": "defaults-controls",
+            "status": "engine-adapted",
+            "source": "code/modules/power/TEG.dm:54-418"
+          },
+          {
+            "feature": "pressure-flow-lubricant",
+            "status": "deferred",
+            "source": "code/modules/power/TEG.dm:188-539"
+          }
+        ]
+      }
+    },
+    {
+      "id": "org.simstation.core:machine/goon-teg-generator",
+      "kind": "machine",
+      "schema": 2,
+      "name_key": "machine.goon-teg-generator",
+      "fixture_kind": "generator",
+      "behavior": "org.simstation.core:machine-behavior/goon-teg-v1",
+      "source": {
+        "repository": "goonstation/goonstation",
+        "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+        "type_path": "/obj/machinery/power/generatorTemp",
+        "files": [
+          "code/modules/power/TEG.dm"
+        ]
+      },
+      "process": {
+        "class": "general",
+        "tier": 4,
+        "interval_ds": 32,
+        "mult_base_ds": 48,
+        "mult_cap_ds": 480
+      },
+      "power": {
+        "requires_power": false,
+        "channel": "none",
+        "idle_w": 0,
+        "priority": 3
+      },
+      "tags": [
+        "atmospherics",
+        "generator",
+        "npc-operable",
+        "power"
+      ],
+      "map_override_fields": [
+        "dir",
+        "name",
+        "variant_a",
+        "variant_b"
+      ],
+      "state_defaults": {
+        "cold_circulator_id": false,
+        "conductor_temp_mk": 293150,
+        "efficiency_controller": 52,
+        "grump": 0,
+        "history": [],
+        "hot_circulator_id": false,
+        "last_output_w": 0,
+        "lastgenlev": 0,
+        "running": false,
+        "semiconductor_efficiency_offset": 0,
+        "semiconductor_state": "installed",
+        "variant_a": 0,
+        "variant_b": false
+      },
+      "wires": [],
+      "actions": [
+        {
+          "id": "inspect",
+          "handler": "common.inspect",
+          "source_symbol": "ui_data",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "diagnose"
+          ]
+        },
+        {
+          "id": "service-thermocouple",
+          "handler": "teg.service-thermocouple",
+          "source_symbol": "semiconductor_state",
+          "implemented": false,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "maintenance",
+            "repair"
+          ]
+        }
+      ],
+      "fidelity": {
+        "profile": "goon-near-1",
+        "ledger": [
+          {
+            "feature": "fixture-triad",
+            "status": "exact",
+            "source": "maps/atlas.dmm"
+          },
+          {
+            "feature": "heat-power-equation",
+            "status": "deferred",
+            "source": "code/modules/power/TEG.dm:840-943"
+          },
+          {
+            "feature": "thermocouple-hazards",
+            "status": "deferred",
+            "source": "code/modules/power/TEG.dm:945-1490"
+          }
+        ]
+      }
+    },
+    {
+      "id": "org.simstation.core:machine/goon-vent-pump",
+      "kind": "machine",
+      "schema": 2,
+      "name_key": "machine.goon-vent-pump",
+      "fixture_kind": "vent_pump",
+      "behavior": "org.simstation.core:machine-behavior/goon-vent-pump-v1",
+      "source": {
+        "repository": "goonstation/goonstation",
+        "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+        "type_path": "/obj/machinery/atmospherics/unary/vent_pump",
+        "files": [
+          "code/modules/atmospherics/machinery/unary/vent_pump.dm"
+        ]
+      },
+      "process": {
+        "class": "atmos",
+        "tier": 0,
+        "interval_ds": 16,
+        "mult_base_ds": 0,
+        "mult_cap_ds": 0
+      },
+      "power": {
+        "requires_power": false,
+        "channel": "none",
+        "idle_w": 0,
+        "priority": 2
+      },
+      "tags": [
+        "atmospherics",
+        "gas-port",
+        "npc-operable",
+        "radio-controlled"
+      ],
+      "map_override_fields": [
+        "dir",
+        "external_pressure_bound",
+        "internal_pressure_bound",
+        "name",
+        "on",
+        "pressure_checks",
+        "pump_direction"
+      ],
+      "state_defaults": {
+        "external_pressure_bound_pa": 0,
+        "internal_pressure_bound_pa": 4000,
+        "internal_volume_l": 200,
+        "on": true,
+        "pressure_checks": 2,
+        "pump_direction": "siphon"
+      },
+      "wires": [],
+      "actions": [
+        {
+          "id": "inspect",
+          "handler": "common.inspect",
+          "source_symbol": "radio(status)",
+          "implemented": true,
+          "range": "adjacent",
+          "duration_ds": 0,
+          "requires": {},
+          "parameters": {},
+          "tags": [
+            "diagnose"
+          ]
+        },
+        {
+          "id": "set-power",
+          "handler": "vent-pump.set-power",
+          "source_symbol": "radio(power)",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true
+          },
+          "parameters": {
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "tags": [
+            "atmospherics",
+            "operate"
+          ]
+        },
+        {
+          "id": "set-direction",
+          "handler": "vent-pump.set-direction",
+          "source_symbol": "radio(direction)",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true
+          },
+          "parameters": {
+            "value": {
+              "type": "enum",
+              "values": [
+                "release",
+                "siphon"
+              ]
+            }
+          },
+          "tags": [
+            "atmospherics",
+            "configure"
+          ]
+        },
+        {
+          "id": "set-external-bound",
+          "handler": "vent-pump.set-external-bound",
+          "source_symbol": "radio(external_pressure)",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true
+          },
+          "parameters": {
+            "value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5066250
+            }
+          },
+          "tags": [
+            "atmospherics",
+            "configure"
+          ]
+        },
+        {
+          "id": "set-internal-bound",
+          "handler": "vent-pump.set-internal-bound",
+          "source_symbol": "radio(internal_pressure)",
+          "implemented": true,
+          "range": "remote-or-adjacent",
+          "duration_ds": 0,
+          "requires": {
+            "allow_remote": true
+          },
+          "parameters": {
+            "value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5066250
+            }
+          },
+          "tags": [
+            "atmospherics",
+            "configure"
+          ]
+        }
+      ],
+      "fidelity": {
+        "profile": "goon-near-1",
+        "ledger": [
+          {
+            "feature": "tox-subtype-defaults-controls",
+            "status": "engine-adapted",
+            "source": "code/modules/atmospherics/machinery/unary/vent_pump.dm:11-306"
+          },
+          {
+            "feature": "bounded-gas-transfer",
+            "status": "deferred",
+            "source": "code/modules/atmospherics/machinery/unary/vent_pump.dm:61-218"
+          },
+          {
+            "feature": "zero-explicit-draw",
+            "status": "exact",
+            "source": "code/modules/atmospherics/machinery/unary/vent_pump.dm:11-306"
+          }
+        ]
+      }
+    }
+  ]
+}

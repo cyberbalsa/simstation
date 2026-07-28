@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 from collections import Counter, defaultdict
 from dataclasses import dataclass
+from decimal import Decimal, InvalidOperation
 import hashlib
 import json
 from pathlib import Path, PurePosixPath
@@ -77,6 +78,7 @@ class MapError(ValueError):
 class Atom:
     path: str
     variables: tuple[str, ...]
+    literal_overrides: tuple[tuple[str, int | str | bool], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -280,6 +282,102 @@ def _variable_names(content: str) -> tuple[str, ...]:
     return tuple(sorted(names))
 
 
+def _literal_override_value(value: str) -> int | str | bool | None:
+    """Decode the deliberately small, data-only subset used by map fixtures.
+
+    Map compilation must never evaluate DM.  Integer-valued decimal/scientific
+    literals, booleans, and quoted strings are safe to preserve as instance
+    data; expressions and type paths remain visible through ``variables`` but
+    are not imported as executable values.
+    """
+
+    value = value.strip()
+    if value in {"TRUE", "true"}:
+        return True
+    if value in {"FALSE", "false"}:
+        return False
+    if re.fullmatch(r"[+-]?\d+", value):
+        return int(value)
+    if re.fullmatch(
+        r"[+-]?(?:\d+\.\d*|\d*\.\d+|\d+)[eE][+-]?\d+",
+        value,
+    ):
+        try:
+            number = Decimal(value)
+        except InvalidOperation:
+            return None
+        if (
+            number.is_finite()
+            and number == number.to_integral_value()
+            and abs(number) <= 9_007_199_254_740_991
+        ):
+            return int(number)
+        return None
+    if len(value) >= 2 and value[0] == value[-1] == '"':
+        try:
+            decoded = json.loads(value)
+        except json.JSONDecodeError:
+            return None
+        return decoded if isinstance(decoded, str) else None
+    return None
+
+
+def _literal_overrides(content: str) -> tuple[tuple[str, int | str | bool], ...]:
+    """Extract top-level ``name = literal`` assignments without running DM."""
+
+    assignments: dict[str, int | str | bool] = {}
+    offset = 0
+    start = 0
+    quoted = False
+    escaped = False
+    parens = 0
+    brackets = 0
+    segments: list[str] = []
+    while offset < len(content):
+        character = content[offset]
+        if quoted:
+            if escaped:
+                escaped = False
+            elif character == "\\":
+                escaped = True
+            elif character == '"':
+                quoted = False
+            offset += 1
+            continue
+        if content.startswith("//", offset):
+            newline = content.find("\n", offset + 2)
+            offset = len(content) if newline < 0 else newline + 1
+            continue
+        if content.startswith("/*", offset):
+            end = content.find("*/", offset + 2)
+            offset = len(content) if end < 0 else end + 2
+            continue
+        if character == '"':
+            quoted = True
+        elif character == "(":
+            parens += 1
+        elif character == ")":
+            parens = max(0, parens - 1)
+        elif character == "[":
+            brackets += 1
+        elif character == "]":
+            brackets = max(0, brackets - 1)
+        elif character == ";" and parens == 0 and brackets == 0:
+            segments.append(content[start:offset])
+            start = offset + 1
+        offset += 1
+    segments.append(content[start:])
+
+    for segment in segments:
+        match = re.match(r"\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$", segment, re.S)
+        if not match:
+            continue
+        decoded = _literal_override_value(match.group(2))
+        if decoded is not None:
+            assignments[match.group(1)] = decoded
+    return tuple(sorted(assignments.items()))
+
+
 def _parse_atoms(body: str, source: str) -> tuple[Atom, ...]:
     atoms: list[Atom] = []
     offset = 0
@@ -297,11 +395,19 @@ def _parse_atoms(body: str, source: str) -> tuple[Atom, ...]:
             raise _error(source, body, offset, "empty atom type path")
         offset = _skip_ignored(body, match.end())
         variables: tuple[str, ...] = ()
+        literal_overrides: tuple[tuple[str, int | str | bool], ...] = ()
         if offset < len(body) and body[offset] == "{":
             overrides, offset = _balanced_content(body, offset, "{", "}", source)
             variables = _variable_names(overrides)
+            literal_overrides = _literal_overrides(overrides)
             offset = _skip_ignored(body, offset)
-        atoms.append(Atom(path=path, variables=variables))
+        atoms.append(
+            Atom(
+                path=path,
+                variables=variables,
+                literal_overrides=literal_overrides,
+            )
+        )
         if offset < len(body) and body[offset] != ",":
             raise _error(source, body, offset, "expected ',' between atoms")
     return tuple(atoms)
@@ -894,22 +1000,46 @@ def _fixture_kind(path: str) -> str | None:
         return "battery"
     if path.startswith("/obj/submachine/cargopad"):
         return "cargo_pad"
+    if path.startswith("/obj/machinery/computer/supplycomp"):
+        return "supply_console"
+    if path.startswith("/obj/machinery/computer/barcode/qm"):
+        return "barcode_computer"
     if path.startswith("/obj/machinery/manufacturer"):
         return "fabricator"
+    if path.startswith("/obj/machinery/nanofab"):
+        return "nanofab"
     if path.startswith("/obj/machinery/portable_reclaimer"):
-        return "refinery"
+        return "reclaimer"
     if path.startswith("/obj/machinery/portable_atmospherics/scrubber"):
-        return "scrubber"
-    if path.startswith(
-        (
-            "/obj/machinery/atmospherics/unary/vent",
-            "/obj/machinery/atmospherics/unary/vent_pump",
-        )
-    ):
+        return "portable_scrubber"
+    if path.startswith("/obj/machinery/atmospherics/unary/vent_pump"):
+        return "vent_pump"
+    if path.startswith("/obj/machinery/atmospherics/unary/vent"):
         return "vent"
+    if path.startswith("/obj/machinery/atmospherics/binary/circulatorTemp"):
+        return "circulator"
     if path.startswith("/obj/machinery/power/generator"):
         return "generator"
     return None
+
+
+def _fixture_definition_id(kind: str) -> str:
+    names = {
+        "apc": "goon-apc",
+        "barcode_computer": "goon-qm-barcode-computer",
+        "battery": "goon-smes",
+        "cargo_pad": "goon-cargo-pad",
+        "circulator": "goon-teg-circulator",
+        "fabricator": "goon-manufacturer",
+        "generator": "goon-teg-generator",
+        "nanofab": "goon-nanofab",
+        "portable_scrubber": "goon-portable-scrubber",
+        "reclaimer": "goon-portable-reclaimer",
+        "supply_console": "goon-supply-console",
+        "vent": "goon-passive-vent",
+        "vent_pump": "goon-vent-pump",
+    }
+    return "org.simstation.core:machine/" + names[kind]
 
 
 def _fixture_name(kind: str, path: str) -> str:
@@ -970,7 +1100,11 @@ def _native_coordinate(
 
 def _station_area_path(entry: DictionaryEntry) -> str:
     for atom in entry.atoms:
-        if atom.path.startswith("/area/station"):
+        if (
+            atom.path.startswith("/area/")
+            and atom.path != "/area/space"
+            and not atom.path.startswith("/area/space/")
+        ):
             return atom.path
     return ""
 
@@ -1222,48 +1356,22 @@ def compile_scenario(
                             kind,
                             atom.path,
                             department,
+                            dict(atom.literal_overrides),
                         )
                     )
     fixtures = []
     fixture_occurrences: Counter[tuple[int, int, str]] = Counter()
-    fixture_priority = {
-        "generator": 0,
-        "apc": 1,
-        "battery": 2,
-        "refinery": 3,
-        "fabricator": 4,
-        "cargo_pad": 5,
-        "vent": 6,
-        "scrubber": 7,
-        "generic": 8,
-    }
-    by_coordinate: dict[tuple[int, int], list[tuple[str, str, str]]] = defaultdict(list)
-    for native_y, native_x, kind, path, department in fixture_candidates:
-        by_coordinate[(native_x, native_y)].append((kind, path, department))
-    collision_omissions = []
-    selected_fixtures = []
-    for (native_x, native_y), records in sorted(by_coordinate.items()):
-        ordered = sorted(
-            records,
-            key=lambda record: (
-                fixture_priority[record[0]],
-                record[0],
-                record[1],
-            ),
-        )
-        selected_fixtures.append((native_y, native_x, *ordered[0]))
-        for omitted in ordered[1:]:
-            collision_omissions.append(
-                {
-                    "x": native_x,
-                    "y": native_y,
-                    "retained_kind": ordered[0][0],
-                    "retained_source_path": ordered[0][1],
-                    "omitted_kind": omitted[0],
-                    "omitted_source_path": omitted[1],
-                }
-            )
-    for native_y, native_x, kind, path, department in sorted(selected_fixtures):
+    collision_omissions: list[dict[str, object]] = []
+    for native_y, native_x, kind, path, department, overrides in sorted(
+        fixture_candidates,
+        key=lambda record: (
+            record[0],
+            record[1],
+            record[2],
+            record[3],
+            json.dumps(record[5], sort_keys=True),
+        ),
+    ):
         identity = (native_x, native_y, kind)
         fixture_occurrences[identity] += 1
         occurrence = fixture_occurrences[identity]
@@ -1276,11 +1384,13 @@ def compile_scenario(
                     f"{suffix}"
                 ),
                 "kind": kind,
+                "definition_id": _fixture_definition_id(kind),
                 "name": _fixture_name(kind, path),
                 "x": native_x,
                 "y": native_y,
                 "department": department,
                 "source_path": path,
+                **({"source_overrides": overrides} if overrides else {}),
             }
         )
     fixtures.sort(key=lambda record: record["id"])

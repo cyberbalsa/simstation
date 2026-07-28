@@ -653,7 +653,9 @@ failure/salvage. Outputs appear atomically into reserved output capacity.
 
 - Planner expands orders and reserves capacity/material at `10t` and relevant
   change.
-- Automated machine progress runs at `10t`; manual/operator work accrues at `1t`.
+- Production planning and non-source-native automation may advance at `10t`;
+  each source-pinned device advances on its declared `ds` process tier and
+  completion deadline.
 - Power/environment predicates are sampled each process tick.
 - Machine wear/maintenance forecasts update at `60t`.
 - Stock-linked orders reevaluate at `30t` with hysteresis: start below minimum,
@@ -674,6 +676,19 @@ The planner selects a deterministic feasible recipe and machine chain by policy,
 available/inbound resources, capacity, quality, distance, cost, power, and
 deadline. It creates haul, operate, maintenance, and cleanup work. Machines run
 autonomously only where their definitions allow.
+
+Goon-derived production devices keep their upstream distinctions. A
+manufacturer has a 20-entry queue and 20-item output cap, ready/working/halt
+modes, repeat and pause controls, normal speeds 1–3 (hacked 5, damaged 8), and
+draws 200 W idle plus `750 × speed²` W while active. Required material is
+rechecked and consumed at completion. Its four globally color-randomized wires,
+damage thresholds, and repair state are machine behavior, not recipe metadata.
+A nanofab performs its source-style immediate fabrication action and has no
+manufacturer queue. A portable reclaimer is an unpowered physical processor
+whose sequential, composition-aware material recovery must not be replaced by
+an abstract refinery conversion. Deferred material banking, subtype catalogs,
+slot binding, and composition remainder work remains visible in each
+definition's fidelity ledger.
 
 ### Inputs, outputs, and dependencies
 

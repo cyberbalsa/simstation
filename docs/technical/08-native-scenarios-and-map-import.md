@@ -16,10 +16,10 @@ current playable-station milestone. It is:
 
 This format deliberately covers the physical substrate already implemented:
 space/floor, empty/wall/door structure, cable presence, initial pressure,
-areas, a bounded set of fixture adapters, crew spawn markers, and meteor
-targets. Pipes, windows, multi-tile footprints, remote planes, item placement,
-decorations, and arbitrary machine definitions require a later versioned
-extension. Existing fields must not be silently reinterpreted.
+areas, a bounded set of fixture adapters linked to namespaced machine
+definitions, crew spawn markers, and meteor targets. Pipes, windows, multi-tile
+footprints, remote planes, item placement, and decorations require a later
+versioned extension. Existing fields must not be silently reinterpreted.
 
 The current implementation is in `src/core/scenario.lua`. Package validation
 begins in `tools/mods.py`, and `src/mods/loader.lua` loads files selected by a
@@ -50,31 +50,35 @@ into the 192×192 milestone station. For example, `maps/cogmap.dmm` contains:
 Those measurements make Cogmap useful layout evidence, not a runtime template.
 The first checked-in candidate instead uses a 192×192 crop of the smaller
 `maps/atlas.dmm`. Its generated
-`org.simstation.core:scenario/goon-atlas` contains 390 palette entries, 2,345
-runs, 84 areas, 121 selected fixtures, 85 spawn markers, and 64 sampled meteor
+`org.simstation.core:scenario/goon-atlas` contains 408 palette entries, 2,405
+runs, 92 areas, 134 selected fixtures, 85 spawn markers, and 64 sampled meteor
 targets. Atlas still supplies broad department coverage while its full source
 has 7,436 object placements rather than Cogmap's 22,544.
 
 The selected source rectangle is `(61,61)` through `(252,252)` on Z level 1.
-It contains 7,433 object placements: 2,721 are represented by the current
-tile/door/cable/fixture/spawn adapters and 4,712 are recorded as unsupported
-objects. Four lower-priority fixture collisions, two invalid APC anchors, and
-one duplicate spawn are also recorded explicitly in generated provenance.
+It contains 7,433 object placements: 2,734 are represented by the current
+tile/door/cable/fixture/spawn adapters and 4,699 are recorded as unsupported.
+The source-preserving machine pass retains every selected machine adapter,
+including multiple machine atoms on one source tile, with no fixture-collision
+or invalid-anchor omission. One duplicate spawn is still recorded explicitly
+in generated provenance.
 
 The Sim Station layout should retain legible department clusters, circulation
 loops, maintenance access, airlock boundaries, utility routing, and
 machine-to-workflow proximity while being rebuilt or cropped for 24 autonomous
 workers and management-scale readability.
 
-The analyzer records type paths and the names of map override variables, but
-override values remain opaque. The `compile` command applies the versioned
+The analyzer records type paths, override names, and only override values that
+its non-executing literal reader can prove are strings, booleans, or exact
+integers. The `compile` command applies the versioned
 `goon-type-path-adapter-v1` profile to a bounded crop. It currently recognizes
 a deliberately small set of turfs, doors/windows, cables, areas, job landmarks,
-and fixture path families. That profile is provisional: substring heuristics
-must have fixtures for every accepted family and cannot turn an opaque override
-into behavior. Decorative or unsupported atoms are either mapped by a reviewed
-rule, recorded in a deterministic omission report, or block a release
-candidate; silently dropping them is not the final contract.
+and fixture path families. A fixture preserves safe values in
+`source_overrides`; its referenced machine definition separately allowlists
+which names may initialize authoritative state. DM expressions remain opaque
+and cannot become behavior. Decorative or unsupported atoms are either mapped
+by a reviewed rule, recorded in a deterministic omission report, or block a
+release candidate; silently dropping them is not the final contract.
 
 ### Coordinate conversion
 
@@ -407,18 +411,23 @@ department or access rule at runtime.
 
 ## Fixtures, machines, and spawns
 
-Schema 1 fixture kinds are the finite adapters already supported by the
-milestone:
+Schema 1 fixture kinds are the finite physical adapters already supported by
+the milestone:
 
 ```text
-apc battery cargo_pad fabricator generator generic refinery scrubber vent
+apc barcode_computer battery cargo_pad circulator fabricator generator generic
+nanofab portable_scrubber reclaimer refinery scrubber supply_console vent
+vent_pump
 ```
 
 Every fixture has a unique namespaced `id`, in-bounds `x`/`y`, one kind,
 optional display `name`, optional department token, and optional Goon
-`source_path`. Fixtures sort by ID before runtime entity allocation. Only one
-anchored fixture may occupy a tile. Its anchor must be a passable floor and
-must satisfy kind-specific preconditions:
+`source_path`. A machine fixture may carry a namespaced `definition_id` and safe
+scalar `source_overrides`; the generated Atlas fixture set carries explicit
+definitions. Fixtures sort by ID before runtime entity allocation. Multiple
+independently addressable fixtures may share a tile when the source map layers
+multiple atoms there; no fixture is flattened or discarded. Every anchor must
+be a passable floor and satisfy kind-specific preconditions:
 
 - generators and APCs must touch the authored cable graph;
 - an APC must occupy a nonzero area;
@@ -428,12 +437,16 @@ must satisfy kind-specific preconditions:
 
 These checks protect authored starts; later damage may break any of those
 conditions. The raw source path is diagnostic provenance and never selects the
-fixture kind.
+fixture kind. `definition_id` resolves through the ordinary replacement-aware
+content registry. Only definition-declared `map_override_fields` can copy a
+preserved literal into initial machine state.
 
-The closed kind list is a milestone constraint, not a permanent machine API.
-Adding mod-defined physical machine types requires namespaced machine
-definitions and a later scenario schema rather than teaching only the core
-pack a special path.
+The closed physical kind list remains a milestone rendering/placement
+constraint, not the behavior API. Schema-2 `machine` definitions already let
+any pack provide source-pinned state, cadence, power, wires, typed actions, and
+a per-feature fidelity ledger for those adapters. A new footprint or physical
+adapter still requires a later scenario schema rather than teaching only the
+core pack a special path.
 
 Spawn records are ordered pools, not crew entities. Each has a unique
 namespaced `id`, an in-bounds passable coordinate, optional namespaced `job`
@@ -542,7 +555,7 @@ The implemented envelope and the playable-station budget are distinct:
 | palette entries | 1–2,048 | small enough for review |
 | runs | 200,000 | canonical, normally far below cell count |
 | areas | 1,024 | department/room-scale labels |
-| fixtures | 8,192 | one anchor per occupied fixture tile |
+| fixtures | 8,192 | independently addressable anchors; source layers may share a tile |
 | spawns | 1,024 | a small set of pools |
 | meteor targets | 0–1,024 | exterior candidates only |
 | ordinary string | 240 bytes | concise stable identifiers |
@@ -598,9 +611,12 @@ missing from the first contract draft:
    with matching credentials may open them; open doors close on a deterministic
    timer. APCs and generators validate against areas/cables, atmosphere devices
    require gas cells, and fixtures/spawns require passable anchors.
-4. Atlas begins with 121 adapted machines. Deterministic power allocation,
-   vents/scrubbers, and three recipe commands provide a bounded manufacturing
-   proof using the authored machinery and starting inventory.
+4. Atlas begins with 134 adapted machines: 81 APCs, six SMES units, one TEG
+   generator, two TEG circulators, three passive vents, one vent pump, three
+   portable scrubbers, 20 manufacturers, seven portable reclaimers, two
+   nanofabs, five cargo pads, two supply consoles, and one barcode computer.
+   Each fixture resolves a source-pinned schema-2 machine definition instead of
+   receiving behavior from a core-only kind table.
 5. Machines, inventory, scenario identity/provenance, authored incident
    targets, and expanded world/area/power state enter snapshots and state
    hashes. Save headers expose scenario ID/schema/map format. An integration
@@ -613,10 +629,12 @@ missing from the first contract draft:
    target envelope, canonical runs, semantic palette uniqueness, exterior
    targets, nested identity, and the runtime safety boundary.
 7. The compiler pins commit/blob/SHA-256, flips source Y explicitly, emits
-   canonical palette runs and namespaced nested IDs, and records unsupported
-   objects, collisions, invalid anchors, and duplicate spawns. All 570 pinned
-   maps parse; four source irregularities remain visible in the inventory
-   report instead of being normalized silently.
+   canonical palette runs and namespaced nested IDs, preserves safe literal
+   overrides without executing DM, and records unsupported objects, placement
+   omissions, fixture collisions, and duplicate spawns. Empty placement and
+   collision lists prove that the selected Atlas machine set is no longer
+   lossy. All 570 pinned maps parse; four source irregularities remain visible
+   in the inventory report instead of being normalized silently.
 
 The following remain release-contract work rather than hidden permissive
 behavior:
@@ -630,10 +648,11 @@ behavior:
 2. Production/cargo fixtures are not validated as reachable from a spawn.
    Runtime crew placement retains a nearest-passable recovery fallback even
    though the checked-in scenario's authored spawns already pass validation.
-3. Fixture behavior, wattage/priority, departments, and credential tokens are
-   a closed hard-coded schema-1 adapter. Third-party scenarios receive the same
-   adapters as core, but mod-defined machine kinds require a later namespaced
-   machine-definition contract.
+3. Physical fixture kinds remain a closed schema-1 adapter list. Machine
+   behavior, source identity, cadence, power, state, wires, action requirements,
+   and fidelity status are namespaced schema-2 definitions available to every
+   pack. New physical footprints and utility connectors still require a
+   versioned scenario extension.
 4. `goon-type-path-adapter-v1` is deterministic and its omissions are explicit,
    but several mappings still derive department/access from reviewed path
    families. Every newly accepted path family or override interpretation needs
@@ -672,16 +691,17 @@ implementation audit above identifies the remaining matrix.
    fixture/spawn input order produce the same final stable order, initial state
    hash, and 600-tick continuation. Noncanonical generated input is rejected,
    not normalized differently at runtime.
-5. **Physical placement:** reject two fixtures on a tile, a fixture/spawn in
-   space or a wall, an APC outside an area, an unconnected generator/APC, and
-   duplicate or non-hull meteor targets. Diagnostics name ID and coordinate.
+5. **Physical placement:** retain two layered source fixtures on one tile in
+   stable ID order; reject a fixture/spawn in space or a wall, an APC outside
+   an area, an unconnected generator/APC, duplicate stable IDs, and duplicate
+   or non-hull meteor targets. Diagnostics name ID and coordinate.
 6. **Areas/access:** area IDs are contiguous, keys unique/namespaced, unknown
    departments fail, doors inherit area access, an explicit door override
    wins, and access on a non-door fails.
 7. **Goon provenance:** the tool refuses an unpinned commit by default; Cogmap
    produces the recorded commit/blob/SHA-256; TGM fixture tests prove Y
-   orientation; unknown paths and opaque overrides cannot become runtime
-   behavior without an explicit mapping fixture.
+   orientation; safe scalar overrides round-trip; expressions, unknown paths,
+   and non-allowlisted overrides cannot become runtime behavior.
 8. **Corpus robustness:** all 570 pinned maps parse or produce a stable,
    reviewed exception report. Analysis reruns are byte-identical.
 9. **Mod behavior:** a third-party pack adds and starts a scenario without core

@@ -6,6 +6,7 @@ local EventLog = require("src.core.event_log")
 local CommandQueue = require("src.core.command_queue")
 local Pathfinding = require("src.core.pathfinding")
 local Scenario = require("src.core.scenario")
+local Machine = require("src.core.machine")
 local HookContext = require("src.mods.context")
 
 local Simulation = {}
@@ -74,7 +75,12 @@ local JOB_DEPARTMENT = {
 }
 
 local JOB_ACCESS = {
-  engineer = { "public", "engineering", "maintenance" },
+  engineer = {
+    "public",
+    "engineering",
+    "engineering_power",
+    "maintenance",
+  },
   cargo_technician = { "public", "cargo" },
   doctor = { "public", "medical" },
   scientist = { "public", "science" },
@@ -83,47 +89,6 @@ local JOB_ACCESS = {
   chef = { "public", "service" },
   janitor = { "public", "service", "maintenance" },
   assistant = { "public", "general" },
-}
-
-local MACHINE_TAG = {
-  fabricator = "fabricator",
-  refinery = "refinery",
-}
-
-local MACHINE_POWER_W = {
-  apc = 500,
-  battery = 250,
-  cargo_pad = 3000,
-  fabricator = 8000,
-  generator = 0,
-  generic = 250,
-  refinery = 12000,
-  scrubber = 1500,
-  vent = 1000,
-}
-
-local MACHINE_IDLE_POWER_W = {
-  apc = 100,
-  battery = 50,
-  cargo_pad = 100,
-  fabricator = 250,
-  generator = 0,
-  generic = 50,
-  refinery = 250,
-  scrubber = 1500,
-  vent = 1000,
-}
-
-local MACHINE_POWER_PRIORITY = {
-  apc = 1,
-  vent = 2,
-  scrubber = 2,
-  battery = 3,
-  generator = 3,
-  cargo_pad = 4,
-  refinery = 5,
-  fabricator = 5,
-  generic = 6,
 }
 
 local MACHINE_DEPARTMENT_PRIORITY = {
@@ -135,6 +100,42 @@ local MACHINE_DEPARTMENT_PRIORITY = {
   service = 6,
   security = 7,
   command = 8,
+}
+
+local JOB_TOOLS = {
+  engineer = {
+    "cable",
+    "crowbar",
+    "multitool",
+    "prying",
+    "pulsing",
+    "screwdriver",
+    "screwing",
+    "snipping",
+    "welder",
+    "wirecutters",
+    "wrench",
+  },
+  cargo_technician = {
+    "crowbar",
+    "prying",
+    "wrench",
+  },
+  scientist = {
+    "multitool",
+    "pulsing",
+    "screwdriver",
+    "screwing",
+  },
+  security_officer = {
+    "crowbar",
+    "prying",
+  },
+  janitor = {
+    "crowbar",
+    "prying",
+  },
+  assistant = {},
 }
 
 local function job_content_id(job)
@@ -227,6 +228,9 @@ local function spawn_crew(sim, count, center_x, center_y, spawns)
       job_id = job_content_id(job),
       department = JOB_DEPARTMENT[job] or "general",
       access = Stable.deep_copy(JOB_ACCESS[job] or { "public" }),
+      tools = Stable.deep_copy(JOB_TOOLS[job] or {}),
+      remote_machine_access = false,
+      silicon = false,
       index = index,
       health = 1000,
       hunger = sim.rngs.crew:integer(20, 120),
@@ -247,24 +251,12 @@ end
 local function spawn_machines(sim, fixtures)
   for index = 1, #(fixtures or {}) do
     local fixture = fixtures[index]
-    local machine = {
-      id = sim.next_entity_id,
-      scenario_fixture_id = fixture.id,
-      kind = fixture.kind,
-      name = fixture.name or fixture.kind:gsub("_", " "),
-      index = fixture.index,
-      x = fixture.x,
-      y = fixture.y,
-      department = fixture.department or "general",
-      machine_tag = MACHINE_TAG[fixture.kind] or false,
-      power_watts = MACHINE_POWER_W[fixture.kind] or MACHINE_POWER_W.generic,
-      state = "idle",
-      task_id = false,
-      recipe_id = false,
-      powered = false,
-      requested_watts = 0,
-      source_path = fixture.source_path or false,
-    }
+    local machine = Machine.create(
+      sim,
+      fixture,
+      sim.next_entity_id,
+      index
+    )
     sim.machines[#sim.machines + 1] = machine
     sim.next_entity_id = sim.next_entity_id + 1
   end
@@ -292,6 +284,8 @@ function Simulation.new(options)
     seconds_in_shift = 0,
     speed = 1,
     paused = false,
+    machine_time_ds = 0,
+    machine_wire_colors = Machine.wire_permutation(seed),
     world = world,
     crew = {},
     machines = {},
@@ -302,6 +296,7 @@ function Simulation.new(options)
       crew = Rng.new(seed + 101),
       incidents = Rng.new(seed + 202),
       economy = Rng.new(seed + 303),
+      machines = Rng.new(seed + 404),
     },
     commands = CommandQueue.new(),
     events = EventLog.new(),
@@ -354,6 +349,9 @@ function Simulation.new(options)
     hooks = options.hooks or false,
     mod_state = Stable.deep_copy(options.mod_state or {}),
     mod_diagnostics = {},
+    grid_base_power_demand_w = 0,
+    grid_base_power_served_w = 0,
+    _machine_power_dirty = false,
   }, Simulation)
 
   local center_x, center_y
@@ -416,8 +414,19 @@ end
 
 function Simulation:_machine_by_id(machine_id)
   for index = 1, #self.machines do
-    if self.machines[index].id == machine_id then
+    if self.machines[index].id == machine_id
+      or self.machines[index].scenario_fixture_id == machine_id
+    then
       return self.machines[index]
+    end
+  end
+  return nil
+end
+
+function Simulation:_crew_by_id(crew_id)
+  for index = 1, #self.crew do
+    if self.crew[index].id == crew_id then
+      return self.crew[index]
     end
   end
   return nil
@@ -433,15 +442,11 @@ function Simulation:_recipe(recipe_id)
   return recipe
 end
 
-function Simulation:_step_power()
-  self.world:step_power()
-  local ordered = {}
-  for index = 1, #self.machines do
-    ordered[index] = self.machines[index]
-  end
+function Simulation:_allocate_machine_power()
+  local ordered = Stable.sorted_values_by_id(self.machines)
   table.sort(ordered, function(a, b)
-    local a_priority = MACHINE_POWER_PRIORITY[a.kind] or 100
-    local b_priority = MACHINE_POWER_PRIORITY[b.kind] or 100
+    local a_priority = Machine.power_priority(a)
+    local b_priority = Machine.power_priority(b)
     if a_priority ~= b_priority then
       return a_priority < b_priority
     end
@@ -450,71 +455,36 @@ function Simulation:_step_power()
 
   local available = math.max(
     0,
-    self.world.power_supply_w - self.world.power_served_w
+    self.world.power_supply_w - self.grid_base_power_served_w
   )
   local machine_demand = 0
   local machine_served = 0
   for index = 1, #ordered do
     local machine = ordered[index]
-    local request = MACHINE_IDLE_POWER_W[machine.kind]
-      or MACHINE_IDLE_POWER_W.generic
-    if machine.task_id then
-      local recipe = self:_recipe(machine.recipe_id)
-      request = recipe and recipe.power_watts
-        or machine.power_watts
-        or request
-    end
-    request = math.max(0, math.floor(request))
+    local request = Machine.power_request(machine)
     machine.requested_watts = request
     machine_demand = machine_demand + request
-    local connected = machine.kind == "generator"
-      or self.world.powered[machine.index] == true
+    local connected = Machine.is_connected(self, machine)
+    local served = 0
     if connected and request <= available then
-      machine.powered = true
+      served = request
       available = available - request
       machine_served = machine_served + request
-    else
-      machine.powered = request == 0 and connected or false
     end
+    Machine.set_power(machine, connected, served)
   end
-  self.world.power_demand_w = self.world.power_demand_w + machine_demand
-  self.world.power_served_w = self.world.power_served_w + machine_served
+  self.world.power_demand_w =
+    self.grid_base_power_demand_w + machine_demand
+  self.world.power_served_w =
+    self.grid_base_power_served_w + machine_served
+  self._machine_power_dirty = false
 end
 
-function Simulation:_step_atmos_fixtures()
-  for index = 1, #self.machines do
-    local machine = self.machines[index]
-    local tile_index = machine.index
-    if machine.powered and machine.kind == "vent" then
-      local o2_deficit = math.max(
-        0,
-        Constants.STANDARD_O2 - self.world.o2[tile_index]
-      )
-      local n2_deficit = math.max(
-        0,
-        Constants.STANDARD_N2 - self.world.n2[tile_index]
-      )
-      self.world.o2[tile_index] = self.world.o2[tile_index]
-        + math.min(1200, o2_deficit)
-      self.world.n2[tile_index] = self.world.n2[tile_index]
-        + math.min(4800, n2_deficit)
-      if o2_deficit > 0 or n2_deficit > 0 then
-        self.world.gas_revision = self.world.gas_revision + 1
-      end
-    elseif machine.powered and machine.kind == "scrubber" then
-      local changed = false
-      local species = { "co2", "plasma", "n2o", "vapor" }
-      for species_index = 1, #species do
-        local key = species[species_index]
-        local before = self.world[key][tile_index]
-        self.world[key][tile_index] = math.max(0, before - 1500)
-        changed = changed or before ~= self.world[key][tile_index]
-      end
-      if changed then
-        self.world.gas_revision = self.world.gas_revision + 1
-      end
-    end
-  end
+function Simulation:_step_power()
+  self.world:step_power()
+  self.grid_base_power_demand_w = self.world.power_demand_w
+  self.grid_base_power_served_w = self.world.power_served_w
+  self:_allocate_machine_power()
 end
 
 function Simulation:_create_construction_task(tile_index, blueprint)
@@ -539,23 +509,30 @@ function Simulation:_queue_recipe(recipe_id, requested_machine_id)
   if not recipe then
     return false, "unknown recipe: " .. tostring(recipe_id)
   end
+  local requested_machine = requested_machine_id
+    and self:_machine_by_id(requested_machine_id)
+    or nil
+  if requested_machine_id and not requested_machine then
+    return false, "unknown machine: " .. tostring(requested_machine_id)
+  end
   local machine
   for index = 1, #self.machines do
     local candidate = self.machines[index]
-    local selected = not requested_machine_id
-      or candidate.id == requested_machine_id
+    local selected = not requested_machine
+      or candidate == requested_machine
+    local candidate_priority =
+      MACHINE_DEPARTMENT_PRIORITY[candidate.department] or 100
+    local selected_priority = machine
+        and (MACHINE_DEPARTMENT_PRIORITY[machine.department] or 100)
+      or 101
     if selected
-      and not candidate.task_id
+      and not candidate.destroyed
       and candidate.machine_tag == recipe.machine_tag
       and (
         not machine
+        or candidate_priority < selected_priority
         or (
-          MACHINE_DEPARTMENT_PRIORITY[candidate.department] or 100
-        ) < (
-          MACHINE_DEPARTMENT_PRIORITY[machine.department] or 100
-        )
-        or (
-          candidate.department == machine.department
+          candidate_priority == selected_priority
           and candidate.id < machine.id
         )
       )
@@ -564,48 +541,15 @@ function Simulation:_queue_recipe(recipe_id, requested_machine_id)
     end
   end
   if not machine then
-    return false, "no idle " .. tostring(recipe.machine_tag) .. " is available"
+    return false,
+      "no compatible " .. tostring(recipe.machine_tag) .. " is available"
   end
-
-  local inputs = recipe.inputs or {}
-  for index = 1, #inputs do
-    local input = inputs[index]
-    local available = self.inventory[input.id] or 0
-    if available < input.quantity then
-      return false, "insufficient " .. tostring(input.id)
-    end
+  local ok, reason = Machine.queue_recipe(self, machine, recipe.id)
+  if not ok then
+    return false, type(reason) == "table"
+      and tostring(reason.code)
+      or tostring(reason)
   end
-  for index = 1, #inputs do
-    local input = inputs[index]
-    self.inventory[input.id] = (self.inventory[input.id] or 0)
-      - input.quantity
-  end
-
-  local task = {
-    id = self.next_task_id,
-    kind = "manufacturing",
-    recipe_id = recipe.id,
-    machine_id = machine.id,
-    target_index = machine.index,
-    priority = TASK_PRIORITY.manufacturing,
-    state = "offered",
-    claimed_by = false,
-    work_remaining = math.max(1, math.floor(recipe.duration_ticks)) * 100,
-    created_tick = self.tick,
-    reserved_inputs = Stable.deep_copy(inputs),
-    outputs = Stable.deep_copy(recipe.outputs or {}),
-  }
-  self.next_task_id = self.next_task_id + 1
-  self.tasks[#self.tasks + 1] = task
-  machine.task_id = task.id
-  machine.recipe_id = recipe.id
-  self:_step_power()
-  machine.state = machine.powered and "queued" or "unpowered"
-  self:_emit("manufacturing_queued", {
-    task_id = task.id,
-    machine_id = machine.id,
-    recipe_id = recipe.id,
-  })
   return true
 end
 
@@ -675,6 +619,48 @@ function Simulation:_apply_command(command)
     return true
   elseif command.kind == "queue_recipe" then
     return self:_queue_recipe(payload.recipe_id, payload.machine_id)
+  elseif command.kind == "machine_action" then
+    local machine = self:_machine_by_id(payload.machine_id)
+    if not machine then
+      return false, "unknown machine: " .. tostring(payload.machine_id)
+    end
+    local actor = self:_crew_by_id(payload.actor_id)
+    if not actor then
+      return false, "actor-missing"
+    end
+    local request = {
+      action_id = payload.action_id,
+      actor_id = actor.id,
+      machine_id = machine.id,
+      parameters = Stable.deep_copy(payload.parameters or {}),
+    }
+    if self.hooks then
+      local allowed, reason = self.hooks:validate(
+        "org.simstation.core:hook/machine/action/validate",
+        Stable.deep_copy(request),
+        HookContext.new(self, {
+          action = Stable.deep_copy(request),
+          actor = Stable.deep_copy(actor),
+          machine = Stable.deep_copy(machine),
+        })
+      )
+      if not allowed then
+        return false, reason or "rejected by a trusted mod"
+      end
+    end
+    local ok, reason = Machine.perform(
+      self,
+      machine,
+      payload.action_id,
+      actor,
+      payload.parameters or {}
+    )
+    if not ok then
+      return false, type(reason) == "table"
+        and tostring(reason.code)
+        or tostring(reason)
+    end
+    return true
   elseif command.kind == "trigger_meteor" then
     self:_trigger_meteor(true)
     return true
@@ -1135,14 +1121,20 @@ function Simulation:step()
   self.seconds_in_shift = self.seconds_in_shift + 1
 
   self:_process_commands()
+  if self._machine_power_dirty then
+    self:_allocate_machine_power()
+  end
   self:_step_crew()
 
   if self.tick % Constants.GAS_STEP_TICKS == 0 then
     self.world:step_atmosphere()
-    self:_step_atmos_fixtures()
   end
   if self.tick % Constants.POWER_STEP_TICKS == 0 then
     self:_step_power()
+  end
+  Machine.step_all(self, self.tick * 10)
+  if self._machine_power_dirty then
+    self:_allocate_machine_power()
   end
   if self.tick % Constants.NEEDS_STEP_TICKS == 0 then
     self:_step_needs_and_health()
@@ -1201,6 +1193,8 @@ function Simulation:snapshot()
     seconds_in_shift = self.seconds_in_shift,
     speed = self.speed,
     paused = self.paused,
+    machine_time_ds = self.machine_time_ds,
+    machine_wire_colors = Stable.deep_copy(self.machine_wire_colors),
     world = self.world:snapshot(),
     crew = Stable.deep_copy(self.crew),
     machines = Stable.deep_copy(self.machines),
@@ -1213,6 +1207,8 @@ function Simulation:snapshot()
     economy = Stable.deep_copy(self.economy),
     station = Stable.deep_copy(self.station),
     metrics = Stable.deep_copy(self.metrics),
+    grid_base_power_demand_w = self.grid_base_power_demand_w,
+    grid_base_power_served_w = self.grid_base_power_served_w,
     mod_state = Stable.deep_copy(self.mod_state),
     commands = Stable.deep_copy(self.commands:snapshot()),
     events = Stable.deep_copy(self.events:snapshot()),
@@ -1230,6 +1226,11 @@ function Simulation.from_snapshot(snapshot, options)
     seconds_in_shift = snapshot.seconds_in_shift,
     speed = snapshot.speed,
     paused = snapshot.paused,
+    machine_time_ds = snapshot.machine_time_ds or snapshot.tick * 10,
+    machine_wire_colors = Stable.deep_copy(
+      snapshot.machine_wire_colors
+        or Machine.wire_permutation(snapshot.seed)
+    ),
     world = World.from_snapshot(snapshot.world),
     crew = Stable.deep_copy(snapshot.crew),
     machines = Stable.deep_copy(snapshot.machines or {}),
@@ -1250,6 +1251,7 @@ function Simulation.from_snapshot(snapshot, options)
       crew = Rng.new(1),
       incidents = Rng.new(1),
       economy = Rng.new(1),
+      machines = Rng.new(1),
     },
     economy = Stable.deep_copy(snapshot.economy),
     station = Stable.deep_copy(snapshot.station),
@@ -1257,11 +1259,24 @@ function Simulation.from_snapshot(snapshot, options)
     hooks = options.hooks or false,
     mod_state = Stable.deep_copy(snapshot.mod_state or {}),
     mod_diagnostics = {},
+    grid_base_power_demand_w = snapshot.grid_base_power_demand_w
+      or snapshot.world.power_demand_w
+      or 0,
+    grid_base_power_served_w = snapshot.grid_base_power_served_w
+      or snapshot.world.power_served_w
+      or 0,
+    _machine_power_dirty = false,
     commands = CommandQueue.new(),
     events = EventLog.new(),
   }, Simulation)
-  for name, rng_snapshot in pairs(snapshot.rngs) do
+  for name, rng_snapshot in pairs(snapshot.rngs or {}) do
+    if not sim.rngs[name] then
+      sim.rngs[name] = Rng.new(1)
+    end
     sim.rngs[name]:restore(rng_snapshot)
+  end
+  for index = 1, #sim.machines do
+    Machine.upgrade_instance(sim, sim.machines[index], index)
   end
   sim.commands.next_sequence = snapshot.commands.next_sequence
   sim.commands.pending = Stable.deep_copy(snapshot.commands.pending)

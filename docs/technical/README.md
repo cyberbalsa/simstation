@@ -15,6 +15,7 @@ must grow toward these contracts without breaking their boundaries.
 6. [Libraries and toolchain](06-libraries-and-toolchain.md)
 7. [Performance, testing, and packaging](07-performance-testing-packaging.md)
 8. [Native scenarios and Goon-informed map import](08-native-scenarios-and-map-import.md)
+9. [Goon-compatible machine fidelity](09-goon-machine-fidelity.md)
 
 Mod authors should then read the [modding specification](../modding/README.md).
 Milestones and release gates live in the
@@ -53,12 +54,15 @@ The current executable establishes LÖVE 11.5, a pure-Lua simulation, fixed
 constants for a 10 Hz scheduler, serial command queuing, stable pathfinding
 tie-breaks, named deterministic RNG instances, and 16×16 dirty chunks. Its
 normal start expands the first-party 192×192 native Atlas scenario into
-authoritative world arrays, 84 operational areas, 121 machine fixtures, 85 job
+authoritative world arrays, 92 operational areas, 134 machine fixtures, 85 job
 spawn markers, and 64 reviewed breach targets.
 
-Area-powered access doors, vents/scrubbers, a bounded manufacturing loop,
-starting inventory, scenario-aware incidents, state hashing, and save/load
-continuation are implemented as a deterministic vertical slice. The broader
-command/event/save and station-system contracts in these documents remain the
-1.0 target; the exact implemented-versus-release gaps for native starts are
-tracked in the [scenario contract](08-native-scenarios-and-map-import.md#implementation-audit).
+Area-powered access doors, source-pinned machine definitions and controls, a
+bounded manufacturing loop, starting inventory, scenario-aware incidents,
+state hashing, and save/load continuation form the deterministic vertical
+slice. Gas/pipe, full powernet, physical production/cargo, maintenance, and
+NPC parity remain explicit deferred work rather than magic fixture effects.
+The broader command/event/save and station-system contracts in these documents
+remain the 1.0 target; native-start gaps are tracked in the
+[scenario contract](08-native-scenarios-and-map-import.md#implementation-audit)
+and [machine-fidelity contract](09-goon-machine-fidelity.md#current-executable-slice).

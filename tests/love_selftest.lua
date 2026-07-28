@@ -24,7 +24,7 @@ function SelfTest.run()
   local mods, mod_error = ModLoader.discover_love({ api_version = "0.1.0" })
   assert(mods, mod_error and Json.encode(mod_error) or "unknown mod load error")
   local registry_report = mods.registry:report()
-  assert_equal(registry_report.definition_count, 24,
+  assert_equal(registry_report.definition_count, 37,
     "unexpected base content definition count")
   local content = RuntimeContent.from_registry(mods.registry)
   local scenario = assert(

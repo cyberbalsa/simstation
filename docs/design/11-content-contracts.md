@@ -68,6 +68,33 @@ Rules:
 - `replaces` may target only a definition in a declared dependency and must
   retain kind. Load fails on implicit collision.
 
+### Source-pinned machine definitions
+
+Schema-2 `machine` definitions are the public contract between a physical
+scenario fixture, deterministic behavior, presentation, and autonomous agents.
+They declare:
+
+- `fixture_kind` and a namespaced `behavior` contract;
+- exact upstream repository, commit, type path, and reviewed source files;
+- process class/tier, interval in `ds`, and callback `mult` bounds;
+- power channel, idle draw, priority, state defaults, health thresholds, and
+  optional four-wire harness;
+- an allowlist of safe literal map overrides;
+- typed actions with stable ID, handler, upstream symbol, range, duration,
+  requirements, parameters, tags, and an honest `implemented` flag; and
+- a fidelity profile and per-feature ledger.
+
+Fidelity status is closed: `exact` means the observable rule and constants
+match source; `deterministic-equivalent` changes implementation while retaining
+the outcome; `engine-adapted` records an intentional Sim Station boundary;
+`intentional-fix` identifies a cited upstream defect and tested replacement;
+`deferred` exposes missing behavior instead of silently approximating it; and
+`not-applicable` identifies multiplayer/round/admin behavior outside the product
+contract. Runtime instances save the definition/behavior IDs, authoritative
+state, process deadlines, wire mapping/effects, power/health state, and any
+active action. Replacements and third-party additions pass through the same
+validator and registry as the first-party definitions.
+
 ## Primitive types and expressions
 
 Definitions use JSON null, boolean, UTF-8 string, bounded integer, array, and

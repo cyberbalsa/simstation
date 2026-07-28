@@ -22,6 +22,18 @@ records are:
 
 - [`architecture-scope.md`](architecture-scope.md) — Faraday /
   `architecture_scope`
+- [`machine-fidelity-architecture.md`](machine-fidelity-architecture.md) —
+  Faraday / resumed `architecture_scope` machine-fidelity episode
+- [`power-machine-fidelity.md`](power-machine-fidelity.md) —
+  `architecture_scope/power_machine_research`
+- [`atmos-production-cargo-fidelity.md`](atmos-production-cargo-fidelity.md) —
+  `architecture_scope/atmos_prod_cargo_research`
+- [`machine-research-archive.md`](machine-research-archive.md) —
+  `archive_machine_research`
+- [`machine-fidelity-tests.md`](machine-fidelity-tests.md) —
+  `machine_fidelity_tests`
+- [`machine-docs-renderer.md`](machine-docs-renderer.md) —
+  `machine_docs_renderer`
 - [`goon-graphics-pipeline.md`](goon-graphics-pipeline.md) — Harvey /
   `goon_graphics_pipeline`
 - [`love-render-assets.md`](love-render-assets.md) — Kierkegaard /

@@ -21,13 +21,27 @@ local COLORS = {
   machine_unpowered = { 0.95, 0.25, 0.18, 1 },
 }
 
+-- The foundation media catalog intentionally opens only six machine sprites.
+-- Keep every physical adapter visible by routing it to the closest available
+-- alias until a dedicated catalog entry is promoted; unknown kinds still use
+-- the deterministic shape fallback below.
 local MACHINE_SPRITES = {
   apc = "apc",
+  barcode_computer = "fabricator",
+  battery = "generator",
+  cargo_pad = "refinery",
+  circulator = "generator",
   fabricator = "fabricator",
   generator = "generator",
+  nanofab = "refinery",
+  passive_vent = "vent",
+  portable_scrubber = "scrubber",
+  reclaimer = "refinery",
   refinery = "refinery",
   scrubber = "scrubber",
+  supply_console = "fabricator",
   vent = "vent",
+  vent_pump = "vent",
 }
 
 local function set_color(color)

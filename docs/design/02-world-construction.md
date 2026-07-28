@@ -32,15 +32,17 @@ Each tile stores dense layer references:
 | base | space, asteroid, void, or supporting terrain |
 | floor | floor assembly, plating, grating, or no floor |
 | structure | wall, window, reinforced wall, or passable boundary |
-| fixture | at most one anchored machine/door/furniture footprint owner |
+| fixture | sorted anchored machine/furniture entity IDs; footprint occupancy decides exclusion |
 | utility | cable, pipe, disposal, and data connectors as independent bitfields |
 | surface | decals, fluid films, residue, dirt, and tracks |
 | environment | atmosphere-cell reference, temperature, light, radiation |
 | occupancy | sorted entity IDs and solid-footprint reservation |
 
-The tile itself does not own items or creatures; it indexes entity IDs owned by
-their systems. Multi-tile fixtures have one anchor entity and validated footprint
-cells.
+The tile itself does not own items, creatures, or fixtures; it indexes entity
+IDs owned by their systems. Multiple source-layered fixtures may share an anchor
+tile when their footprint/solidity contracts permit it, and remain independently
+addressable in stable ID order. Multi-tile fixtures have one anchor entity and
+validated footprint cells.
 
 Topological regions are flood-filled sets for:
 

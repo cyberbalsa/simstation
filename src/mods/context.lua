@@ -1,10 +1,32 @@
 local Stable = require("src.core.stable")
+local Machine = require("src.core.machine")
 local Json = require("src.vendor.json")
 
 local Context = {}
 Context.__index = Context
 
 local MAX_STATE_BYTES = 8 * 1024 * 1024
+
+local function machine_by_id(simulation, stable_id)
+  for index = 1, #simulation.machines do
+    local machine = simulation.machines[index]
+    if machine.id == stable_id
+      or machine.scenario_fixture_id == stable_id
+    then
+      return machine
+    end
+  end
+  return nil
+end
+
+local function crew_by_id(simulation, actor_id)
+  for index = 1, #simulation.crew do
+    if simulation.crew[index].id == actor_id then
+      return simulation.crew[index]
+    end
+  end
+  return nil
+end
 
 local function assert_primitive(value, seen)
   local kind = type(value)
@@ -64,13 +86,8 @@ function Context:query(kind, stable_id)
     return Stable.deep_copy(self.simulation.inventory)
   elseif kind == "machines" then
     if stable_id ~= nil then
-      for index = 1, #self.simulation.machines do
-        local machine = self.simulation.machines[index]
-        if machine.scenario_fixture_id == stable_id then
-          return Stable.deep_copy(machine)
-        end
-      end
-      return nil
+      local machine = machine_by_id(self.simulation, stable_id)
+      return machine and Stable.deep_copy(machine) or nil
     end
     return Stable.deep_copy(self.simulation.machines)
   elseif kind == "scenario" then
@@ -84,6 +101,20 @@ function Context:query(kind, stable_id)
     }
   end
   return nil
+end
+
+function Context:machine_actions(machine_id, actor_id)
+  local machine = machine_by_id(self.simulation, machine_id)
+  if not machine then
+    return nil
+  end
+  local actor = actor_id ~= nil
+      and crew_by_id(self.simulation, actor_id)
+    or nil
+  if actor_id ~= nil and not actor then
+    return nil
+  end
+  return Machine.affordances(self.simulation, machine, actor)
 end
 
 function Context:query_tile(map_id, x, y)

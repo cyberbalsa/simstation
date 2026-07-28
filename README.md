@@ -46,10 +46,14 @@ quietly; simulation behavior remains identical.
 
 The current executable is the deterministic Atlas milestone. It expands the
 first-party `org.simstation.core:scenario/goon-atlas` definition, instantiates
-authored areas, utility fixtures, job spawns, and incident targets, then
-simulates crew, atmosphere, power, needs, budgets, work orders, manufacturing,
-and incidents. The complete product contract and implementation roadmap live
-in [docs](docs/README.md).
+92 authored areas, 134 source-selected machine fixtures, job spawns, and
+incident targets, then simulates crew, atmosphere, power, needs, budgets, work
+orders, manufacturing, and incidents. Layered machines are retained instead of
+flattened by coordinate, and safe literal map overrides survive import without
+executing DM. Source-pinned machine definitions carry their cadence, state,
+power, wires, typed NPC actions, and an explicit per-feature fidelity ledger.
+The complete product contract and implementation roadmap live in
+[docs](docs/README.md).
 
 ## Controls
 

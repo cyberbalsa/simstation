@@ -97,6 +97,28 @@ python3 tools/dev.py run --scenario \
 Tags are discoverability hints, not behavior unless a system schema names the
 tag. A mod may not assume all definitions with an arbitrary tag are compatible.
 
+### Machine workflow
+
+1. Choose a supported `fixture_kind` and a namespaced schema-2 machine ID.
+2. Pin upstream-derived behavior to repository, exact commit, type path, and the
+   reviewed source files; original machines should identify their own source.
+3. Declare integer `ds` cadence, power, state, health, wires, and only the safe
+   map override names that may initialize state.
+4. Publish each interaction as a typed action with range, duration,
+   requirements, closed parameters, and a stable handler. Set `implemented`
+   false until that action is executable; NPC planners will report it rather
+   than inventing an approximation.
+5. Record every meaningful feature as `exact`, `deterministic-equivalent`,
+   `engine-adapted`, `intentional-fix`, `deferred`, or `not-applicable` in the
+   fidelity ledger, with source evidence and a regression test for any fix.
+6. Add validator, affordance/reason-code, deterministic timing, save/reload, and
+   replacement fixtures.
+
+Data packs can reuse supported behavior/physical adapters and replace complete
+machine definitions. A new authoritative handler requires a trusted code API
+surface, and a new footprint/connector kind requires a versioned scenario
+extension; neither is smuggled in through a tag or source path.
+
 ## Graphics workflow
 
 - Author lossless RGBA8 PNG plus TOML; never atlas-edit.

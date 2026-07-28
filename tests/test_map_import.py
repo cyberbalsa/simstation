@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from collections import Counter
+import copy
 import hashlib
 import json
 from pathlib import Path
@@ -38,6 +40,64 @@ class MapImportTests(unittest.TestCase):
         door = parsed.entries["aa"].atoms[0]
         self.assertEqual(door.path, "/obj/machinery/door")
         self.assertEqual(door.variables, ("dir", "id", "links"))
+        self.assertEqual(
+            dict(door.literal_overrides),
+            {"dir": 4, "id": "engineering"},
+        )
+
+    def test_literal_overrides_preserve_only_safe_data_primitives(self) -> None:
+        parsed = map_import.parse_map(
+            (
+                b'"a" = ('
+                b'/obj/machinery/power/smes{'
+                b'charge = 1e6; '
+                b'chargelevel = 15000; '
+                b'output = 10000; '
+                b'on = TRUE; '
+                b'label = "engineering"; '
+                b'precise = 9007199254740991e0; '
+                b'huge = 1e999; '
+                b'fraction = 1.5; '
+                b'expression = 2 + 2; '
+                b'type_value = /obj/item/cell; '
+                b'nested = list("value" = 1)'
+                b'},'
+                b'/turf/simulated/floor,'
+                b'/area/station/engineering'
+                b')\n'
+                b'(1,1,1) = {"a"}\n'
+            ),
+            "literal-overrides.dmm",
+        )
+        smes = parsed.entries["a"].atoms[0]
+
+        self.assertEqual(
+            dict(smes.literal_overrides),
+            {
+                "charge": 1_000_000,
+                "chargelevel": 15_000,
+                "label": "engineering",
+                "on": True,
+                "output": 10_000,
+                "precise": 9_007_199_254_740_991,
+            },
+        )
+        self.assertEqual(
+            smes.variables,
+            (
+                "charge",
+                "chargelevel",
+                "expression",
+                "fraction",
+                "huge",
+                "label",
+                "nested",
+                "on",
+                "output",
+                "precise",
+                "type_value",
+            ),
+        )
 
     def test_tgm_summary_and_relationships(self) -> None:
         parsed = self.parse_fixture("tgm_minimal.dmm")
@@ -197,6 +257,187 @@ class MapImportTests(unittest.TestCase):
         )
 
         self.assertEqual(compiled, committed)
+        fixtures = scenario["fixtures"]
+        self.assertEqual(len(scenario["areas"]), 92)
+        self.assertEqual(len(fixtures), 134)
+        self.assertEqual(
+            Counter(fixture["kind"] for fixture in fixtures),
+            Counter(
+                {
+                    "apc": 81,
+                    "barcode_computer": 1,
+                    "battery": 6,
+                    "cargo_pad": 5,
+                    "circulator": 2,
+                    "fabricator": 20,
+                    "generator": 1,
+                    "nanofab": 2,
+                    "portable_scrubber": 3,
+                    "reclaimer": 7,
+                    "supply_console": 2,
+                    "vent": 3,
+                    "vent_pump": 1,
+                }
+            ),
+        )
+
+        smes = [fixture for fixture in fixtures if fixture["kind"] == "battery"]
+        self.assertEqual(len(smes), 6)
+        self.assertTrue(
+            all(
+                fixture["source_overrides"]["chargelevel"] == 15_000
+                and fixture["source_overrides"]["output"] == 10_000
+                for fixture in smes
+            )
+        )
+        self.assertEqual(
+            sum(
+                fixture["source_overrides"].get("charge") == 1_000_000
+                for fixture in smes
+            ),
+            2,
+        )
+
+        fixtures_by_position: dict[tuple[int, int], list[dict]] = {}
+        for fixture in fixtures:
+            fixtures_by_position.setdefault(
+                (fixture["x"], fixture["y"]),
+                [],
+            ).append(fixture)
+        layered = [
+            records for records in fixtures_by_position.values() if len(records) > 1
+        ]
+        self.assertEqual(len(layered), 5)
+        self.assertIn(
+            {"apc", "battery"},
+            [{record["kind"] for record in records} for records in layered],
+        )
+        self.assertIn(
+            {"apc", "fabricator"},
+            [{record["kind"] for record in records} for records in layered],
+        )
+        self.assertEqual(
+            scenario["provenance"]["omissions"]["fixture_collision_omissions"],
+            [],
+        )
+        self.assertEqual(
+            scenario["provenance"]["omissions"]["placement_omissions"],
+            [],
+        )
+
+    def test_compiler_and_validator_preserve_colocated_machine_fixtures(self) -> None:
+        parsed = map_import.parse_map(
+            (
+                b'"a" = ('
+                b'/obj/cable,'
+                b'/obj/machinery/power/apc,'
+                b'/obj/machinery/power/smes{'
+                b'charge = 1e6; chargelevel = 15000; output = 10000'
+                b'},'
+                b'/turf/simulated/floor,'
+                b'/area/station/engineering'
+                b')\n'
+                b'(1,1,1) = {"a"}\n'
+            ),
+            "layered-machines.dmm",
+        )
+        document = map_import.compile_scenario(
+            parsed,
+            {
+                "commit": "1" * 40,
+                "path": "maps/layered-machines.dmm",
+                "git_blob": "2" * 40,
+                "sha256": "3" * 64,
+            },
+            scenario_id="org.example.test:scenario/layered-machines",
+            name="Layered Machines",
+            crop=(1, 1, 16, 16),
+        )
+        scenario = document["definitions"][0]
+
+        self.assertEqual(
+            [(fixture["kind"], fixture["x"], fixture["y"]) for fixture in scenario["fixtures"]],
+            [("apc", 1, 16), ("battery", 1, 16)],
+        )
+        self.assertEqual(
+            scenario["fixtures"][1]["source_overrides"],
+            {
+                "charge": 1_000_000,
+                "chargelevel": 15_000,
+                "output": 10_000,
+            },
+        )
+        mod_tools.validate_scenario(scenario, "scenario.json", 0)
+
+    def test_scenario_validator_rejects_unsafe_machine_metadata(self) -> None:
+        parsed = map_import.parse_map(
+            (
+                b'"a" = ('
+                b'/obj/machinery/power/smes,'
+                b'/turf/simulated/floor,'
+                b'/area/station/engineering'
+                b')\n'
+                b'(1,1,1) = {"a"}\n'
+            ),
+            "machine-metadata.dmm",
+        )
+        document = map_import.compile_scenario(
+            parsed,
+            {
+                "commit": "1" * 40,
+                "path": "maps/machine-metadata.dmm",
+                "git_blob": "2" * 40,
+                "sha256": "3" * 64,
+            },
+            scenario_id="org.example.test:scenario/machine-metadata",
+            name="Machine Metadata",
+            crop=(1, 1, 16, 16),
+        )
+        scenario = document["definitions"][0]
+
+        invalid = copy.deepcopy(scenario)
+        invalid["fixtures"][0]["source_overrides"] = {"charge": 1.5}
+        with self.assertRaisesRegex(mod_tools.ModError, "unsafe fixture source override"):
+            mod_tools.validate_scenario(invalid, "scenario.json", 0)
+
+        invalid = copy.deepcopy(scenario)
+        invalid["fixtures"][0]["definition_id"] = (
+            "org.simstation.core:item/not-a-machine"
+        )
+        with self.assertRaisesRegex(mod_tools.ModError, "invalid fixture metadata"):
+            mod_tools.validate_scenario(invalid, "scenario.json", 0)
+
+    def test_shipped_machine_contracts_validate_strict_schema(self) -> None:
+        machine_path = (
+            ROOT
+            / "mods"
+            / "org.simstation.core"
+            / "content"
+            / "machines.json"
+        )
+        document = json.loads(machine_path.read_text(encoding="utf-8"))
+        definitions = document["definitions"]
+        self.assertEqual(len(definitions), 13)
+        for index, definition in enumerate(definitions):
+            mod_tools.validate_machine(definition, "content/machines.json", index)
+
+        invalid = copy.deepcopy(definitions[0])
+        invalid["state_defaults"]["unsafe_fraction"] = 1.5
+        with self.assertRaisesRegex(
+            mod_tools.ModError,
+            "machine state must use JSON integer primitives",
+        ):
+            mod_tools.validate_machine(invalid, "content/machines.json", 0)
+
+        invalid = copy.deepcopy(definitions[0])
+        invalid["tags"] = list(reversed(invalid["tags"]))
+        with self.assertRaisesRegex(mod_tools.ModError, "sorted and unique"):
+            mod_tools.validate_machine(invalid, "content/machines.json", 0)
+
+        invalid = copy.deepcopy(definitions[0])
+        invalid["wires"][1]["index"] = invalid["wires"][0]["index"]
+        with self.assertRaisesRegex(mod_tools.ModError, "invalid wire record"):
+            mod_tools.validate_machine(invalid, "content/machines.json", 0)
 
     def test_scenario_validator_rejects_foreign_nested_identity(self) -> None:
         parsed = self.parse_fixture("tgm_minimal.dmm")

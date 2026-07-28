@@ -64,12 +64,16 @@ folder hashing, ZIP packaging, and the four example packs have fixtures.
 
 Native maps use `scenario_maps = ["scenarios/*.json"]` and pass through the
 same registry path as other data definitions. The first-party Atlas start
-proves this path with authored areas, machines, spawns, inventory, power,
-manufacturing, incidents, and save continuation. See the
+proves this path with 92 authored areas, 134 source-selected machines, layered
+fixtures, safe literal map overrides, spawns, inventory, power, manufacturing,
+incidents, and save continuation. Schema-2 machine definitions provide
+source-pinned state/cadence/power, typed NPC/UI actions, wires, and a
+feature-level fidelity ledger through that same registry. See the
 [native scenario contract](../technical/08-native-scenarios-and-map-import.md).
 
 This remains a pre-1.0 API. There is no in-game mod manager, scenario picker,
-network workshop, schema migration UI, or general mod-defined physical machine
-kind yet. The packaged examples and current API `0.1.0` are compatibility
-fixtures, not a promise that all later system hooks in the design documents are
-already active.
+network workshop, schema migration UI, or arbitrary new machine footprint kind
+yet. A pack can add or replace definitions for supported physical adapters;
+new collision/connector geometry still requires a scenario-schema extension.
+The packaged examples and current API `0.1.0` are compatibility fixtures, not a
+promise that all later system hooks in the design documents are already active.

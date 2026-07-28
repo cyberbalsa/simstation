@@ -177,6 +177,15 @@ area/fixture/spawn IDs, physical anchors, and provenance before registry
 sealing. A scenario is still an ordinary registry definition: additions use
 the pack namespace and replacements follow the exact rules above.
 
+Source-pinned machine fixtures reference a namespaced schema-2 `machine`
+definition through `definition_id`; the old kind-only adapter remains a
+compatibility fallback during the pre-1.0 migration. Safe string/boolean/integer
+values preserved from an imported map may appear in `source_overrides`, but only
+names explicitly listed by the machine definition's `map_override_fields`
+initialize runtime state. Expressions are never evaluated. Independently
+addressable fixtures may share one coordinate when the source has layered
+atoms; stable fixture IDs, not coordinate flattening, determine load order.
+
 The game defaults to the first-party Atlas definition. Any loaded scenario can
 use the same startup path:
 

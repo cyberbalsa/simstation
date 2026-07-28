@@ -8,6 +8,7 @@ documentation use these meanings.
 | Term | Meaning |
 |---|---|
 | tick | One authoritative in-world second. Never means a rendered frame. |
+| decisecond (`ds`) | One tenth of an in-world second, used by the ordered machine subcalendar. |
 | real second | Wall-clock second. At 1× it schedules ten ticks. |
 | shift | 28,800 ticks/eight in-world hours; about 48 real minutes at 1×. |
 | campaign | Persistent history spanning shifts and possibly replacement stations. |
@@ -48,6 +49,8 @@ documentation use these meanings.
 | code mod | Explicitly trusted arbitrary Lua extension; not sandboxed. |
 | hook | Ordered observe, validate/cancel, or transform/reduce extension point. |
 | reason code | Stable localized explanation identifier used by validation and AI. |
+| machine affordance | Definition-declared typed action projected for one machine/actor with availability and blocker. |
+| fidelity ledger | Per-feature record of exact/equivalent/adapted/fixed/deferred/not-applicable upstream behavior. |
 
 ## Work and organization
 

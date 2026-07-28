@@ -412,6 +412,15 @@ when its definition's quorum/time-window rule passes.
 Crew retain a valid current task unless a new candidate exceeds it by a 150,000
 milli-point hysteresis or a survival/emergency rule interrupts it.
 
+Machine operation is planned from typed affordances, not machine-kind
+conditionals in the crew AI. For a machine and actor, the core returns every
+definition-declared verb with range, duration, parameter schema, availability,
+and one stable blocker such as `not-adjacent`, `access-denied`, `wrong-tool`,
+`panel-closed`, `no-power`, `interface-locked`, or `queue-full`. Work stages
+select a verb, obtain its physical/tool/access prerequisites, then submit the
+same serializable `machine_action` command used by the UI and trusted mods.
+Source symbols remain provenance; NPCs reason only over the typed contract.
+
 ### Inputs, outputs, and dependencies
 
 All labor-using systems own and publish work orders. Work AI consumes crew,

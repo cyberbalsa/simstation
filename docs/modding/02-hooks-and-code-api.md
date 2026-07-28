@@ -111,6 +111,7 @@ ctx:query(kind, stable_id)                  -- documented knowledge-safe view
 ctx:query_tile(map_id, x, y, projection)    -- documented tile projection
 ctx:definitions(kind, tag)                  -- sorted ContentId array
 ctx:definition(content_id)                  -- immutable definition view
+ctx:machine_actions(machine_id, actor_id)   -- sorted typed affordance copies
 ctx:enqueue(command_type, payload)          -- next tick, trusted issuer
 ctx:get_state()                             -- caller's primitive state copy
 ctx:set_state(next_state)                   -- schema-check caller state
@@ -150,6 +151,7 @@ System design documents may add typed hooks. API 0.1 reserves:
 | Hook ID | Kind | Purpose |
 |---|---|---|
 | `org.simstation.core:hook/command/validate` | validate | validate a documented command proposal |
+| `org.simstation.core:hook/machine/action/validate` | validate | validate one typed machine action at command commit |
 | `org.simstation.core:hook/task/candidates` | transform | filter/annotate candidate task IDs before core stable scoring |
 | `org.simstation.core:hook/task/score` | transform | integer bounded score adjustment |
 | `org.simstation.core:hook/recipe/validate-start` | validate | validate a production start |
@@ -162,6 +164,14 @@ The generic command/event hooks still expose a discriminated closed union, not
 arbitrary core tables. High-volume tile/atmosphere inner loops deliberately
 have no per-cell Lua hooks; data-driven gas/reaction definitions and coarse
 transition hooks preserve performance.
+
+`machine_actions` returns the same definition-declared verbs used by crew AI and
+the inspector: stable action ID, range, duration, parameter schema, source
+symbol, tags, availability, and a stable denial reason. It never returns a live
+machine table. A `machine/action/validate` proposal identifies the machine,
+actor, action, and validated primitive parameters; handlers may allow or deny
+it, but cannot replace the action handler or bypass access, adjacency, tool,
+power, panel, health, or parameter checks.
 
 Every hook-specific contract defines cadence, input schema, mutable output
 fields, visibility, maximum collection sizes, and error criticality before
