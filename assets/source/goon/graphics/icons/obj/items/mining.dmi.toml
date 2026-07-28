@@ -1,0 +1,480 @@
+format_version = 1
+source_path = "icons/obj/items/mining.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "daa6b63071e405bf36a4ccdb45fb93a78c04a6606af0d3cba5e0311fdabe092e"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "scan-anom"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "255"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "255"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "scan-gem"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "255"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "255"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "scan-object"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "255"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "255"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "scan-danger"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "255"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "255"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "scan-soft"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "255"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "255"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "scan-hard"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "255"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "255"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "scan-rare_metal"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "255"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "255"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "scan-solid"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "255"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "255"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "pickaxe"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "powerpick-old"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "powerhammer-old"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "pp-glow-old"
+dirs = 1
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ph-glow-old"
+dirs = 1
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "orebag"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "minanal"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lasdrill-old"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "scoop"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "scoop-bag"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "cargotele"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "cargotelegreen"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "extractor-off"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "extractor-on"
+dirs = 1
+frames = 3
+raw_delay_ds = ["1", "1", "1"]
+delay_ds = ["1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "drillhead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "pickhead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hammerhead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blasterhead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blaster"
+dirs = 1
+frames = 3
+raw_delay_ds = ["1", "1", "1"]
+delay_ds = ["1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "mod_conc"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "mod_pow"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "mod_none"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "powerpick"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "powerhammer"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "pp-glow"
+dirs = 1
+frames = 4
+raw_delay_ds = ["2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ph-glow"
+dirs = 1
+frames = 4
+raw_delay_ds = ["2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "pd-glow"
+dirs = 1
+frames = 4
+raw_delay_ds = ["2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "syndicargotele"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hedron-W"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hedron-M"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hedron-MtoW"
+dirs = 1
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hedron-WtoM"
+dirs = 1
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "powerdrill"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "powershovel"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ps-glow"
+dirs = 1
+frames = 4
+raw_delay_ds = ["2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

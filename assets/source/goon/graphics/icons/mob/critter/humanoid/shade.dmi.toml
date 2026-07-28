@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/mob/critter/humanoid/shade.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "abe580b2a80fe95f3d57c689d49b53abbbe664eb6896793ace4877b3a1abb3bd"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "shade"
+dirs = 1
+frames = 5
+raw_delay_ds = ["40", "1", "0.5", "0.3", "10"]
+delay_ds = ["40", "1", "0.5", "0.3", "10"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []

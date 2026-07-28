@@ -1,0 +1,106 @@
+format_version = 1
+source_path = "icons/obj/machines/fusion.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "1edc80ed2837c407f1fc6ba6d3d4e2be2bf43760f22c09df096907abd1edfa5c"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "laser_unit"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "laser_frame"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "laser-broken"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "laser-mounted"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "emitter_overlay"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "laser-premade"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "cab1"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "cab2"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "cab3"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

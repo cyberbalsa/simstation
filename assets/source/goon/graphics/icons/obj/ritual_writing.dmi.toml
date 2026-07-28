@@ -1,0 +1,513 @@
+format_version = 1
+source_path = "icons/obj/ritual_writing.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "a4584ea46d5a56900ef5740f97c32ab3102930b47aebc4383f80703fe978206b"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "aura"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "extendo"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "aperio"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "sano"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "mutatio"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "evincio"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "terra"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "expilo"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "augmen"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "exanimis"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "corruptus"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "persisto"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "motus"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "spatium"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "perdo"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "sanguis"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "evoco"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "aqua"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "aer"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ignis"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "nope"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "exalto"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "objectum"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "resilio"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "obscurum"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "??1"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "."
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "|"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "-"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "sacrificum"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "materia"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conditum"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bttbg"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bttbg2"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "anchor"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "spark"
+dirs = 1
+frames = 10
+raw_delay_ds = ["2", "1", "1", "1", "1", "1", "1", "1", "1", "5"]
+delay_ds = ["2", "1", "1", "1", "1", "1", "1", "1", "1", "5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "anima"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "concido"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hominem"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = ""
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ritualchalk"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "apis"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "cresco"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "murus"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "sanctus"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "portus"
+dirs = 8
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

@@ -1,0 +1,1580 @@
+format_version = 1
+source_path = "icons/obj/window_pyro.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "447ad45159e1485fb13ce262f752df7acfea835d7f70259e38ea3f233ab5e55b"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "mapwin"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "0"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "1"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "2"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "3"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "4"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "5"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "6"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "7"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "8"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "9"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "10"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "11"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "12"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "13"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "14"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "15"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "mapwin_r"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R0"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R1"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R2"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R3"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R4"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R5"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R7"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R6"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R8"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R9"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R10"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R11"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R13"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R12"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R14"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R15"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "overlay-1"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "overlay-2"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "overlay-3"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "overlay-4"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "overlay-5"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "overlay-6"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "overlay-7"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "overlay-8"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "overlay-9"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "overlay-10"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "overlay-11"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "overlay-12"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "overlay-13"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "overlay-14"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "overlay-15"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-0"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-1"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-2"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-3"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-4"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-5"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-6"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-7"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-8"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-9"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-10"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-11"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-12"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-13"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-14"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-15"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-21"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-23"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-29"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-31"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-38"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-39"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-46"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-47"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-55"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-63"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-74"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-75"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-78"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-79"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-95"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-110"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-111"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-127"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-137"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-139"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-141"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-143"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-157"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-159"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-175"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-191"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-203"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-207"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-223"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-239"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W-255"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-0"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-1"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-2"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-3"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-4"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-5"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-6"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-7"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-8"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-9"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-10"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-11"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-12"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-13"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-14"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-15"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-21"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-23"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-29"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-31"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-38"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-39"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-46"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-47"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-55"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-63"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-74"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-75"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-78"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-79"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-95"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-110"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-111"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-127"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-137"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-139"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-141"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-143"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-157"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-159"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-175"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-191"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-203"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-207"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-223"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-239"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R-255"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

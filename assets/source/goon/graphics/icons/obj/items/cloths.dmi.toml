@@ -1,0 +1,227 @@
+format_version = 1
+source_path = "icons/obj/items/cloths.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "0ff8a48dae96878d9dae92a953818d4954fb4f96de620692ff5cf66b06bb7458"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "towel_white"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "towel_yellow"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "towel_sundae"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "towel_pink"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "towel_green"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "towel_clown"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "towel_blue"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "towel_black"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "towel_grey"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "towel_orange"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hanky_white"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hanky_yellow"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hanky_red"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hanky_purple"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hanky_pink"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hanky_orange"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hanky_nt"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hanky_green"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hanky_blue"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "towel_security"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

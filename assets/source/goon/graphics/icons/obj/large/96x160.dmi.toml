@@ -1,0 +1,62 @@
+format_version = 1
+source_path = "icons/obj/large/96x160.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "43814e0a4bc0a7a4392854004a607355b129a00df7ea7cbe5ff86550ee0435af"
+dmi_version = "4.0"
+cell_width = 96
+cell_height = 160
+
+[[states]]
+name = "turbine_spin"
+dirs = 1
+frames = 12
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "turbine_main"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ruined"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "tower"
+dirs = 1
+frames = 3
+raw_delay_ds = ["1", "1", "1"]
+delay_ds = ["1", "1", "1"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "tower_off"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []

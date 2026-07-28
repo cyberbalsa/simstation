@@ -1,0 +1,95 @@
+format_version = 1
+source_path = "icons/mob/inhand/tools/weldingtool.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "d7aaf64be92913e00679d6bfefedd864e0f15067b46d68c3e6e97c49959d8fea"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "weldingtool-off-L"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "weldingtool-off-R"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "weldingtool-on-L"
+dirs = 4
+frames = 2
+raw_delay_ds = ["0.8", "0.8"]
+delay_ds = ["0.8", "0.8"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "weldingtool-on-R"
+dirs = 4
+frames = 2
+raw_delay_ds = ["0.8", "0.8"]
+delay_ds = ["0.8", "0.8"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "arcwelder-off-L"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "arcwelder-off-R"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "arcwelder-on-L"
+dirs = 4
+frames = 3
+raw_delay_ds = ["0.8", "0.8", "1"]
+delay_ds = ["0.8", "0.8", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "arcwelder-on-R"
+dirs = 4
+frames = 3
+raw_delay_ds = ["0.8", "0.8", "1"]
+delay_ds = ["0.8", "0.8", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

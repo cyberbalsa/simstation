@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/cursors/target/blue.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "9a4959f828eafd70f4677e1d7302b06c9b41432583c270ac9c0b5a03f36f69de"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "all"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = ["15,15,1"]

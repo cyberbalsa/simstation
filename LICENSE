@@ -1,0 +1,23 @@
+Sim Station license overview
+============================
+
+This repository is a mixed-license, noncommercial public-source project.
+
+Original engine code and build tools are licensed under the MIT License in
+LICENSE-CODE unless a file says otherwise.
+
+Goonstation-derived graphics, audio, data, and their generated adaptations are
+licensed under Creative Commons Attribution-NonCommercial-ShareAlike 3.0
+United States, subject to stronger file-specific notices. The pinned upstream
+license text is preserved at assets/upstream/goon/LICENSE.
+
+Project documentation is licensed under Creative Commons Attribution 4.0
+unless it embeds or adapts material under another stated license.
+
+Third-party material remains under its own license. See docs/legal/README.md
+and docs/legal/license-architecture.md for the authoritative license matrix,
+attribution obligations, provenance policy, and release blockers.
+
+The normal game distribution contains NonCommercial material and is not an
+OSI-approved open-source distribution. A code-only reuse must omit all
+Goon-derived content and comply with each remaining file's notice.

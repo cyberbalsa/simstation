@@ -1,0 +1,29 @@
+format_version = 1
+source_path = "icons/effects/vision_wide.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "36ca092b7d93401001a7fb8aeb4497062cecc942999d863c650425fdfdf4ec39"
+dmi_version = "4.0"
+cell_width = 672
+cell_height = 480
+
+[[states]]
+name = "flockvision"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "meson"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

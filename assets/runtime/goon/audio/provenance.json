@@ -1,0 +1,10 @@
+{
+  "catalog_sha256": "d19b0230624a47b4e3a9d3fb722c7e979383f075a7943294dced7c75cb72bff0",
+  "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+  "files": 4699,
+  "format_version": 1,
+  "generator": "tools/assets.py",
+  "license": "CC-BY-NC-SA-3.0-US",
+  "repository": "https://github.com/goonstation/goonstation.git",
+  "rights_policy": "trust-goon-root-license"
+}

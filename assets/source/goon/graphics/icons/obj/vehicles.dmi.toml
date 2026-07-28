@@ -1,0 +1,546 @@
+format_version = 1
+source_path = "icons/obj/vehicles.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "dcbe58ae0e8544716479852a2250fba16e23b3094a90fb61f3498a9666724e1c"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "segway"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "segway1"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "segway1"
+dirs = 4
+frames = 3
+raw_delay_ds = ["1", "1", "1"]
+delay_ds = ["1", "1", "1"]
+loop = 0
+rewind = false
+movement = true
+hotspots_raw = []
+
+[[states]]
+name = "segway2"
+dirs = 4
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "segway2"
+dirs = 4
+frames = 12
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = true
+hotspots_raw = []
+
+[[states]]
+name = "clowncar"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "clowncar2"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "1"]
+delay_ds = ["1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "clowncar-d"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "segwaycat"
+dirs = 4
+frames = 2
+raw_delay_ds = ["20", "1"]
+delay_ds = ["20", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "segwaycat"
+dirs = 4
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = true
+hotspots_raw = []
+
+[[states]]
+name = "segwaycat1"
+dirs = 4
+frames = 2
+raw_delay_ds = ["20", "1"]
+delay_ds = ["20", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "segwaycat1"
+dirs = 4
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = true
+hotspots_raw = []
+
+[[states]]
+name = "garfield"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "garfield1"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "odie"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "adminbus"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "adminbus2"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "1"]
+delay_ds = ["1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "cluwnecar"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "cluwnecar2"
+dirs = 4
+frames = 7
+raw_delay_ds = ["2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "floorbuffer"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "floorbuffer0"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "floorbuffer1"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "1"]
+delay_ds = ["1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "floorbuffer1a"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "marsrover"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "marsrover2"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "1"]
+delay_ds = ["1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "badminbus"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "badminbus2"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "1"]
+delay_ds = ["1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "boost-bus"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "1"]
+delay_ds = ["1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "tractor"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "flatbed"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "titanic"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "forklift"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "forklift1"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "forklift_light"
+dirs = 4
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "forklift_panel"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = ["13,26,1"]
+
+[[states]]
+name = "forklift_crate"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = ["15,27,1"]
+
+[[states]]
+name = "forklift_crate2"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = ["15,27,1"]
+
+[[states]]
+name = "forklift_crate3"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = ["14,28,1"]
+
+[[states]]
+name = "forklift_crate4"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = ["14,28,1"]
+
+[[states]]
+name = "skateboard"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "skateboard0"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "tractor-sec"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "tractor-sec2"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "1"]
+delay_ds = ["1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "aircart"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "odie1"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "amogbus"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "amogbus2"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "1"]
+delay_ds = ["1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "clowncar_Old"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "clowncar2_Old"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "1"]
+delay_ds = ["1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

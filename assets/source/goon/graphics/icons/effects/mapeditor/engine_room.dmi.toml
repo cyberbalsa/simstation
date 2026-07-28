@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/effects/mapeditor/engine_room.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "19290b5730b4685e1a0227184d214ca7b4a39263109ec73d3de3389446d48002"
+dmi_version = "4.0"
+cell_width = 352
+cell_height = 352
+
+[[states]]
+name = "11x11engine_room"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "definitions": [
+    {
+      "id": "org.simstation.core:incident/meteor-breach",
+      "kind": "incident",
+      "name_key": "incident.meteor-breach",
+      "threat_cost": 30,
+      "cooldown_ticks": 18000,
+      "effects": ["outer-hull-breach", "localized-fire"],
+      "recovery_contract": "emergency-hull-repair"
+    },
+    {
+      "id": "org.simstation.core:incident/power-overload",
+      "kind": "incident",
+      "name_key": "incident.power-overload",
+      "threat_cost": 15,
+      "cooldown_ticks": 9000,
+      "effects": ["breaker-trip", "machine-damage"],
+      "recovery_contract": "restore-essential-power"
+    },
+    {
+      "id": "org.simstation.core:incident/supply-delay",
+      "kind": "incident",
+      "name_key": "incident.supply-delay",
+      "threat_cost": 8,
+      "cooldown_ticks": 6000,
+      "effects": ["shuttle-delay"],
+      "recovery_contract": "local-substitution"
+    }
+  ]
+}

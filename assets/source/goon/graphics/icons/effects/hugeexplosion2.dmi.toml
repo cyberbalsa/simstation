@@ -1,0 +1,29 @@
+format_version = 1
+source_path = "icons/effects/hugeexplosion2.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "f33d17beb2ef5fed56d3b9fb0231d7b8d23ad864c4611657dfd1f594e371649d"
+dmi_version = "4.0"
+cell_width = 80
+cell_height = 80
+
+[[states]]
+name = "explosion2"
+dirs = 1
+frames = 29
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "explosion"
+dirs = 1
+frames = 25
+raw_delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "1"]
+delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []

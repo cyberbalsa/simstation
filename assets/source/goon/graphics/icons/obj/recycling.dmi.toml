@@ -1,0 +1,755 @@
+format_version = 1
+source_path = "icons/obj/recycling.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "2450e9b0c9a3a7017ba79ebb9500a763762827f62f47e51b86a97a8214a135be"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "conveyor-b"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "diverter0"
+dirs = 8
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "diverter1"
+dirs = 8
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "diverter10"
+dirs = 8
+frames = 4
+raw_delay_ds = ["2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "diverter01"
+dirs = 8
+frames = 4
+raw_delay_ds = ["2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "switch-off"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "switch-rev"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "switch-fwd"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "grinder-a0"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "grinder-a1"
+dirs = 1
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "grinder-b0"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "grinder-o0"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "grinder-o0bld"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "grinder-o1"
+dirs = 1
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "grinder-o1bld"
+dirs = 1
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "grinder-b1"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "separator-AO0"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "separator-AO1"
+dirs = 1
+frames = 3
+raw_delay_ds = ["3", "3", "3"]
+delay_ds = ["3", "3", "3"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "separator-A0"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "separator-A1"
+dirs = 1
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "separator-B0"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "separator-BO0"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "separator-0"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "separator-"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "smasher0"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "smasher1"
+dirs = 4
+frames = 8
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "stopper0"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "stopper1"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor0-map"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "debug"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "debug-on"
+dirs = 1
+frames = 5
+raw_delay_ds = ["10", "1", "1", "1", "1"]
+delay_ds = ["10", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-fuck"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-NE-map"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-NS-map"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-NW-map"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-ES-map"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-EW-map"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-EN-map"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-SW-map"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-SN-map"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-SE-map"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-WN-map"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-WE-map"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-WS-map"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-NS-still"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-NS-run"
+dirs = 1
+frames = 8
+raw_delay_ds = ["0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7"]
+delay_ds = ["0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-EW-still"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-EW-run"
+dirs = 1
+frames = 8
+raw_delay_ds = ["0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7"]
+delay_ds = ["0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-SN-still"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-SN-run"
+dirs = 1
+frames = 8
+raw_delay_ds = ["0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7"]
+delay_ds = ["0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-WE-still"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-WE-run"
+dirs = 1
+frames = 8
+raw_delay_ds = ["0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7"]
+delay_ds = ["0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-NE-run"
+dirs = 1
+frames = 6
+raw_delay_ds = ["0.9", "0.9", "0.9", "0.9", "1", "1"]
+delay_ds = ["0.9", "0.9", "0.9", "0.9", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-NW-run"
+dirs = 1
+frames = 6
+raw_delay_ds = ["0.9", "0.9", "0.9", "0.9", "1", "1"]
+delay_ds = ["0.9", "0.9", "0.9", "0.9", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-EN-run"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "0.9", "0.9", "0.9", "0.9"]
+delay_ds = ["1", "1", "0.9", "0.9", "0.9", "0.9"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-WN-run"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "0.9", "0.9", "0.9", "0.9"]
+delay_ds = ["1", "1", "0.9", "0.9", "0.9", "0.9"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-ES-run"
+dirs = 1
+frames = 6
+raw_delay_ds = ["0.9", "0.9", "0.9", "0.9", "1", "1", "1"]
+delay_ds = ["0.9", "0.9", "0.9", "0.9", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-WS-run"
+dirs = 1
+frames = 6
+raw_delay_ds = ["0.9", "0.9", "0.9", "0.9", "1", "1", "1"]
+delay_ds = ["0.9", "0.9", "0.9", "0.9", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-SE-run"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "0.9", "0.9", "0.9", "0.9", "1"]
+delay_ds = ["1", "1", "0.9", "0.9", "0.9", "0.9"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-SW-run"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "0.9", "0.9", "0.9", "0.9", "1"]
+delay_ds = ["1", "1", "0.9", "0.9", "0.9", "0.9"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-NE-still"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-NW-still"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-EN-still"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-WN-still"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-ES-still"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-WS-still"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-SE-still"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conveyor-SW-still"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

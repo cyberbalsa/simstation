@@ -1,0 +1,29 @@
+format_version = 1
+source_path = "icons/misc/mapEmpty.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "3fc60a58aff82a1660de8495cffa9943e4afa46375f3cc346d952c8d6372b54b"
+dmi_version = "4.0"
+cell_width = 200
+cell_height = 200
+
+[[states]]
+name = "template"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "overlay"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

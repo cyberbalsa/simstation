@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "definitions": [
+    {
+      "id": "org.simstation.core:recipe/smelt-steel",
+      "kind": "recipe",
+      "name_key": "recipe.smelt-steel",
+      "machine_tag": "refinery",
+      "duration_ticks": 240,
+      "power_watts": 12000,
+      "inputs": [{"id": "org.simstation.core:item/iron-ore", "quantity": 2}],
+      "outputs": [{"id": "org.simstation.core:item/steel-sheet", "quantity": 1}]
+    },
+    {
+      "id": "org.simstation.core:recipe/fabricate-circuit",
+      "kind": "recipe",
+      "name_key": "recipe.fabricate-circuit",
+      "machine_tag": "fabricator",
+      "duration_ticks": 180,
+      "power_watts": 8000,
+      "inputs": [
+        {"id": "org.simstation.core:item/steel-sheet", "quantity": 1},
+        {"id": "org.simstation.core:item/cable-coil", "quantity": 1}
+      ],
+      "outputs": [{"id": "org.simstation.core:item/circuit", "quantity": 1}]
+    },
+    {
+      "id": "org.simstation.core:recipe/control-assembly",
+      "kind": "recipe",
+      "name_key": "recipe.control-assembly",
+      "machine_tag": "fabricator",
+      "duration_ticks": 360,
+      "power_watts": 10000,
+      "inputs": [
+        {"id": "org.simstation.core:item/steel-sheet", "quantity": 2},
+        {"id": "org.simstation.core:item/circuit", "quantity": 2}
+      ],
+      "outputs": [{"id": "org.simstation.core:item/control-assembly", "quantity": 1}]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+format_version = 1
+source_path = "icons/misc/Tyson4real.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "941133134e68059de3f491c08de152db667b76069138d4d45a5735a7eb0c6434"
+dmi_version = "4.0"
+cell_width = 50
+cell_height = 109
+
+[[states]]
+name = "punch"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "idle"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

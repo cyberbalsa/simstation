@@ -1,0 +1,29 @@
+format_version = 1
+source_path = "icons/obj/atmospherics/tanks/red_white_pipe_tank.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "06bb9b1d9a0bdc6e1c64c1f075345e41a38475ef1299dd2cf7c0c7e9e9afa98b"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "tank"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "tank-map"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

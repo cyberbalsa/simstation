@@ -1,0 +1,76 @@
+# Developer automation
+
+`tools/dev.py` is the cross-platform entry point for routine work. It resolves
+the repository from its own location, so commands do not depend on the caller's
+current directory.
+
+## Environment and handoff checks
+
+```text
+python3 tools/dev.py doctor
+python3 tools/dev.py doctor --format json --require runtime
+python3 tools/dev.py doctor --require assets
+python3 tools/dev.py audit
+python3 tools/dev.py ci
+```
+
+Python 3.11+ and a LuaJIT/compatible Lua interpreter are always required.
+`runtime` additionally requires LÖVE 11.5. `assets` requires Git LFS, Pillow,
+FFmpeg/FFprobe, and hydrated runtime media; `full` requires everything.
+`doctor` is read-only and returns `2` when a required capability is missing.
+
+`audit` runs the Lua suite, Python compilation, JSON/TOML parsing, the
+pure-core boundary check, local Markdown-link checks, pinned-workflow/toolchain
+consistency, LFS attribute checks, and every bundled example-mod validator.
+Its default `--assets auto` mode runs the media catalog/hash audit when all LFS
+payloads are hydrated and reports an explicit skip for pointer-only CI
+checkouts. Use `--assets required` for a media handoff.
+
+## Determinism and performance
+
+```text
+python3 tools/dev.py benchmark smoke
+python3 tools/dev.py benchmark ci --output build/benchmarks/ci.json
+python3 tools/dev.py benchmark nominal-100
+python3 tools/dev.py benchmark disaster-100
+python3 tools/dev.py soak --shifts 1
+python3 tools/dev.py soak --shifts 30
+```
+
+The Lua harness has no LÖVE or media dependency. Every invocation runs a
+fresh simulation and an identical replay, compares checkpoint hashes, audits
+authoritative invariants, measures retained Lua memory, and emits one JSON
+report on stdout. Command traces go to stderr, so stdout can be piped directly
+to a JSON consumer. `--output` writes the same report to a file.
+
+| Scenario | World / crew | Default ticks | Routine gate |
+|---|---:|---:|---|
+| `smoke` | 48×48 / 24 | 240 | replay plus cross-platform golden hashes |
+| `ci` | 192×192 / 100 | 600 | golden hashes, ≥40 ticks/s, p95 ≤25 ms |
+| `nominal-100` | 192×192 / 100 | 1,800 | replay, ≥40 ticks/s, p95 ≤25 ms |
+| `disaster-100` | 192×192 / 100 | 1,800 | replay, breach load, performance |
+| `soak` | 192×192 / 100 | 28,800 per shift | replay, performance, bounded state |
+
+The 40-tick/s portable gate proves the simulation can supply the 4× scheduler.
+The stricter 12 ms mean / 20 ms p95 release budget remains a reference-machine
+acceptance test and is included in each report. Timing uses process CPU time;
+CI artifacts are trend evidence, not a substitute for the reference machine.
+
+Golden fixtures live in
+[`tests/fixtures/benchmark-baselines.json`](../tests/fixtures/benchmark-baselines.json).
+An intentional authoritative-state change must update them only after the
+human-readable state and compatibility impact are reviewed. Never rebaseline
+merely to make a divergence pass.
+
+## Automation layout
+
+- `ci.yml` runs LuaJIT tests/golden replay on Linux, Windows, and Intel macOS,
+  plus a plain-Lua lane on Apple Silicon, then runs the 100-crew gate on Linux.
+- `nightly-soak.yml` runs one complete shift by default. Manual dispatch can
+  select 30 shifts for the M3/release soak.
+- Both workflows skip LFS downloads and preserve JSON benchmark artifacts.
+- Action revisions and runtime versions are pinned in `toolchain.json`;
+  Dependabot opens reviewable action-update pull requests.
+
+GitHub-hosted CI still needs one successful run on each platform before a
+release can claim that runner combination as validated.

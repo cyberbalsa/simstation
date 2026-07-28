@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "ci": {
+    "python": "3.11.9",
+    "lua": [
+      "luajit-2.1.0-beta3",
+      "5.1.5"
+    ],
+    "runners": [
+      "ubuntu-24.04",
+      "windows-2025",
+      "macos-15-intel",
+      "macos-15"
+    ]
+  },
+  "github_actions": {
+    "actions/checkout": {
+      "revision": "d23441a48e516b6c34aea4fa41551a30e30af803",
+      "tag": "v6.1.0"
+    },
+    "actions/setup-python": {
+      "revision": "ece7cb06caefa5fff74198d8649806c4678c61a1",
+      "tag": "v6.3.0"
+    },
+    "actions/upload-artifact": {
+      "revision": "b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+      "tag": "v6.0.0"
+    },
+    "leafo/gh-actions-lua": {
+      "revision": "6919171ccf181b826f44b9bca76307b577217377",
+      "tag": "v13"
+    },
+    "step-security/msvc-dev-cmd": {
+      "revision": "22c98154b708dbd743e6f27a933cf6ceba3305c4",
+      "tag": "v1.13.1"
+    }
+  }
+}

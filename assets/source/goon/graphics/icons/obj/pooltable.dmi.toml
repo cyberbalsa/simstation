@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/obj/pooltable.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "067b44cbb35e60a080b74b26ea9e22e6e389efde4ea55cf22076ecb1b7d0f8e9"
+dmi_version = "4.0"
+cell_width = 128
+cell_height = 64
+
+[[states]]
+name = ""
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

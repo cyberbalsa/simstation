@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "definitions": [
+    {
+      "id": "org.simstation.core:job/engineer",
+      "kind": "job",
+      "name_key": "job.engineer",
+      "department": "engineering",
+      "base_wage_credits": 160,
+      "work_tags": ["construction", "maintenance", "power", "atmospherics"]
+    },
+    {
+      "id": "org.simstation.core:job/cargo-technician",
+      "kind": "job",
+      "name_key": "job.cargo-technician",
+      "department": "cargo",
+      "base_wage_credits": 120,
+      "work_tags": ["hauling", "requisition", "export"]
+    },
+    {
+      "id": "org.simstation.core:job/doctor",
+      "kind": "job",
+      "name_key": "job.doctor",
+      "department": "medical",
+      "base_wage_credits": 150,
+      "work_tags": ["triage", "treatment", "rescue"]
+    },
+    {
+      "id": "org.simstation.core:job/scientist",
+      "kind": "job",
+      "name_key": "job.scientist",
+      "department": "science",
+      "base_wage_credits": 145,
+      "work_tags": ["research", "analysis", "experiment"]
+    },
+    {
+      "id": "org.simstation.core:job/security-officer",
+      "kind": "job",
+      "name_key": "job.security-officer",
+      "department": "security",
+      "base_wage_credits": 140,
+      "work_tags": ["patrol", "respond", "detain"]
+    },
+    {
+      "id": "org.simstation.core:job/assistant",
+      "kind": "job",
+      "name_key": "job.assistant",
+      "department": "service",
+      "base_wage_credits": 90,
+      "work_tags": ["hauling", "cleaning", "construction"]
+    }
+  ]
+}

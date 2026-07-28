@@ -1,0 +1,117 @@
+format_version = 1
+source_path = "icons/obj/items/casings.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "b69de5f79fb11f8735043df6a7f4912616cf9df5a1e1f22d834ff6b8eda752db"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "medium"
+dirs = 8
+frames = 5
+raw_delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "small"
+dirs = 8
+frames = 5
+raw_delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "rifle"
+dirs = 8
+frames = 5
+raw_delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "shotgun_red"
+dirs = 8
+frames = 5
+raw_delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "shotgun_gray"
+dirs = 8
+frames = 5
+raw_delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "shotgun_pipe"
+dirs = 8
+frames = 5
+raw_delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "shotgun_blue"
+dirs = 8
+frames = 5
+raw_delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "shotgun_orange"
+dirs = 8
+frames = 5
+raw_delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "40mm"
+dirs = 8
+frames = 5
+raw_delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "polymer"
+dirs = 8
+frames = 5
+raw_delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []

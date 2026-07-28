@@ -1,0 +1,106 @@
+format_version = 1
+source_path = "icons/obj/items/radio_upgrades.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "66fc96048d9d2eb2f408addf7ec437d99e95a0568a2c016b9edac5400a67326c"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "wiretap"
+dirs = 1
+frames = 4
+raw_delay_ds = ["0.9", "0.9", "0.9", "0.9"]
+delay_ds = ["0.9", "0.9", "0.9", "0.9"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "syndicate"
+dirs = 1
+frames = 4
+raw_delay_ds = ["0.9", "0.9", "0.9", "0.9"]
+delay_ds = ["0.9", "0.9", "0.9", "0.9"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "nanotrasen"
+dirs = 1
+frames = 4
+raw_delay_ds = ["0.9", "0.9", "0.9", "0.9"]
+delay_ds = ["0.9", "0.9", "0.9", "0.9"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "command"
+dirs = 1
+frames = 4
+raw_delay_ds = ["0.9", "0.9", "0.9", "0.9"]
+delay_ds = ["0.9", "0.9", "0.9", "0.9"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "security"
+dirs = 1
+frames = 4
+raw_delay_ds = ["0.9", "0.9", "0.9", "0.9"]
+delay_ds = ["0.9", "0.9", "0.9", "0.9"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "engineering"
+dirs = 1
+frames = 4
+raw_delay_ds = ["0.9", "0.9", "0.9", "0.9"]
+delay_ds = ["0.9", "0.9", "0.9", "0.9"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "research"
+dirs = 1
+frames = 4
+raw_delay_ds = ["0.9", "0.9", "0.9", "0.9"]
+delay_ds = ["0.9", "0.9", "0.9", "0.9"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "medical"
+dirs = 1
+frames = 4
+raw_delay_ds = ["0.9", "0.9", "0.9", "0.9"]
+delay_ds = ["0.9", "0.9", "0.9", "0.9"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "civilian"
+dirs = 1
+frames = 4
+raw_delay_ds = ["0.9", "0.9", "0.9", "0.9"]
+delay_ds = ["0.9", "0.9", "0.9", "0.9"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

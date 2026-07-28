@@ -1,0 +1,40 @@
+format_version = 1
+source_path = "icons/misc/galactic_objects_large.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "4a34c9cbe1885d6379bc7a20e05123f965b633f5baa1d27532544a6f54aefc81"
+dmi_version = "4.0"
+cell_width = 160
+cell_height = 160
+
+[[states]]
+name = "generic"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "star-red"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "star-blue"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

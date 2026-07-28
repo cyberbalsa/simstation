@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/cursors/admin.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "539b094a1f4a2a8128028c34e0252e95736b179c9344315eb4d3d5af3d9190c6"
+dmi_version = "4.0"
+cell_width = 64
+cell_height = 64
+
+[[states]]
+name = "all"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

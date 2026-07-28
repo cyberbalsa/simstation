@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "definitions": [
+    {
+      "id": "org.simstation.example.salvage-scenario:scenario/last-chance",
+      "kind": "scenario",
+      "name_key": "example.salvage.last-chance",
+      "seed": 90210,
+      "station_credits": 8000,
+      "material_units": 80,
+      "crew_count": 16,
+      "objectives": [
+        {
+          "kind": "export",
+          "item": "org.simstation.core:item/control-assembly",
+          "quantity": 2,
+          "deadline_shift": 3
+        }
+      ],
+      "incident_allowlist": [
+        "org.simstation.core:incident/supply-delay",
+        "org.simstation.core:incident/power-overload"
+      ]
+    }
+  ]
+}

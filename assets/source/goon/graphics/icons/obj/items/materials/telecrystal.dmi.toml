@@ -1,0 +1,150 @@
+format_version = 1
+source_path = "icons/obj/items/materials/telecrystal.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "67d75eff302b9542ea1891771f7b2c3c7a19fe55310fc0df70dee16f5dc677b0"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "telecrystal_half"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ore1_$$telecrystal"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ore2_$$telecrystal"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ore3_$$telecrystal"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ore4_$$telecrystal"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ore5_$$telecrystal"
+dirs = 1
+frames = 12
+raw_delay_ds = ["10", "1", "1", "1", "10", "1", "1", "1", "10", "1", "1", "1"]
+delay_ds = ["10", "1", "1", "1", "10", "1", "1", "1", "10", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ore6_$$telecrystal"
+dirs = 1
+frames = 20
+raw_delay_ds = ["5", "1", "1", "1", "1", "5", "1", "1", "1", "1", "5", "1", "1", "1", "1", "5", "1", "1", "1", "1"]
+delay_ds = ["5", "1", "1", "1", "1", "5", "1", "1", "1", "1", "5", "1", "1", "1", "1", "5", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "telecrystal_pure_1"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "telecrystal_pure_2"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "telecrystal_pure_3"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "telecrystal_pure_4"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "telecrystal_pure_5"
+dirs = 1
+frames = 12
+raw_delay_ds = ["35", "0.5", "1", "1", "35", "0.5", "1", "1", "35", "0.5", "1", "1"]
+delay_ds = ["35", "0.5", "1", "1", "35", "0.5", "1", "1", "35", "0.5", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "telecrystal_pure_6"
+dirs = 1
+frames = 20
+raw_delay_ds = ["25", "0.5", "0.5", "1", "1", "25", "0.5", "0.5", "1", "1", "25", "0.5", "0.5", "1", "1", "25", "0.5", "0.5", "1", "1"]
+delay_ds = ["25", "0.5", "0.5", "1", "1", "25", "0.5", "0.5", "1", "1", "25", "0.5", "0.5", "1", "1", "25", "0.5", "0.5", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

@@ -1,0 +1,40 @@
+format_version = 1
+source_path = "icons/misc/retribution/SWORD/transformations_o.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "c145a94e41e72580eaec693ded78068d18c407a1a6c862fe776f577a7a467044"
+dmi_version = "4.0"
+cell_width = 96
+cell_height = 96
+
+[[states]]
+name = "beacon"
+dirs = 4
+frames = 18
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "anchored"
+dirs = 4
+frames = 11
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "unanchored"
+dirs = 4
+frames = 11
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

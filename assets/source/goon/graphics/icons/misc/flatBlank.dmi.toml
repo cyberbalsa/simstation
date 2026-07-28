@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/misc/flatBlank.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "551d3adb914131939c3ae765730595b212e62f9f43204ed50a7b98cbd2deb168"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = ""
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

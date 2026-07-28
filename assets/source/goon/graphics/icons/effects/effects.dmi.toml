@@ -1,0 +1,1690 @@
+format_version = 1
+source_path = "icons/effects/effects.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "4adcde0f718fb81a7d0f0c34c983e20166a659a2f3736fe68408f2f63ca798b4"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "sparks"
+dirs = 4
+frames = 7
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "shieldsparkles"
+dirs = 4
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "smoke"
+dirs = 4
+frames = 4
+raw_delay_ds = ["3", "3", "3", "3"]
+delay_ds = ["3", "3", "3", "3"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "mustard"
+dirs = 4
+frames = 4
+raw_delay_ds = ["2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "extinguish"
+dirs = 8
+frames = 4
+raw_delay_ds = ["2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ion_fade"
+dirs = 4
+frames = 3
+raw_delay_ds = ["2", "2", "2"]
+delay_ds = ["2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ion_fire"
+dirs = 4
+frames = 3
+raw_delay_ds = ["2", "2", "2"]
+delay_ds = ["2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ion_trails"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "empdisable"
+dirs = 4
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "emppulse"
+dirs = 1
+frames = 8
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "greenshatter"
+dirs = 1
+frames = 5
+raw_delay_ds = ["2", "2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2", "2"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "greenshatter2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["2", "2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2", "2"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blueshatter"
+dirs = 1
+frames = 4
+raw_delay_ds = ["2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blueshatter2"
+dirs = 1
+frames = 4
+raw_delay_ds = ["2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "shield1"
+dirs = 8
+frames = 3
+raw_delay_ds = ["2", "2", "2"]
+delay_ds = ["2", "2", "2"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "onfire"
+dirs = 1
+frames = 59
+raw_delay_ds = ["0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17"]
+delay_ds = ["0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "light"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "explosionOLD"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "nothing"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "explosion"
+dirs = 1
+frames = 9
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "thermite"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "foam"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "foam_overlay"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "foam-disolve"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "mfoam"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "mfoam-disolve"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "metalfoam"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ironfoam"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "greenglow"
+dirs = 1
+frames = 10
+raw_delay_ds = ["2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "explosion_particle"
+dirs = 8
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "spat-h"
+dirs = 1
+frames = 8
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "spat-v"
+dirs = 1
+frames = 8
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "boom_segment"
+dirs = 4
+frames = 10
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "boom_tip"
+dirs = 4
+frames = 10
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "boom_center"
+dirs = 1
+frames = 10
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "enshield"
+dirs = 1
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "shield0"
+dirs = 8
+frames = 3
+raw_delay_ds = ["2", "2", "2"]
+delay_ds = ["2", "2", "2"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "shockwave"
+dirs = 8
+frames = 2
+raw_delay_ds = ["1", "1"]
+delay_ds = ["1", "1"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "icecube"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "spray"
+dirs = 8
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "batarang"
+dirs = 1
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "batwham"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "batpow"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "energyorb"
+dirs = 1
+frames = 8
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "energytwirlin"
+dirs = 1
+frames = 6
+raw_delay_ds = ["2", "2", "2", "2", "2", "1"]
+delay_ds = ["2", "2", "2", "2", "2", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "energytwirlout"
+dirs = 1
+frames = 6
+raw_delay_ds = ["2", "2", "2", "2", "2", "1"]
+delay_ds = ["2", "2", "2", "2", "2", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "energyspark"
+dirs = 4
+frames = 4
+raw_delay_ds = ["2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "portswirl"
+dirs = 1
+frames = 9
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "portswirl_out"
+dirs = 1
+frames = 9
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "portswirl_error"
+dirs = 1
+frames = 8
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "residual"
+dirs = 1
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ykingvanish"
+dirs = 1
+frames = 7
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "explosion_sm"
+dirs = 1
+frames = 8
+raw_delay_ds = ["0.5", "1", "1", "0.5", "0.3", "0.2", "0.1", "0.1"]
+delay_ds = ["0.5", "1", "1", "0.5", "0.3", "0.2", "0.1", "0.1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "fpart"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "stink"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wpart"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "forcewall"
+dirs = 1
+frames = 18
+raw_delay_ds = ["2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "meteor_shield"
+dirs = 1
+frames = 8
+raw_delay_ds = ["2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "swirlthing"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "spaceants"
+dirs = 4
+frames = 22
+raw_delay_ds = ["3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3"]
+delay_ds = ["3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3", "3"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wisp"
+dirs = 1
+frames = 6
+raw_delay_ds = ["3", "3", "3", "3", "3", "3"]
+delay_ds = ["3", "3", "3", "3", "3", "3"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "glitter"
+dirs = 4
+frames = 7
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "gears"
+dirs = 1
+frames = 2
+raw_delay_ds = ["1.3", "1.3"]
+delay_ds = ["1.3", "1.3"]
+loop = 1001
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "nitrotri_wet"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "nitrotri_dry"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "web"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "web2"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "candyweb"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "candyweb2"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hoverdiscs"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wormhole"
+dirs = 1
+frames = 32
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "glowyline"
+dirs = 8
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hearts"
+dirs = 1
+frames = 13
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "dril2"
+dirs = 4
+frames = 7
+raw_delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "1"]
+delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hammer"
+dirs = 1
+frames = 5
+raw_delay_ds = ["0.1", "0.25", "1", "0.6", "1"]
+delay_ds = ["0.1", "0.25", "1", "0.6", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blaster"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "drill"
+dirs = 4
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "pick"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conc"
+dirs = 1
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "smoketest"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bluefade"
+dirs = 1
+frames = 7
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bluefade2"
+dirs = 1
+frames = 7
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "simple"
+dirs = 1
+frames = 5
+raw_delay_ds = ["0.25", "0.25", "0.25", "0.25", "0.25"]
+delay_ds = ["0.25", "0.25", "0.25", "0.25", "0.25"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ceshield"
+dirs = 1
+frames = 11
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "glimmer"
+dirs = 1
+frames = 11
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "conc_fast"
+dirs = 1
+frames = 4
+raw_delay_ds = ["0.7", "0.6", "1", "1"]
+delay_ds = ["0.7", "0.6", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "sparks_attack"
+dirs = 4
+frames = 8
+raw_delay_ds = ["1.2", "1.2", "1.2", "1.2", "1.2", "1.2", "1.2", "1.2"]
+delay_ds = ["1.2", "1.2", "1.2", "1.2", "1.2", "1.2", "1.2", "1.2"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bgraddown"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bgradup"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "dark"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wallfade"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "portalcutout"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "portal"
+dirs = 1
+frames = 7
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "portalshade"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "sparkle"
+dirs = 1
+frames = 3
+raw_delay_ds = ["1", "1", "1"]
+delay_ds = ["1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "clash"
+dirs = 1
+frames = 5
+raw_delay_ds = ["0.7", "0.6", "0.8", "1", "0.2"]
+delay_ds = ["0.7", "0.6", "0.8", "1", "0.2"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "barrier"
+dirs = 4
+frames = 31
+raw_delay_ds = ["0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4"]
+delay_ds = ["0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "gokupower"
+dirs = 1
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "engineshit"
+dirs = 1
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "target"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "spinny_red"
+dirs = 1
+frames = 10
+raw_delay_ds = ["0.6", "0.6", "0.6", "0.8", "1.2", "1.5", "1.6", "1.7", "1.8", "4"]
+delay_ds = ["0.6", "0.6", "0.6", "0.8", "1.2", "1.5", "1.6", "1.7", "1.8", "4"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "medusa"
+dirs = 4
+frames = 4
+raw_delay_ds = ["2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "fire_blah"
+dirs = 4
+frames = 9
+raw_delay_ds = ["0.3", "0.3", "0.8", "0.8", "1", "1", "1", "1", "1"]
+delay_ds = ["0.3", "0.3", "0.8", "0.8", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "flame"
+dirs = 4
+frames = 7
+raw_delay_ds = ["0.3", "0.3", "0.8", "0.8", "1", "1", "1"]
+delay_ds = ["0.3", "0.3", "0.8", "0.8", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "spark"
+dirs = 4
+frames = 4
+raw_delay_ds = ["0.3", "0.3", "0.8", "0.8"]
+delay_ds = ["0.3", "0.3", "0.8", "0.8"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "engineshit2"
+dirs = 1
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "baton-spark-ntso"
+dirs = 4
+frames = 9
+raw_delay_ds = ["0.2", "0.2", "0.41", "0.41", "0.41", "0.8", "0.8", "0.41", "0.2"]
+delay_ds = ["0.2", "0.2", "0.41", "0.41", "0.41", "0.8", "0.8", "0.41", "0.2"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "portalmask"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "portalring"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "f1"
+dirs = 1
+frames = 30
+raw_delay_ds = ["0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25"]
+delay_ds = ["0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "burning"
+dirs = 1
+frames = 30
+raw_delay_ds = ["0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25"]
+delay_ds = ["0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "f2"
+dirs = 1
+frames = 30
+raw_delay_ds = ["0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25"]
+delay_ds = ["0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "f3"
+dirs = 1
+frames = 30
+raw_delay_ds = ["0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25"]
+delay_ds = ["0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ka-start"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1", "1", "1", "1", "5"]
+delay_ds = ["1", "1", "1", "1", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ka-mid-unused"
+dirs = 8
+frames = 8
+raw_delay_ds = ["0.7", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["0.7", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ka-mid"
+dirs = 8
+frames = 7
+raw_delay_ds = ["0.7", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["0.7", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ka-end"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1", "1", "1", "1", "5"]
+delay_ds = ["1", "1", "1", "1", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "onfire1"
+dirs = 1
+frames = 59
+raw_delay_ds = ["0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17"]
+delay_ds = ["0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "onfire2"
+dirs = 1
+frames = 59
+raw_delay_ds = ["0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17"]
+delay_ds = ["0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "onfire3"
+dirs = 1
+frames = 59
+raw_delay_ds = ["0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17"]
+delay_ds = ["0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "portaltest"
+dirs = 1
+frames = 29
+raw_delay_ds = ["0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17"]
+delay_ds = ["0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17", "0.17"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "null"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "concrete_drying"
+dirs = 1
+frames = 9
+raw_delay_ds = ["1.7", "1.7", "1.7", "1.7", "1.7", "1.7", "1.7", "1.7", "1.7"]
+delay_ds = ["1.7", "1.7", "1.7", "1.7", "1.7", "1.7", "1.7", "1.7", "1.7"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "concrete"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "concrete_wet"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "cracks"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = ""
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "push"
+dirs = 8
+frames = 6
+raw_delay_ds = ["0.8", "0.7", "0.6", "0.7", "0.8", "0.8"]
+delay_ds = ["0.8", "0.7", "0.6", "0.7", "0.8", "0.8"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "orb"
+dirs = 1
+frames = 8
+raw_delay_ds = ["2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "residual_electricity"
+dirs = 1
+frames = 3
+raw_delay_ds = ["1", "1", "1"]
+delay_ds = ["1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "residual_electricity_start"
+dirs = 1
+frames = 3
+raw_delay_ds = ["1", "1", "1"]
+delay_ds = ["1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lightning_target"
+dirs = 1
+frames = 3
+raw_delay_ds = ["1", "1", "1"]
+delay_ds = ["1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "greyglow"
+dirs = 1
+frames = 11
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "slipup"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "atmos_overlay"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "badge_hold_l"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "badge_hold_r"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "id_hold_l"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "id_hold_r"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "disk_hold_l"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "disk_hold_r"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "tile_channel_target"
+dirs = 1
+frames = 4
+raw_delay_ds = ["2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "graffiti_mask_1"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "graffiti_mask_2"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "graffiti_mask_3"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "quickjab"
+dirs = 4
+frames = 7
+raw_delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "1"]
+delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "heavybump"
+dirs = 4
+frames = 7
+raw_delay_ds = ["0.4", "0.4", "0.8", "0.8", "0.8", "0.8", "0.4"]
+delay_ds = ["0.4", "0.4", "0.8", "0.8", "0.8", "0.8", "0.4"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "heavystep"
+dirs = 4
+frames = 7
+raw_delay_ds = ["0.6", "0.4", "0.4", "0.4", "1", "1", "1"]
+delay_ds = ["0.6", "0.4", "0.4", "0.4", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "syndiebarrier"
+dirs = 4
+frames = 6
+raw_delay_ds = ["0.8", "0.8", "0.8", "0.8", "0.8", "0.8"]
+delay_ds = ["0.8", "0.8", "0.8", "0.8", "0.8", "0.8"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "arrow"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "diploma_hold_l"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "diploma_hold_r"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "void-barrier"
+dirs = 4
+frames = 3
+raw_delay_ds = ["1", "1", "1"]
+delay_ds = ["1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

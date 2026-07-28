@@ -1,0 +1,29 @@
+format_version = 1
+source_path = "icons/mob/werewolf/back.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "e5745b4ee8837c96ea993bb71e43a85f9aaeafc254be49b0575c0dc25c5fc019"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 48
+
+[[states]]
+name = "backpack"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "satchel"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

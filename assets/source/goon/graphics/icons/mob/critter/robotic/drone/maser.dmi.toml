@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/mob/critter/robotic/drone/maser.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "54c1d81ee0a1596ffcb920717bd8ca28e69f707f92a68af226f9e5fc6689763a"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "drone_maser"
+dirs = 4
+frames = 4
+raw_delay_ds = ["3", "1", "1", "1"]
+delay_ds = ["3", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

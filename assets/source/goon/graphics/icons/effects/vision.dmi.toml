@@ -1,0 +1,40 @@
+format_version = 1
+source_path = "icons/effects/vision.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "1a81ff1f03d6aa808da57594a0605c4c920b507f3cbc0542654ec580fa6efd44"
+dmi_version = "4.0"
+cell_width = 480
+cell_height = 480
+
+[[states]]
+name = "nightvision"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "meson_old"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "meson"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

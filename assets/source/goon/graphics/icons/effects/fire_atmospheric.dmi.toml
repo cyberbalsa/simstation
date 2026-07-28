@@ -1,0 +1,293 @@
+format_version = 1
+source_path = "icons/effects/fire_atmospheric.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "2b3834ad54b733ddb795bf17ce416a1ca03539248f576f62b3b1da53ff1f4880"
+dmi_version = "4.0"
+cell_width = 64
+cell_height = 64
+
+[[states]]
+name = "1-"
+dirs = 4
+frames = 6
+raw_delay_ds = ["2", "3", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "1-W"
+dirs = 4
+frames = 6
+raw_delay_ds = ["2", "3", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "1-E"
+dirs = 4
+frames = 6
+raw_delay_ds = ["2", "3", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "1-N"
+dirs = 4
+frames = 6
+raw_delay_ds = ["2", "3", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "1-NW"
+dirs = 4
+frames = 6
+raw_delay_ds = ["2", "3", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "1-NE"
+dirs = 4
+frames = 6
+raw_delay_ds = ["2", "3", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "1-EW"
+dirs = 4
+frames = 6
+raw_delay_ds = ["2", "3", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "1-NEW"
+dirs = 4
+frames = 6
+raw_delay_ds = ["2", "3", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "2-"
+dirs = 4
+frames = 14
+raw_delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "2-W"
+dirs = 4
+frames = 14
+raw_delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "2-E"
+dirs = 4
+frames = 14
+raw_delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "2-N"
+dirs = 4
+frames = 14
+raw_delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "2-NW"
+dirs = 4
+frames = 14
+raw_delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "2-NE"
+dirs = 4
+frames = 14
+raw_delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "2-EW"
+dirs = 4
+frames = 14
+raw_delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "2-NEW"
+dirs = 4
+frames = 14
+raw_delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "3-"
+dirs = 4
+frames = 14
+raw_delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "3-W"
+dirs = 4
+frames = 14
+raw_delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "3-E"
+dirs = 4
+frames = 14
+raw_delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "3-N"
+dirs = 4
+frames = 14
+raw_delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "3-NW"
+dirs = 4
+frames = 14
+raw_delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "3-NE"
+dirs = 4
+frames = 14
+raw_delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "3-EW"
+dirs = 4
+frames = 14
+raw_delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "3-NEW"
+dirs = 4
+frames = 14
+raw_delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "3", "2", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "NW-alpha"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "NE-alpha"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

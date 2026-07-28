@@ -1,0 +1,271 @@
+format_version = 1
+source_path = "icons/obj/machines/photocopier.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "7136464589cac0213184dc21cb09598564fc3eea85cbc361063d32484c475b8d"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "open_sesame"
+dirs = 1
+frames = 2
+raw_delay_ds = ["5", "5"]
+delay_ds = ["5", "5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "papper"
+dirs = 1
+frames = 2
+raw_delay_ds = ["5", "5"]
+delay_ds = ["5", "5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "buttt"
+dirs = 1
+frames = 2
+raw_delay_ds = ["5", "5"]
+delay_ds = ["5", "5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "close_sesame"
+dirs = 1
+frames = 2
+raw_delay_ds = ["5", "5"]
+delay_ds = ["5", "5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "scan"
+dirs = 1
+frames = 8
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "print"
+dirs = 1
+frames = 6
+raw_delay_ds = ["4", "4", "4", "4", "9", "5"]
+delay_ds = ["4", "4", "4", "4", "9", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "zoom"
+dirs = 1
+frames = 2
+raw_delay_ds = ["0.2", "0.2"]
+delay_ds = ["0.2", "0.2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "emag_open"
+dirs = 1
+frames = 3
+raw_delay_ds = ["1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "emag_closed"
+dirs = 1
+frames = 3
+raw_delay_ds = ["1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "fail_open"
+dirs = 1
+frames = 2
+raw_delay_ds = ["15", "0"]
+delay_ds = ["15", "0"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "fail_closed"
+dirs = 1
+frames = 2
+raw_delay_ds = ["15", "0"]
+delay_ds = ["15", "0"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "net_open"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "net_closed"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "scan_news"
+dirs = 1
+frames = 2
+raw_delay_ds = ["5", "5"]
+delay_ds = ["5", "5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "scan_book"
+dirs = 1
+frames = 2
+raw_delay_ds = ["5", "5"]
+delay_ds = ["5", "5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "scan_blueprint"
+dirs = 1
+frames = 2
+raw_delay_ds = ["5", "5"]
+delay_ds = ["5", "5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "scan_cash"
+dirs = 1
+frames = 2
+raw_delay_ds = ["5", "5"]
+delay_ds = ["5", "5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "scan_id"
+dirs = 1
+frames = 2
+raw_delay_ds = ["5", "5"]
+delay_ds = ["5", "5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "scan_id_gold"
+dirs = 1
+frames = 2
+raw_delay_ds = ["5", "5"]
+delay_ds = ["5", "5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "print_blueprint"
+dirs = 1
+frames = 6
+raw_delay_ds = ["4", "4", "4", "4", "9", "5"]
+delay_ds = ["4", "4", "4", "4", "9", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "print_cash"
+dirs = 1
+frames = 6
+raw_delay_ds = ["4", "4", "4", "4", "9", "5"]
+delay_ds = ["4", "4", "4", "4", "9", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "print_id"
+dirs = 1
+frames = 10
+raw_delay_ds = ["9", "9", "9", "9", "9", "9", "9", "9", "13", "5"]
+delay_ds = ["9", "9", "9", "9", "9", "9", "9", "9", "13", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "print_id_gold"
+dirs = 1
+frames = 10
+raw_delay_ds = ["9", "9", "9", "9", "9", "9", "9", "9", "13", "5"]
+delay_ds = ["9", "9", "9", "9", "9", "9", "9", "9", "13", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "print_light"
+dirs = 1
+frames = 4
+raw_delay_ds = ["1.5", "1.5", "2.5", "1.5"]
+delay_ds = ["1.5", "1.5", "2.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

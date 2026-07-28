@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "definitions": [
+    {
+      "id": "org.simstation.core:structure/floor",
+      "kind": "structure",
+      "name_key": "structure.floor",
+      "material_cost": 2,
+      "work_milliticks": 1200,
+      "sprite": "org.simstation.goon:sprite/icons/turf/floors-dmi/floor--3684c9d3c0-o01"
+    },
+    {
+      "id": "org.simstation.core:structure/wall",
+      "kind": "structure",
+      "name_key": "structure.wall",
+      "material_cost": 3,
+      "work_milliticks": 1800,
+      "sprite": "org.simstation.goon:sprite/icons/turf/walls-dmi/riveted--b2df855a7c-o01"
+    },
+    {
+      "id": "org.simstation.core:structure/door",
+      "kind": "structure",
+      "name_key": "structure.door",
+      "material_cost": 5,
+      "work_milliticks": 2400,
+      "closed_sprite": "org.simstation.goon:sprite/icons/obj/doors/doorclassic-dmi/door_closed--553558f5ff-o01",
+      "open_sprite": "org.simstation.goon:sprite/icons/obj/doors/doorclassic-dmi/door_open--5fe7ebb3c8-o01"
+    }
+  ]
+}

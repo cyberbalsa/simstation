@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/effects/overlays/solid.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "23fc226e6f2254c40ce4773a51b69c9148fb148932f60e94f6037080728f3115"
+dmi_version = "4.0"
+cell_width = 480
+cell_height = 480
+
+[[states]]
+name = "solid"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

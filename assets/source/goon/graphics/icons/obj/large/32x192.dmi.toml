@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/obj/large/32x192.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "9cf9c9a02c370f2287ad5ab0c9e22a3b0e5a851198fd785d3c5b535844158c5f"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 192
+
+[[states]]
+name = "heavenlight"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

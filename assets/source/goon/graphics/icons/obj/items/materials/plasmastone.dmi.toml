@@ -1,0 +1,84 @@
+format_version = 1
+source_path = "icons/obj/items/materials/plasmastone.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "4be1ed27b8d6a574e183df64a5989358469f6b7b359d3c2e3de57bbf40f91f71"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "ore1_$$plasmastone"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.8", "1.8", "1.8", "1.8", "1.8"]
+delay_ds = ["1.8", "1.8", "1.8", "1.8", "1.8"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ore2_$$plasmastone"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.8", "1.8", "1.8", "1.8", "1.8"]
+delay_ds = ["1.8", "1.8", "1.8", "1.8", "1.8"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ore3_$$plasmastone"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.8", "1.8", "1.8", "1.8", "1.8", "1.8"]
+delay_ds = ["1.8", "1.8", "1.8", "1.8", "1.8", "1.8"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ore4_$$plasmastone"
+dirs = 1
+frames = 8
+raw_delay_ds = ["1.8", "1.8", "1.8", "1.8", "1.8", "1.8", "1.8", "1.8"]
+delay_ds = ["1.8", "1.8", "1.8", "1.8", "1.8", "1.8", "1.8", "1.8"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ore5_$$plasmastone"
+dirs = 1
+frames = 15
+raw_delay_ds = ["1.8", "1.8", "1.8", "1.2", "1.8", "1.8", "1.8", "1.8", "1.8", "1.2", "1.8", "1.8", "1.8", "1.8", "1.8"]
+delay_ds = ["1.8", "1.8", "1.8", "1.2", "1.8", "1.8", "1.8", "1.8", "1.8", "1.2", "1.8", "1.8", "1.8", "1.8", "1.8"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ore6_$$plasmastone"
+dirs = 1
+frames = 25
+raw_delay_ds = ["1.8", "1.8", "1.2", "1.8", "1.8", "1.8", "1.2", "1.8", "1.8", "1.8", "1.8", "1.2", "1.8", "1.8", "1.8", "1.8", "1.8", "1.2", "1.8", "1.8", "1.8", "1.2", "1.8", "1.8", "1.8"]
+delay_ds = ["1.8", "1.8", "1.2", "1.8", "1.8", "1.8", "1.2", "1.8", "1.8", "1.8", "1.8", "1.2", "1.8", "1.8", "1.8", "1.8", "1.8", "1.2", "1.8", "1.8", "1.8", "1.2", "1.8", "1.8", "1.8"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "plasma5_glitterless"
+dirs = 1
+frames = 25
+raw_delay_ds = ["2", "2", "1.1", "2.1", "2.1", "2", "1.1", "2.1", "2.1", "2", "2", "1.1", "2.1", "2.1", "2", "2", "2", "1.1", "2.1", "2.1", "2", "1.1", "2.1", "2.1", "2"]
+delay_ds = ["2", "2", "1.1", "2.1", "2.1", "2", "1.1", "2.1", "2.1", "2", "2", "1.1", "2.1", "2.1", "2", "2", "2", "1.1", "2.1", "2.1", "2", "1.1", "2.1", "2.1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

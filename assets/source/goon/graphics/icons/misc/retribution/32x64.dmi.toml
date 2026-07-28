@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/misc/retribution/32x64.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "c9e3d43304f0e7f41082c77eb8568bf5b8745f9ffd69712bab224f0ab2af5da6"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 64
+
+[[states]]
+name = "SDS_tile_beam"
+dirs = 1
+frames = 12
+raw_delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5"]
+delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []

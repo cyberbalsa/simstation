@@ -1,0 +1,21 @@
+schema = 1
+id = "org.simstation.example.smart-grid"
+version = "0.1.0"
+name = "Smart Grid Trusted-Code Example"
+description = "Exercises validator, transform, observer, and private state APIs."
+authors = ["Sim Station contributors"]
+license = "MIT"
+api = "^0.1.0"
+class = "code"
+load_priority = 0
+content = []
+entrypoints = ["lua/init.lua"]
+dependencies = [{ id = "org.simstation.core", version = "^0.1.0" }]
+optional_dependencies = []
+conflicts = []
+load_after = []
+load_before = []
+replaces = []
+
+[state]
+schema = 1

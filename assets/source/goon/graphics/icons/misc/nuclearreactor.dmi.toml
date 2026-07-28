@@ -1,0 +1,117 @@
+format_version = 1
+source_path = "icons/misc/nuclearreactor.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "4c03368feb992bbf75d4aa9ec034d054df149bd34e1adef28b288e4a28d341d8"
+dmi_version = "4.0"
+cell_width = 160
+cell_height = 160
+
+[[states]]
+name = "reactor"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "reactor_empty"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lights_cool"
+dirs = 1
+frames = 6
+raw_delay_ds = ["8", "1", "1", "10", "1", "1"]
+delay_ds = ["8", "1", "1", "10", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lights_heat"
+dirs = 1
+frames = 6
+raw_delay_ds = ["8", "1", "1", "10", "1", "1"]
+delay_ds = ["8", "1", "1", "10", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lights_warning"
+dirs = 1
+frames = 6
+raw_delay_ds = ["8", "1", "1", "10", "1", "1"]
+delay_ds = ["8", "1", "1", "10", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lights_meltdown"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.5", "0.7", "0.7", "1.5", "0.7", "0.7"]
+delay_ds = ["1.5", "0.7", "0.7", "1.5", "0.7", "0.7"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "status_active"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.3", "1.3", "1.3", "1.3", "1.3"]
+delay_ds = ["1.3", "1.3", "1.3", "1.3", "1.3"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "status_overheat"
+dirs = 1
+frames = 15
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "status_meltdown"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "reactor_destroyed"
+dirs = 1
+frames = 10
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

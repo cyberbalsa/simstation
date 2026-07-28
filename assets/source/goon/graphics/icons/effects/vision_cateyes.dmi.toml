@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/effects/vision_cateyes.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "8563fe43c8d9f9af845e2252a0a3a4a5ae0b0e1840cfa2e0576bb4adb3423981"
+dmi_version = "4.0"
+cell_width = 320
+cell_height = 320
+
+[[states]]
+name = "cateyes"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

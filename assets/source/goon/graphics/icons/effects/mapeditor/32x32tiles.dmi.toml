@@ -1,0 +1,29 @@
+format_version = 1
+source_path = "icons/effects/mapeditor/32x32tiles.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "5e148c200aa66d06d3c3822fb199b34d6df352c7bd860b96d10c930edbdb02c9"
+dmi_version = "4.0"
+cell_width = 1024
+cell_height = 1024
+
+[[states]]
+name = "listening_post"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "probstation_shuttles"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

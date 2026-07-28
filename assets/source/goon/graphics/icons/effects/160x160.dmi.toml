@@ -1,0 +1,425 @@
+format_version = 1
+source_path = "icons/effects/160x160.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "1049a9ef13db67fe9bb7e4a16f78c5fe7c48f064213c4827c18c7871775097e1"
+dmi_version = "4.0"
+cell_width = 160
+cell_height = 160
+
+[[states]]
+name = "Sing2"
+dirs = 1
+frames = 3
+raw_delay_ds = ["3", "3", "3"]
+delay_ds = ["3", "3", "3"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "what the fuck"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "sun"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "powercore_base"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "powercore_core"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "powercore_base_start"
+dirs = 1
+frames = 31
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "powercore_core_start"
+dirs = 1
+frames = 31
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "powercore_base_active"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "powercore_core_active"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "powercore_base_fast"
+dirs = 1
+frames = 11
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "powercore_core_fast"
+dirs = 1
+frames = 11
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "powercore_base_stop"
+dirs = 1
+frames = 12
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "powercore_core_stop"
+dirs = 1
+frames = 12
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "powercore_base_dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "powercore_core_hit"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "shuttlecock"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "shuttlecock_busted"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "shuttlecock_mining"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bhole"
+dirs = 1
+frames = 12
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "sadbuddy"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "alchcircle"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "sun_red"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "sun_ripple"
+dirs = 1
+frames = 8
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "shuttlecock_blu"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "shuttlecock_blu2"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "shuttlecock_syndie"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "dagger"
+dirs = 8
+frames = 7
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "spear"
+dirs = 8
+frames = 6
+raw_delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5", "0.5"]
+delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5", "0.5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "whirlwind"
+dirs = 1
+frames = 11
+raw_delay_ds = ["0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25"]
+delay_ds = ["0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25", "0.25"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "empty"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "evilcloud"
+dirs = 1
+frames = 30
+raw_delay_ds = ["0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35"]
+delay_ds = ["0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "thundercloud"
+dirs = 1
+frames = 30
+raw_delay_ds = ["0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35"]
+delay_ds = ["0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "tearhuge"
+dirs = 1
+frames = 30
+raw_delay_ds = ["0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34"]
+delay_ds = ["0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "tearmed"
+dirs = 1
+frames = 30
+raw_delay_ds = ["0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34"]
+delay_ds = ["0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34", "0.34"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "tearsmall"
+dirs = 1
+frames = 29
+raw_delay_ds = ["0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35"]
+delay_ds = ["0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "magicspark"
+dirs = 1
+frames = 44
+raw_delay_ds = ["0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35"]
+delay_ds = ["0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35", "0.35"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bubularity"
+dirs = 1
+frames = 3
+raw_delay_ds = ["2.5", "1.5", "2"]
+delay_ds = ["2.5", "1.5", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "whole"
+dirs = 1
+frames = 12
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/effects/overlays/insanity.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "ab52911ce01c2da049ae27164652594030c8b2cf202ef75f6d78d4ab22558836"
+dmi_version = "4.0"
+cell_width = 672
+cell_height = 480
+
+[[states]]
+name = "insanity"
+dirs = 1
+frames = 19
+raw_delay_ds = ["4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4"]
+delay_ds = ["4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

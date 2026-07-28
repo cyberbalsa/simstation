@@ -1,0 +1,30 @@
+Sim Station — attribution notice
+================================
+
+Sim Station is an independent, noncommercial station-management project. It
+is not endorsed by Goonstation, Space Station 13, BYOND, or LÖVE.
+
+The media fork is derived from Goonstation:
+
+- Source: https://github.com/goonstation/goonstation
+- Pinned commit: 1b2b250abb5be747d55e274de0203a59cfc8da78
+- License: Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United
+  States
+- Broad sprite credits:
+  assets/upstream/goon/strings/changelog_attribution/spriters.txt
+- Upstream notices:
+  assets/upstream/goon/LICENSE
+  assets/upstream/goon/README.md
+  assets/upstream/goon/.github/AUDIO_GUIDELINES.md
+
+Graphics were extracted from DMI containers, normalized into editable
+PNG/TOML source, and packed without lossy conversion into native PNG atlases.
+Existing Ogg audio was copied byte-for-byte. Tracker modules were rendered to
+48 kHz stereo Ogg Vorbis with FFmpeg/libopenmpt. Exact source/output hashes and
+transform metadata are stored under assets/upstream/goon and
+assets/runtime/goon.
+
+The project currently relies on Goonstation's root license for audio files
+without stronger per-file evidence, as requested by the project owner. That
+accepted risk and the takedown process are documented in
+docs/legal/audio-rights-risk.md.

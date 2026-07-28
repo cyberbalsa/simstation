@@ -1,0 +1,799 @@
+format_version = 1
+source_path = "icons/obj/writing_animated_blood.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "1ded0110a6f39e9e76b48d2cd6ae3088803e38036697ff6e46f7c2b605646ac8"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "A"
+dirs = 1
+frames = 16
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "B"
+dirs = 1
+frames = 17
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "C"
+dirs = 1
+frames = 13
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "D"
+dirs = 1
+frames = 17
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "E"
+dirs = 1
+frames = 16
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "F"
+dirs = 1
+frames = 17
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "G"
+dirs = 1
+frames = 17
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "H"
+dirs = 1
+frames = 17
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "I"
+dirs = 1
+frames = 17
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "J"
+dirs = 1
+frames = 15
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "K"
+dirs = 1
+frames = 17
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "L"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "M"
+dirs = 1
+frames = 18
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "N"
+dirs = 1
+frames = 17
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "O"
+dirs = 1
+frames = 13
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "P"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Q"
+dirs = 1
+frames = 15
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "R"
+dirs = 1
+frames = 16
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "S"
+dirs = 1
+frames = 13
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "T"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "U"
+dirs = 1
+frames = 13
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "V"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "W"
+dirs = 1
+frames = 18
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "X"
+dirs = 1
+frames = 15
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Y"
+dirs = 1
+frames = 15
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Z"
+dirs = 1
+frames = 17
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "0"
+dirs = 1
+frames = 16
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "1"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "2"
+dirs = 1
+frames = 15
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "3"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "4"
+dirs = 1
+frames = 15
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "5"
+dirs = 1
+frames = 17
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "6"
+dirs = 1
+frames = 13
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "7"
+dirs = 1
+frames = 16
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "8"
+dirs = 1
+frames = 15
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "9"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Ampersand"
+dirs = 1
+frames = 16
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Arrow East"
+dirs = 1
+frames = 17
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Arrow North"
+dirs = 1
+frames = 17
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Arrow West"
+dirs = 1
+frames = 17
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Arrow South"
+dirs = 1
+frames = 17
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Divided"
+dirs = 1
+frames = 15
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Dollar"
+dirs = 1
+frames = 21
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Bee"
+dirs = 1
+frames = 38
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Equals"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Exclamation Point"
+dirs = 1
+frames = 12
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Question Mark"
+dirs = 1
+frames = 15
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Frown"
+dirs = 1
+frames = 18
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Smile"
+dirs = 1
+frames = 18
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Heart"
+dirs = 1
+frames = 16
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Minus"
+dirs = 1
+frames = 11
+raw_delay_ds = ["1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Circle"
+dirs = 1
+frames = 15
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Square"
+dirs = 1
+frames = 20
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Triangle"
+dirs = 1
+frames = 17
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Plus"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Times"
+dirs = 1
+frames = 14
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Percent"
+dirs = 1
+frames = 18
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Star"
+dirs = 1
+frames = 23
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Pentagram"
+dirs = 1
+frames = 26
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Period"
+dirs = 1
+frames = 10
+raw_delay_ds = ["1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Comma"
+dirs = 1
+frames = 10
+raw_delay_ds = ["1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Colon"
+dirs = 1
+frames = 12
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Semicolon"
+dirs = 1
+frames = 12
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Left Parenthesis"
+dirs = 1
+frames = 12
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Right Parenthesis"
+dirs = 1
+frames = 12
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Left Bracket"
+dirs = 1
+frames = 13
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Right Bracket"
+dirs = 1
+frames = 13
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Less Than"
+dirs = 1
+frames = 13
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Greater Than"
+dirs = 1
+frames = 13
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Euro"
+dirs = 1
+frames = 16
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Neutral Face"
+dirs = 1
+frames = 15
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Skull"
+dirs = 1
+frames = 19
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5", "5", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "0.7", "5", "5", "5"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "0.7", "0.7", "0.7", "0.7", "0.7", "5"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []

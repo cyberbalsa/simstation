@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/obj/items/bathbomb.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "28cacfdbafb289df9006d0e230002ac98a12518dce58506eae6b802f01f56885"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "bathbomb"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

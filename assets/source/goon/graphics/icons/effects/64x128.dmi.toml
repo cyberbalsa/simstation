@@ -1,0 +1,29 @@
+format_version = 1
+source_path = "icons/effects/64x128.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "8937a186df35601f6083daef1098b5dccf1094c14d069f2b1c892497d0dcc40e"
+dmi_version = "4.0"
+cell_width = 64
+cell_height = 128
+
+[[states]]
+name = "lightning_1"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lightning_2"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []

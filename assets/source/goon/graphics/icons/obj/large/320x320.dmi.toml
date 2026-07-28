@@ -1,0 +1,29 @@
+format_version = 1
+source_path = "icons/obj/large/320x320.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "ae03c7a1c0952cd5ab581e272f5d7d85414023054fa0cfe9d5d1918ba7a0b474"
+dmi_version = "4.0"
+cell_width = 320
+cell_height = 320
+
+[[states]]
+name = "bigtree"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "regina"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

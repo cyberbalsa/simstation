@@ -1,0 +1,18 @@
+schema = 1
+id = "org.simstation.example.catering"
+version = "0.1.0"
+name = "Catering Example"
+description = "Data-only job, ingredients, and a two-stage pie chain."
+authors = ["Sim Station contributors"]
+license = "CC0-1.0"
+api = "^0.1.0"
+class = "data"
+load_priority = 0
+content = ["content/*.json"]
+localization = ["locales/*.json"]
+dependencies = [{ id = "org.simstation.core", version = "^0.1.0" }]
+optional_dependencies = []
+conflicts = []
+load_after = []
+load_before = []
+replaces = []

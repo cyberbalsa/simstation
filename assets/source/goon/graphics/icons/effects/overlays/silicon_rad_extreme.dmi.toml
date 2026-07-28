@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/effects/overlays/silicon_rad_extreme.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "5a95e7beff1698a6a1814c1a34ef54827e0f2ec698965db799a9d7dd3863e522"
+dmi_version = "4.0"
+cell_width = 480
+cell_height = 480
+
+[[states]]
+name = "interference"
+dirs = 1
+frames = 30
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

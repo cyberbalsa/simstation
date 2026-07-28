@@ -1,0 +1,84 @@
+format_version = 1
+source_path = "icons/obj/spooky.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "ffa4ed0f976968af53b14adc80521e1c9e9c341bfe9a3cfa2b821c2ce4f059de"
+dmi_version = "4.0"
+cell_width = 64
+cell_height = 32
+
+[[states]]
+name = "altar"
+dirs = 1
+frames = 9
+raw_delay_ds = ["20", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["20", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "altar2"
+dirs = 1
+frames = 9
+raw_delay_ds = ["20", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["20", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = ""
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "sacrificum"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "test"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "altar-sleep"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "altar-awake"
+dirs = 1
+frames = 9
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

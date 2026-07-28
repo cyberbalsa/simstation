@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/obj/large/bigprojectiles.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "c38b9672ed832625d965aa83eb2535f78ae6e09b1c7d2efbe1519528c5d94153"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 96
+
+[[states]]
+name = "152mm-shot"
+dirs = 1
+frames = 3
+raw_delay_ds = ["1", "1", "1"]
+delay_ds = ["1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

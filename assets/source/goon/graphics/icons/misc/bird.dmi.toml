@@ -1,0 +1,2009 @@
+format_version = 1
+source_path = "icons/misc/bird.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "7089b3d58103fa0a981e343ab983d5b899502c69db9232c61102acf5237d8058"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "parrot"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "parrot-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "parrot-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "parrot-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "kea"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "kea-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "kea-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "kea-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eclectus"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eclectus-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eclectus-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eclectus-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eclectusf"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eclectusf-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eclectusf-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eclectusf-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "agrey"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "agrey-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "agrey-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "agrey-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bcaique"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bcaique-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bcaique-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bcaique-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wcaique"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wcaique-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wcaique-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wcaique-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "gbudge"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "gbudge-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "gbudge-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "gbudge-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bbudge"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bbudge-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bbudge-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bbudge-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bgbudge"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bgbudge-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bgbudge-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bgbudge-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "commonblackbird"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "commonblackbird-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "azuretit"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "azuretit-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "europeanrobin"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "europeanrobin-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "goldcrest"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "goldcrest-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ringneckdove"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ringneckdove-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "chicken_white"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "chicken_brown"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "chicken_babby"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "tiel"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "tiel-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "tiel-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "tiel-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wtiel"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wtiel-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wtiel-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wtiel-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "luttiel"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "luttiel-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "luttiel-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "luttiel-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blutiel"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blutiel-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blutiel-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blutiel-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "too"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "too-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "too-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "too-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "utoo"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "utoo-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "utoo-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "utoo-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "mtoo"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "mtoo-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "mtoo-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "mtoo-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "toucan"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "toucan-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "toucan-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "toucan-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "kbtoucan"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "kbtoucan-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "kbtoucan-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "kbtoucan-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "space"
+dirs = 4
+frames = 4
+raw_delay_ds = ["2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "space-flap"
+dirs = 4
+frames = 19
+raw_delay_ds = ["2", "2", "2", "2", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "2"]
+delay_ds = ["2", "2", "2", "2", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "space-flaploop"
+dirs = 4
+frames = 8
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "space-dead"
+dirs = 1
+frames = 4
+raw_delay_ds = ["10", "10", "10", "10"]
+delay_ds = ["10", "10", "10", "10"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ikea"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ikea-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ikea-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ikea-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "goose"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "goose-flap"
+dirs = 4
+frames = 12
+raw_delay_ds = ["5", "1", "1", "1", "2", "1", "1", "1", "2", "1", "1", "1"]
+delay_ds = ["5", "1", "1", "1", "2", "1", "1", "1", "2", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "goose-flaploop"
+dirs = 4
+frames = 8
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "goose-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "gull"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "gull-flap"
+dirs = 4
+frames = 12
+raw_delay_ds = ["5", "1", "1", "2", "1", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "1", "2", "1", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "gull-flaploop"
+dirs = 4
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "gull-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "smallowl"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "smallowl-flap"
+dirs = 1
+frames = 2
+raw_delay_ds = ["4", "3"]
+delay_ds = ["4", "3"]
+loop = 3
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "smallowl-flaploop"
+dirs = 1
+frames = 2
+raw_delay_ds = ["4", "3"]
+delay_ds = ["4", "3"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "smallowl-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "owl"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "owl-flap"
+dirs = 1
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "owl-flaploop"
+dirs = 1
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "owl-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hooty"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hooty-flap"
+dirs = 1
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hooty-flaploop"
+dirs = 1
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hooty-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bhooty"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bhooty-flap"
+dirs = 1
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bhooty-flaploop"
+dirs = 1
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bhooty-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "then"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "then-flap"
+dirs = 4
+frames = 2
+raw_delay_ds = ["2", "4"]
+delay_ds = ["2", "4"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "then-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["2", "4"]
+delay_ds = ["2", "4"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "then-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ttom"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ttom-flap"
+dirs = 4
+frames = 2
+raw_delay_ds = ["2", "4"]
+delay_ds = ["2", "4"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ttom-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["2", "4"]
+delay_ds = ["2", "4"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ttom-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ttom-poof"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "gannet"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "gannet-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "gannet-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "gannet-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "love"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "love-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "love-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "love-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lovey"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lovey-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lovey-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lovey-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lovem"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lovem-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lovem-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lovem-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "loveb"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "loveb-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "loveb-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "loveb-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lovef"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lovef-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lovef-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lovef-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "crow"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "crow-flap"
+dirs = 4
+frames = 12
+raw_delay_ds = ["5", "1", "1", "2", "1", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "1", "2", "1", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "crow-flaploop"
+dirs = 4
+frames = 4
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "crow-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "doodle"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "doodle"
+dirs = 4
+frames = 3
+raw_delay_ds = ["1", "1", "1"]
+delay_ds = ["1", "1", "1"]
+loop = 0
+rewind = true
+movement = true
+hotspots_raw = []
+
+[[states]]
+name = "doodle-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "doodle-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "doodle-poof"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "doodle-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "swan"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "swan-flap"
+dirs = 4
+frames = 12
+raw_delay_ds = ["5", "1", "1", "1", "2", "1", "1", "1", "2", "1", "1", "1"]
+delay_ds = ["5", "1", "1", "1", "2", "1", "1", "1", "2", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "swan-flaploop"
+dirs = 4
+frames = 8
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "swan-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "cassowary"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "cassowary-flap"
+dirs = 1
+frames = 8
+raw_delay_ds = ["3", "3", "2", "2", "1", "1", "2", "2"]
+delay_ds = ["3", "3", "2", "2", "1", "1", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "cassowary-flaploop"
+dirs = 1
+frames = 2
+raw_delay_ds = ["3", "3"]
+delay_ds = ["3", "3"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "cassowary-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "penguin"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "penguin-flap"
+dirs = 4
+frames = 10
+raw_delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+delay_ds = ["5", "1", "2", "1", "1", "1", "3", "1", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "penguin-flaploop"
+dirs = 4
+frames = 2
+raw_delay_ds = ["1", "2"]
+delay_ds = ["1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "penguin-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "madsmallowl"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "madsmallowlknife"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "madsmallowlgun"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "untitled-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "untitled"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "untitled-pull"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/obj/atmospherics/pipes/silo_oxygen.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "df867d99a2af1256ea319b9367c067fd5934bb3747616818fad0ca0c6aef1477"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "intact"
+dirs = 8
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

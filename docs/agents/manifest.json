@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "archive_date": "2026-07-28",
+  "project": "Sim Station (codename)",
+  "privacy_notice": "Only externally observable assignments, statuses, reports, sources, and decisions are archived. Hidden reasoning, private model state, and unavailable messages are not reproduced.",
+  "evidence_levels": [
+    "verbatim",
+    "consolidated",
+    "decision",
+    "reconstruction"
+  ],
+  "agents": [
+    {
+      "canonical_task": "/root/architecture_scope",
+      "display_name": "Faraday",
+      "archive": "architecture-scope.md",
+      "last_observed_status": "completed",
+      "assignment_evidence": "reconstruction",
+      "report_evidence": "full visible final report available; Markdown links and line wrapping normalized in the archive",
+      "topics": [
+        "product scope",
+        "engine selection",
+        "simulation architecture",
+        "content and saves",
+        "roadmap"
+      ]
+    },
+    {
+      "canonical_task": "/root/goon_graphics_pipeline",
+      "display_name": "Harvey",
+      "archive": "goon-graphics-pipeline.md",
+      "last_observed_status": "report incorporated into approved plan; exact runtime status no longer visible",
+      "assignment_evidence": "reconstruction from the user request and planning record",
+      "report_evidence": "consolidated findings only",
+      "topics": [
+        "Goonstation DMI inventory",
+        "DMI semantics",
+        "atlas compiler",
+        "graphics provenance"
+      ]
+    },
+    {
+      "canonical_task": "/root/love_render_assets",
+      "display_name": "Kierkegaard",
+      "archive": "love-render-assets.md",
+      "last_observed_status": "report incorporated into approved plan; exact runtime status no longer visible",
+      "assignment_evidence": "reconstruction from the user request and planning record",
+      "report_evidence": "consolidated findings only",
+      "topics": [
+        "LÖVE 11.5 texture support",
+        "SpriteBatch rendering",
+        "atlas constraints",
+        "portable fallbacks"
+      ]
+    },
+    {
+      "canonical_task": "/root/goon_audio_pipeline",
+      "display_name": null,
+      "archive": "goon-audio-pipeline.md",
+      "last_observed_status": "report incorporated into approved plan; exact runtime status and display name no longer visible",
+      "assignment_evidence": "reconstruction from the user request and planning record",
+      "report_evidence": "consolidated findings only",
+      "topics": [
+        "Goonstation audio inventory",
+        "LÖVE audio support",
+        "tracker conversion",
+        "streaming and caching",
+        "audio provenance risk"
+      ]
+    },
+    {
+      "canonical_task": "/root/agent_archive_legal",
+      "display_name": null,
+      "archive": "agent-archive-legal.md",
+      "last_observed_status": "completed",
+      "assignment_evidence": "consolidated",
+      "report_evidence": "consolidated visible completion report",
+      "topics": [
+        "agent archive",
+        "license architecture",
+        "Goonstation provenance",
+        "audio rights risk",
+        "contribution and naming policy"
+      ]
+    },
+    {
+      "canonical_task": "/root/design_docs",
+      "display_name": "Mendel",
+      "archive": "design-docs.md",
+      "last_observed_status": "completed",
+      "assignment_evidence": "consolidated from visible task scope",
+      "report_evidence": "normalized visible final report",
+      "topics": [
+        "product contract",
+        "29 system specifications",
+        "vertical slice",
+        "cross-system cascades",
+        "content and balancing"
+      ]
+    },
+    {
+      "canonical_task": "/root/technical_docs",
+      "display_name": "Cicero",
+      "archive": "technical-docs.md",
+      "last_observed_status": "documentation completed; final audit rerun exposed a concurrent hook-order fixture mismatch",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible report",
+      "topics": [
+        "runtime architecture",
+        "public contracts and persistence",
+        "graphics and audio runtime",
+        "mod package and hook API",
+        "toolchain and performance",
+        "vertical slice and roadmap"
+      ]
+    },
+    {
+      "canonical_task": "/root/runtime_media",
+      "display_name": null,
+      "archive": "runtime-media.md",
+      "last_observed_status": "implementation and validation completed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible report",
+      "topics": [
+        "compact runtime media catalogs",
+        "lazy atlas loading",
+        "Goonstation presentation integration",
+        "bounded event audio",
+        "runtime media validation"
+      ]
+    },
+    {
+      "canonical_task": "/root/maintainability_ci",
+      "display_name": null,
+      "archive": "maintainability-ci.md",
+      "last_observed_status": "implementation and local validation completed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible report",
+      "topics": [
+        "cross-platform continuous integration",
+        "deterministic benchmark and soak",
+        "golden checkpoints",
+        "developer doctor and audit",
+        "Git LFS-tolerant automation"
+      ]
+    }
+  ]
+}

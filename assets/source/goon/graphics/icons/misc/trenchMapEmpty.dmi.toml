@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/misc/trenchMapEmpty.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "f45676c744524c0e55dbe9ebb19b4c84094206a33b983c2f5612f9e5ba076119"
+dmi_version = "4.0"
+cell_width = 600
+cell_height = 600
+
+[[states]]
+name = "template"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

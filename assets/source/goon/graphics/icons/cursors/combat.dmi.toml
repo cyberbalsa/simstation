@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/cursors/combat.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "fde8dff513d18a18e4b5e035cf68a25d73af8c5277b086e98b2bf6bd5a93ee4b"
+dmi_version = "4.0"
+cell_width = 64
+cell_height = 64
+
+[[states]]
+name = "all"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

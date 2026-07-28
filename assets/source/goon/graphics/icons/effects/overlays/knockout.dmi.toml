@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/effects/overlays/knockout.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "11284bc29001c1f8dff5402d30376b2dcac463403633d51b07b3248c5492ae1c"
+dmi_version = "4.0"
+cell_width = 480
+cell_height = 480
+
+[[states]]
+name = "knockout"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

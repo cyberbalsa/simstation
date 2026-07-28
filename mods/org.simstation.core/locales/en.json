@@ -1,0 +1,13 @@
+{
+  "job.engineer": "Engineer",
+  "job.cargo-technician": "Cargo Technician",
+  "job.doctor": "Medical Doctor",
+  "job.scientist": "Scientist",
+  "job.security-officer": "Security Officer",
+  "job.assistant": "Assistant",
+  "item.iron-ore": "Iron-bearing Ore",
+  "item.steel-sheet": "Steel Sheet",
+  "item.cable-coil": "Cable Coil",
+  "item.circuit": "Circuit",
+  "item.control-assembly": "Control Assembly"
+}

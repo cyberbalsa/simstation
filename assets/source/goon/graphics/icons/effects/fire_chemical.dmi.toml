@@ -1,0 +1,1690 @@
+format_version = 1
+source_path = "icons/effects/fire_chemical.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "da0f0c5e0f29cdc51a7e8c556f577678fb1e0988a37e9b8fb9f743f046c341a0"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 48
+
+[[states]]
+name = "red_full"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "red_under-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "red_over-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "red_fx-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "red_under-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "red_over-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "red_fx-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_full"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_under-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_over-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_fx-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_under-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_over-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_fx-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_full"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_under-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_over-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_fx-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_under-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_over-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_fx-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_full"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_under-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_over-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_fx-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_under-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_over-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_fx-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_full"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_under-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_over-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_fx-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_under-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_over-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_fx-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_full"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_under-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_over-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_fx-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_under-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_over-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_fx-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_full"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_under-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_over-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_fx-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_under-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_over-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_fx-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_full"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_under-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_over-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_fx-1"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_under-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_over-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_fx-2"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "red_under-1-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "red_under-1-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "red_under-1-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "red_under-2-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "red_under-2-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "red_under-2-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "red_over-1-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "red_over-1-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "red_over-1-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "red_over-2-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "red_over-2-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "red_over-2-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "alpha"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_under-1-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_under-1-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_under-1-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_under-2-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_under-2-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_under-2-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_over-1-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_over-1-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_over-1-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_over-2-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_over-2-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blue_over-2-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_under-1-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_under-1-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_under-1-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_under-2-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_under-2-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_under-2-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_over-1-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_over-1-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_over-1-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_over-2-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_over-2-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "green_over-2-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_under-1-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_under-1-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_under-1-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_under-2-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_under-2-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_under-2-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_over-1-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_over-1-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_over-1-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_over-2-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_over-2-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "yellow_over-2-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_under-1-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_under-1-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_under-1-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_under-2-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_under-2-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_under-2-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_over-1-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_over-1-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_over-1-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_over-2-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_over-2-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "darkred_over-2-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_under-1-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_under-1-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_under-1-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_under-2-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_under-2-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_under-2-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_over-1-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_over-1-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_over-1-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_over-2-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_over-2-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "purple_over-2-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_under-1-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_under-1-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_under-1-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_under-2-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_under-2-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_under-2-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_over-1-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_over-1-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_over-1-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_over-2-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_over-2-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "white_over-2-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_under-1-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_under-1-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_under-1-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_under-2-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_under-2-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_under-2-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_over-1-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_over-1-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_over-1-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_over-2-4"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_over-2-12"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "black_over-2-8"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+delay_ds = ["1.6", "1.6", "1.6", "1.6", "1.6"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

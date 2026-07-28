@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/effects/mapeditor/engine_room_mushroom.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "2b4957233620a88d27ad9c35a37c480ed07dde306bfb31cbc23ba6bdde068021"
+dmi_version = "4.0"
+cell_width = 416
+cell_height = 416
+
+[[states]]
+name = "13x13engine_room"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

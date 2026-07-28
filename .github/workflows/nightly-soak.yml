@@ -1,0 +1,66 @@
+name: Nightly soak
+
+on:
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+    inputs:
+      shifts:
+        description: Complete simulated shifts to run
+        required: true
+        default: "1"
+        type: string
+      minimum_tps:
+        description: Minimum simulation ticks per CPU second
+        required: true
+        default: "40"
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nightly-soak
+  cancel-in-progress: false
+
+jobs:
+  soak:
+    name: Headless deterministic soak
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source without media payloads
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          fetch-depth: 1
+          lfs: false
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.11.9"
+          check-latest: false
+
+      - name: Set up LuaJIT
+        uses: leafo/gh-actions-lua@6919171ccf181b826f44b9bca76307b577217377 # v13
+        with:
+          luaVersion: "luajit-2.1.0-beta3"
+
+      - name: Run fast audit
+        run: python tools/dev.py audit --assets auto
+
+      - name: Run complete-shift soak
+        env:
+          SOAK_SHIFTS: ${{ inputs.shifts || '1' }}
+          SOAK_MINIMUM_TPS: ${{ inputs.minimum_tps || '40' }}
+        run: python tools/dev.py soak --shifts "$SOAK_SHIFTS" --min-tps "$SOAK_MINIMUM_TPS" --output build/benchmarks/soak.json
+
+      - name: Preserve soak report
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: benchmark-soak
+          path: build/benchmarks/*.json
+          if-no-files-found: warn
+          retention-days: 30

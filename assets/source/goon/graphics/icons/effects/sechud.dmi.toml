@@ -1,0 +1,128 @@
+format_version = 1
+source_path = "icons/effects/sechud.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "213952eca1d72711fb5251febc0316774bbab77fad01f01f654d2fe31f3c9f4a"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "*Arrest*"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = ["26,5,1"]
+
+[[states]]
+name = "*Detain*"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Contraband"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = ["26,5,1"]
+
+[[states]]
+name = "Suspect"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Clown"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = ["26,5,1"]
+
+[[states]]
+name = "Parolled"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = ["26,5,1"]
+
+[[states]]
+name = "Incarcerated"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = ["26,5,1"]
+
+[[states]]
+name = "Released"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = ["26,5,1"]
+
+[[states]]
+name = "Loyal"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = ["26,5,1"]
+
+[[states]]
+name = "RevHead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "Loyal_Progress"
+dirs = 1
+frames = 11
+raw_delay_ds = ["5", "5", "0.2", "0.2", "0.2", "1", "5", "0.2", "0.2", "1", "1"]
+delay_ds = ["5", "5", "0.2", "0.2", "0.2", "1", "5", "0.2", "0.2", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = ["26,5,1", "26,5,2", "26,5,3", "26,5,4", "26,5,5", "26,5,6", "26,5,7", "26,5,8", "26,5,9", "26,5,10", "26,5,11"]

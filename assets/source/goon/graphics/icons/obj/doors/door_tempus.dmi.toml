@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/obj/doors/door_tempus.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "f65f13ebc94036872ce0bc95604c016bd87ada11e13f4ab2691b54ee8bd505b6"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "generic_closed"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

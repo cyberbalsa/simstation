@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "definitions": [
+    {
+      "id": "org.simstation.core:item/iron-ore",
+      "kind": "item",
+      "name_key": "item.iron-ore",
+      "stack_limit": 50,
+      "tags": ["ore", "iron-bearing"]
+    },
+    {
+      "id": "org.simstation.core:item/steel-sheet",
+      "kind": "item",
+      "name_key": "item.steel-sheet",
+      "stack_limit": 50,
+      "tags": ["construction", "metal"]
+    },
+    {
+      "id": "org.simstation.core:item/cable-coil",
+      "kind": "item",
+      "name_key": "item.cable-coil",
+      "stack_limit": 30,
+      "tags": ["construction", "electrical"]
+    },
+    {
+      "id": "org.simstation.core:item/circuit",
+      "kind": "item",
+      "name_key": "item.circuit",
+      "stack_limit": 10,
+      "tags": ["electronics", "intermediate"]
+    },
+    {
+      "id": "org.simstation.core:item/control-assembly",
+      "kind": "item",
+      "name_key": "item.control-assembly",
+      "stack_limit": 5,
+      "tags": ["electronics", "export"]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+schema = 1
+id = "org.simstation.example.av-swap"
+version = "0.1.0"
+name = "Audio/Visual Replacement Example"
+description = "Explicitly replaces one core structure presentation contract."
+authors = ["Sim Station contributors"]
+license = "CC0-1.0"
+api = "^0.1.0"
+class = "data"
+load_priority = 100
+content = ["content/*.json"]
+dependencies = [{ id = "org.simstation.core", version = "^0.1.0" }]
+optional_dependencies = []
+conflicts = []
+load_after = []
+load_before = []
+replaces = ["org.simstation.core:structure/floor"]

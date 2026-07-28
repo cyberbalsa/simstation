@@ -1,0 +1,95 @@
+format_version = 1
+source_path = "icons/effects/224x224.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "28f43517585b6b04e96a5531855277dc14c30099b8f77e38b906baec7092031e"
+dmi_version = "4.0"
+cell_width = 224
+cell_height = 224
+
+[[states]]
+name = "shockwave"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "light"
+dirs = 1
+frames = 16
+raw_delay_ds = ["2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "light2"
+dirs = 1
+frames = 16
+raw_delay_ds = ["2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "electro"
+dirs = 1
+frames = 16
+raw_delay_ds = ["0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4"]
+delay_ds = ["0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "mars_shuttle"
+dirs = 8
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "mars_shuttle_wing"
+dirs = 8
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "circle"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "superexpl"
+dirs = 1
+frames = 54
+raw_delay_ds = ["0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "1"]
+delay_ds = ["0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "0.6", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []

@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "definitions": [
+    {
+      "id": "org.simstation.example.catering:job/pastry-cook",
+      "kind": "job",
+      "name_key": "example.catering.job.pastry-cook",
+      "department": "service",
+      "base_wage_credits": 110,
+      "work_tags": ["cooking", "harvesting"]
+    },
+    {
+      "id": "org.simstation.example.catering:item/pie-dough",
+      "kind": "item",
+      "name_key": "example.catering.item.pie-dough",
+      "stack_limit": 10,
+      "tags": ["food", "intermediate"]
+    },
+    {
+      "id": "org.simstation.example.catering:item/space-pie",
+      "kind": "item",
+      "name_key": "example.catering.item.space-pie",
+      "stack_limit": 4,
+      "nutrition": 280,
+      "tags": ["food", "meal"]
+    },
+    {
+      "id": "org.simstation.example.catering:recipe/mix-pie-dough",
+      "kind": "recipe",
+      "name_key": "example.catering.recipe.mix-pie-dough",
+      "machine_tag": "kitchen-prep",
+      "duration_ticks": 100,
+      "inputs": [{"tag": "grain", "quantity": 2}],
+      "outputs": [{"id": "org.simstation.example.catering:item/pie-dough", "quantity": 1}]
+    },
+    {
+      "id": "org.simstation.example.catering:recipe/bake-space-pie",
+      "kind": "recipe",
+      "name_key": "example.catering.recipe.bake-space-pie",
+      "machine_tag": "oven",
+      "duration_ticks": 200,
+      "inputs": [{"id": "org.simstation.example.catering:item/pie-dough", "quantity": 1}],
+      "outputs": [{"id": "org.simstation.example.catering:item/space-pie", "quantity": 1}]
+    }
+  ]
+}

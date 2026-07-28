@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "scenarios": {
+    "ci": {
+      "configuration": {
+        "checkpoint_every": 120,
+        "crew": 100,
+        "height": 192,
+        "scenario": "ci",
+        "seed": 1337,
+        "ticks": 600,
+        "width": 192
+      },
+      "checkpoints": [
+        {
+          "state_hash": 936031148,
+          "tick": 120
+        },
+        {
+          "state_hash": 1518135122,
+          "tick": 240
+        },
+        {
+          "state_hash": 1946289126,
+          "tick": 360
+        },
+        {
+          "state_hash": 1315313105,
+          "tick": 480
+        },
+        {
+          "state_hash": 943234082,
+          "tick": 600
+        }
+      ],
+      "final_state_hash": 943234082
+    },
+    "smoke": {
+      "configuration": {
+        "checkpoint_every": 60,
+        "crew": 24,
+        "height": 48,
+        "scenario": "smoke",
+        "seed": 1337,
+        "ticks": 240,
+        "width": 48
+      },
+      "checkpoints": [
+        {
+          "state_hash": 206027005,
+          "tick": 60
+        },
+        {
+          "state_hash": 821470155,
+          "tick": 120
+        },
+        {
+          "state_hash": 987276484,
+          "tick": 180
+        },
+        {
+          "state_hash": 1661846301,
+          "tick": 240
+        }
+      ],
+      "final_state_hash": 1661846301
+    }
+  }
+}

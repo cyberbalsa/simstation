@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/effects/overlays/noise.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "533eef3c1cb0354d3289bf2d22b1a9eb23a76c3c2107fece5fadc6702d267556"
+dmi_version = "4.0"
+cell_width = 480
+cell_height = 480
+
+[[states]]
+name = "noise"
+dirs = 1
+frames = 5
+raw_delay_ds = ["1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

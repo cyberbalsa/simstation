@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/effects/mapeditor/15x15tiles.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "fca718e0a8120e7530c34802ed0c91fa24b48869dc0004a1c431e1be606d8daf"
+dmi_version = "4.0"
+cell_width = 480
+cell_height = 480
+
+[[states]]
+name = "random_room"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

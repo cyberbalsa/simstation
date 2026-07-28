@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/misc/colortest.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "ae72f795c0cc05ca78f99b5a686609edc60581fd496ad3ee18170422e6880837"
+dmi_version = "4.0"
+cell_width = 64
+cell_height = 64
+
+[[states]]
+name = "colors"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

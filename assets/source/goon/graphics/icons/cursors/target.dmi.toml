@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/cursors/target.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "07d444cd0b85f75d43b72f20bc5f1eb09b7ef2d6d4a1fef852560b809f1641f8"
+dmi_version = "4.0"
+cell_width = 16
+cell_height = 16
+
+[[states]]
+name = "all"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = ["7,7,1"]

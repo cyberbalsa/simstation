@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/misc/384x384.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "84cbc6e4f906db41375edbe08e4e43d34c19cbd2d2cae5996ce4241453733ed1"
+dmi_version = "4.0"
+cell_width = 384
+cell_height = 384
+
+[[states]]
+name = "little_seamonster"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

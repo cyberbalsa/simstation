@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/effects/bubbles_1.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "26b70e6bf779d61149385f5e870ab934b5554e280dd2b77c4935d245529d8156"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "bubbles"
+dirs = 4
+frames = 9
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

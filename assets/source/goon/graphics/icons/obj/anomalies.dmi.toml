@@ -1,0 +1,40 @@
+format_version = 1
+source_path = "icons/obj/anomalies.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "4b8d7f26662401638680964798841a96edb8592d25a54737978884da87088f8b"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "anom"
+dirs = 1
+frames = 8
+raw_delay_ds = ["0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4"]
+delay_ds = ["0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4", "0.4"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "fatportal"
+dirs = 1
+frames = 14
+raw_delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5"]
+delay_ds = ["0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5", "0.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "space_tear"
+dirs = 1
+frames = 9
+raw_delay_ds = ["0.3", "0.3", "0.3", "0.3", "0.3", "0.3", "0.3", "0.3", "0.3"]
+delay_ds = ["0.3", "0.3", "0.3", "0.3", "0.3", "0.3", "0.3", "0.3", "0.3"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

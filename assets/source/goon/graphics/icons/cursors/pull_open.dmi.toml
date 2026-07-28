@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/cursors/pull_open.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "a1adde1d13f44185fe636fec91911fa60a875ba2fd2f7de8e2edb1b4020a415e"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "all"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

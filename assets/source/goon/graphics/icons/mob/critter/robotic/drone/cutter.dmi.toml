@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/mob/critter/robotic/drone/cutter.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "ae5281920b828472ac3d233c488726286b612f03f10f2e51d0de48b1cf2383d1"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "drone_cutter"
+dirs = 4
+frames = 4
+raw_delay_ds = ["4", "1", "1", "1"]
+delay_ds = ["4", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

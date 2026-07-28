@@ -1,0 +1,29 @@
+format_version = 1
+source_path = "icons/misc/frogs.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "e2e1792186134de1cb896be429cf258f6b875580da4a1805cadf51fb197d9aa8"
+dmi_version = "4.0"
+cell_width = 90
+cell_height = 25
+
+[[states]]
+name = "getout"
+dirs = 1
+frames = 10
+raw_delay_ds = ["10", "1", "10", "1", "1", "1", "30", "1", "1", "1"]
+delay_ds = ["10", "1", "10", "1", "1", "1", "30", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "getin"
+dirs = 1
+frames = 16
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

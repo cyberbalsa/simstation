@@ -1,0 +1,51 @@
+format_version = 1
+source_path = "icons/obj/bots/robuddy/pr-1.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "ece0f99ba7335f988178e99e95bbee0e563b473fceb20ec2f4f45cca92249eca"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "body"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "face-happy"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "100"]
+delay_ds = ["1", "1", "1", "1", "1", "100"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "face-sad"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "100"]
+delay_ds = ["1", "1", "1", "1", "1", "100"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lights-on"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

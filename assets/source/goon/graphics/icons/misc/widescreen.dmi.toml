@@ -1,0 +1,84 @@
+format_version = 1
+source_path = "icons/misc/widescreen.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "92e288ef9c596cc3b9a8303ca6d8c259b5a8935b4429ddc4720b89547945b77f"
+dmi_version = "4.0"
+cell_width = 672
+cell_height = 480
+
+[[states]]
+name = "title_oshan"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "title_oshan_battle_royale"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "title_main"
+dirs = 1
+frames = 24
+raw_delay_ds = ["20", "1", "1", "10", "2", "1", "1", "1", "20", "1", "1", "10", "2", "1", "1", "1", "20", "1", "1", "10", "2", "1", "1", "2"]
+delay_ds = ["20", "1", "1", "10", "2", "1", "1", "1", "20", "1", "1", "10", "2", "1", "1", "1", "20", "1", "1", "10", "2", "1", "1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "title_main_battle_royale"
+dirs = 1
+frames = 24
+raw_delay_ds = ["20", "1", "1", "10", "2", "1", "1", "1", "20", "1", "1", "10", "2", "1", "1", "1", "20", "1", "1", "10", "2", "1", "1", "2"]
+delay_ds = ["20", "1", "1", "10", "2", "1", "1", "1", "20", "1", "1", "10", "2", "1", "1", "1", "20", "1", "1", "10", "2", "1", "1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "hehe"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "s"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "title_manta"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

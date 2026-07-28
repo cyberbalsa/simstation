@@ -1,0 +1,183 @@
+format_version = 1
+source_path = "icons/mob/blob_organs.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "c8d4c89fd02f56f74653a1aefb2df4038df2c29c5cfdd52bfd69d756728c9a48"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 48
+
+[[states]]
+name = "nucleus"
+dirs = 1
+frames = 4
+raw_delay_ds = ["2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "nucleus_blink"
+dirs = 1
+frames = 4
+raw_delay_ds = ["24", "0.35", "0.5", "1.5"]
+delay_ds = ["24", "0.35", "0.5", "1.5"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ribosome"
+dirs = 1
+frames = 3
+raw_delay_ds = ["4", "2", "1"]
+delay_ds = ["4", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lipid"
+dirs = 1
+frames = 3
+raw_delay_ds = ["4", "2", "1"]
+delay_ds = ["4", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "mitochondria"
+dirs = 1
+frames = 3
+raw_delay_ds = ["4", "2", "1"]
+delay_ds = ["4", "2", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "plasmaphyll"
+dirs = 1
+frames = 3
+raw_delay_ds = ["6", "3", "2"]
+delay_ds = ["6", "3", "2"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ectothermid"
+dirs = 1
+frames = 3
+raw_delay_ds = ["4", "2", "2"]
+delay_ds = ["4", "2", "2"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wall"
+dirs = 1
+frames = 3
+raw_delay_ds = ["4", "2", "2"]
+delay_ds = ["4", "2", "2"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "bridge"
+dirs = 1
+frames = 3
+raw_delay_ds = ["4", "2", "2"]
+delay_ds = ["4", "2", "2"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "firewall"
+dirs = 1
+frames = 3
+raw_delay_ds = ["4", "2", "2"]
+delay_ds = ["4", "2", "2"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "reflective"
+dirs = 1
+frames = 3
+raw_delay_ds = ["4", "2", "2"]
+delay_ds = ["4", "2", "2"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "replicator"
+dirs = 1
+frames = 3
+raw_delay_ds = ["4", "2", "1"]
+delay_ds = ["4", "2", "1"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "reclaimer"
+dirs = 1
+frames = 3
+raw_delay_ds = ["4", "2", "1"]
+delay_ds = ["4", "2", "1"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "cannon"
+dirs = 1
+frames = 3
+raw_delay_ds = ["4", "2", "2"]
+delay_ds = ["4", "2", "2"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "deposit-reagent"
+dirs = 1
+frames = 3
+raw_delay_ds = ["4", "2", "2"]
+delay_ds = ["4", "2", "2"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "deposit-material"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

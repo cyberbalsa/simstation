@@ -1,0 +1,62 @@
+format_version = 1
+source_path = "icons/mob/critter/robotic/nanites.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "4ebe2f7d1df6de2704ebc1e33cbf1805415d3021dabb5efcdab4fe6d32b629c8"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "nanites"
+dirs = 1
+frames = 8
+raw_delay_ds = ["1.25", "1.25", "1.25", "1.25", "1.25", "1.25", "1.25", "1.25"]
+delay_ds = ["1.25", "1.25", "1.25", "1.25", "1.25", "1.25", "1.25", "1.25"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "nanites-dead"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "nanites-attack"
+dirs = 1
+frames = 9
+raw_delay_ds = ["1", "1", "1", "1", "1.25", "1.25", "1.25", "1.25", "1.25"]
+delay_ds = ["1", "1", "1", "1", "1.25", "1.25", "1.25", "1.25", "1.25"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "nanites-dead-reform"
+dirs = 1
+frames = 7
+raw_delay_ds = ["2", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["2", "1.5", "1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "nanites-reform"
+dirs = 1
+frames = 4
+raw_delay_ds = ["1.25", "1.25", "1", "1"]
+delay_ds = ["1.25", "1.25", "1", "1"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []

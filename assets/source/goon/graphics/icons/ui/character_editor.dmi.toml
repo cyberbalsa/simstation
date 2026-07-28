@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/ui/character_editor.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "6f364e3f7d8e8c0f2def4932d7b25d176009283f68471a276891d23ac18e8c0e"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "missing"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

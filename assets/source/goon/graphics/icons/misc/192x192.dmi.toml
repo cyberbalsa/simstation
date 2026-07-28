@@ -1,0 +1,29 @@
+format_version = 1
+source_path = "icons/misc/192x192.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "8a88b4a8dc0ea3f6874a7b780a81736aebe5357ae9015fc7f7bf7326ba4d8c58"
+dmi_version = "4.0"
+cell_width = 192
+cell_height = 192
+
+[[states]]
+name = "ghoast"
+dirs = 4
+frames = 5
+raw_delay_ds = ["1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1"]
+loop = 0
+rewind = true
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "little_seamonster"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

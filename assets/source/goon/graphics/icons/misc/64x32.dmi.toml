@@ -1,0 +1,51 @@
+format_version = 1
+source_path = "icons/misc/64x32.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "ee4ed55a19af90b58abf16cc288b120ff54e436d262e27d0664c682de8a81a06"
+dmi_version = "4.0"
+cell_width = 64
+cell_height = 32
+
+[[states]]
+name = "howitzer"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "howitzer-idle"
+dirs = 1
+frames = 4
+raw_delay_ds = ["1", "2", "1", "2"]
+delay_ds = ["1", "2", "1", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "howitzer-firing"
+dirs = 1
+frames = 16
+raw_delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "kudzu_bulb-open"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

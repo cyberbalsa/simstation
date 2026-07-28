@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/mob/critter/robotic/mechanical/vivisection.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "e614264f3215bab3fbf33fd68118fbbb61f2be31f4cb462f7ca60a2377ef8152"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "vivisection"
+dirs = 4
+frames = 8
+raw_delay_ds = ["2", "2", "2", "2", "2", "2", "2", "2"]
+delay_ds = ["2", "2", "2", "2", "2", "2", "2", "2"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

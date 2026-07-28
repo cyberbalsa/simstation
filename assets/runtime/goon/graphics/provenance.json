@@ -1,0 +1,10 @@
+{
+  "catalog_sha256": "a97a12921de56ad3a40ddc8ae2330af6cb50a2a17cb39122c87009661e7a55df",
+  "commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+  "format_version": 1,
+  "frame_direction_cells": 164558,
+  "generator": "tools/assets.py",
+  "license": "CC-BY-NC-SA-3.0-US",
+  "repository": "https://github.com/goonstation/goonstation.git",
+  "sprite_count": 46160
+}

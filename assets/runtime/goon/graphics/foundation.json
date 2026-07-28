@@ -1,0 +1,321 @@
+{
+  "format_version": 1,
+  "full_catalog_sha256": "a97a12921de56ad3a40ddc8ae2330af6cb50a2a17cb39122c87009661e7a55df",
+  "kind": "foundation-graphics-selection",
+  "pack_id": "org.simstation.goon",
+  "pages": [
+    {
+      "bundle": "core_tiles",
+      "file": "atlas-000.png",
+      "format": "rgba8-png",
+      "height": 2048,
+      "page": 0,
+      "runtime_path": "core_tiles/atlas-000.png",
+      "sha256": "df7aad5532d7a110f95600f8210d8e076fe4f83a5e58695f373b9de2f3edcbff",
+      "width": 2048
+    },
+    {
+      "bundle": "core_tiles",
+      "file": "atlas-001.png",
+      "format": "rgba8-png",
+      "height": 2048,
+      "page": 1,
+      "runtime_path": "core_tiles/atlas-001.png",
+      "sha256": "d90c9fb6919cc5b29483c908fdfcbb3f628297c56c42a80cebb401d8d22c06ea",
+      "width": 2048
+    },
+    {
+      "bundle": "crew",
+      "file": "atlas-005.png",
+      "format": "rgba8-png",
+      "height": 2048,
+      "page": 5,
+      "runtime_path": "crew/atlas-005.png",
+      "sha256": "26b13cb88435967a0f0206a6a9ae89ae79f59d1c117f08a080796b089d474f53",
+      "width": 2048
+    },
+    {
+      "bundle": "machines",
+      "file": "atlas-000.png",
+      "format": "rgba8-png",
+      "height": 2048,
+      "page": 0,
+      "runtime_path": "machines/atlas-000.png",
+      "sha256": "bc468c09b405565438081ce4b828cb18cbdf75b8c380292b8f7dce94b58d352b",
+      "width": 2048
+    }
+  ],
+  "source_commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+  "sprites": {
+    "crew_female": {
+      "bundle": "crew",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "east": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 5,
+            "w": 32,
+            "x": 1497,
+            "y": 375
+          }
+        ],
+        "north": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 5,
+            "w": 32,
+            "x": 647,
+            "y": 375
+          }
+        ],
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 5,
+            "w": 32,
+            "x": 409,
+            "y": 1497
+          }
+        ],
+        "west": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 5,
+            "w": 32,
+            "x": 1531,
+            "y": 375
+          }
+        ]
+      },
+      "dirs": 4,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/mob/human-dmi/body_f--4ed48d58ce-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/mob/human.dmi",
+      "source_sha256": "fd1252ef7a0566f0612210daf7afc78a76460ec19073102ec4fd00a56a13f49d",
+      "source_state": "body_f",
+      "source_state_index": 5,
+      "source_state_occurrence": 1
+    },
+    "crew_male": {
+      "bundle": "crew",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "east": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 5,
+            "w": 32,
+            "x": 681,
+            "y": 375
+          }
+        ],
+        "north": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 5,
+            "w": 32,
+            "x": 647,
+            "y": 375
+          }
+        ],
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 5,
+            "w": 32,
+            "x": 375,
+            "y": 1497
+          }
+        ],
+        "west": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 5,
+            "w": 32,
+            "x": 715,
+            "y": 375
+          }
+        ]
+      },
+      "dirs": 4,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/mob/human-dmi/body_m--04641b6d93-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/mob/human.dmi",
+      "source_sha256": "fd1252ef7a0566f0612210daf7afc78a76460ec19073102ec4fd00a56a13f49d",
+      "source_state": "body_m",
+      "source_state_index": 4,
+      "source_state_occurrence": 1
+    },
+    "door_closed": {
+      "bundle": "machines",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 0,
+            "w": 32,
+            "x": 1531,
+            "y": 103
+          }
+        ]
+      },
+      "dirs": 1,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/doors/doorclassic-dmi/door_closed--553558f5ff-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/doors/Doorclassic.dmi",
+      "source_sha256": "cc1758d1757023ab8d042faabf061247eaf90fe40990a2abf02ce77471969478",
+      "source_state": "door_closed",
+      "source_state_index": 1,
+      "source_state_occurrence": 1
+    },
+    "door_open": {
+      "bundle": "machines",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 0,
+            "w": 32,
+            "x": 1803,
+            "y": 103
+          }
+        ]
+      },
+      "dirs": 1,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/obj/doors/doorclassic-dmi/door_open--5fe7ebb3c8-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/obj/doors/Doorclassic.dmi",
+      "source_sha256": "cc1758d1757023ab8d042faabf061247eaf90fe40990a2abf02ce77471969478",
+      "source_state": "door_open",
+      "source_state_index": 5,
+      "source_state_occurrence": 1
+    },
+    "floor": {
+      "bundle": "core_tiles",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 0,
+            "w": 32,
+            "x": 1871,
+            "y": 375
+          }
+        ]
+      },
+      "dirs": 1,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/turf/floors-dmi/floor--3684c9d3c0-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/turf/floors.dmi",
+      "source_sha256": "6aef9c554d1e33a74fc5414af44f18e2c9e62357f92deac1d6f166f5318279b1",
+      "source_state": "floor",
+      "source_state_index": 2,
+      "source_state_occurrence": 1
+    },
+    "wall": {
+      "bundle": "core_tiles",
+      "cell_height": 32,
+      "cell_width": 32,
+      "delay_ds": [
+        "1"
+      ],
+      "directions": {
+        "south": [
+          {
+            "duration_ds": "1",
+            "frame": 1,
+            "h": 32,
+            "page": 1,
+            "w": 32,
+            "x": 1633,
+            "y": 239
+          }
+        ]
+      },
+      "dirs": 1,
+      "frames": 1,
+      "hotspots_raw": [],
+      "id": "org.simstation.goon:sprite/icons/turf/walls-dmi/riveted--b2df855a7c-o01",
+      "loop": 0,
+      "movement": false,
+      "raw_delay_ds": [],
+      "rewind": false,
+      "source_path": "icons/turf/walls.dmi",
+      "source_sha256": "bca2f891566d2af1ee3ef4a93ef991377d285ac336f5c83885c90a4f029d6964",
+      "source_state": "riveted",
+      "source_state_index": 10,
+      "source_state_occurrence": 1
+    }
+  }
+}

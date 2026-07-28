@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/mob/critter/robotic/drone/rocket.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "2a21aa7ffdf9af8048ec2edc9fd21b05b3e2bf16154f471084b78bc299570512"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "drone_rocket"
+dirs = 4
+frames = 3
+raw_delay_ds = ["1", "1", "5"]
+delay_ds = ["1", "1", "5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

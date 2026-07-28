@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/mob/skeleton_commander.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "2c94fa868080678988cdaa08a262a9bbedba0a06037bbfacce367fa90f7e9454"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 64
+
+[[states]]
+name = "skeleton_commander"
+dirs = 4
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

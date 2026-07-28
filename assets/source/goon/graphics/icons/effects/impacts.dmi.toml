@@ -1,0 +1,139 @@
+format_version = 1
+source_path = "icons/effects/impacts.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "8e5912514d83a61abcff2e31f6e588c2feec3e2391338f66c3cc4dfc73d02861"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "blood_impact1"
+dirs = 1
+frames = 7
+raw_delay_ds = ["0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+delay_ds = ["0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blood_impact2"
+dirs = 1
+frames = 9
+raw_delay_ds = ["0.2", "0.2", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+delay_ds = ["0.2", "0.2", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blood_impact1-old"
+dirs = 1
+frames = 7
+raw_delay_ds = ["0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+delay_ds = ["0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "blood_impact2-old"
+dirs = 1
+frames = 9
+raw_delay_ds = ["0.2", "0.2", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+delay_ds = ["0.2", "0.2", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "energy_impact"
+dirs = 1
+frames = 10
+raw_delay_ds = ["0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+delay_ds = ["0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "taser_impact"
+dirs = 1
+frames = 12
+raw_delay_ds = ["0.2", "0.2", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+delay_ds = ["0.2", "0.2", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "taser_impact-old"
+dirs = 1
+frames = 12
+raw_delay_ds = ["0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+delay_ds = ["0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "silicon_impact1"
+dirs = 1
+frames = 9
+raw_delay_ds = ["0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+delay_ds = ["0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "silicon_impact2"
+dirs = 1
+frames = 9
+raw_delay_ds = ["0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+delay_ds = ["0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "silicon_impact-unused"
+dirs = 1
+frames = 9
+raw_delay_ds = ["0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+delay_ds = ["0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "laser_impact_window"
+dirs = 1
+frames = 13
+raw_delay_ds = ["0.2", "0.2", "0.2", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+delay_ds = ["0.2", "0.2", "0.2", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "laser_impact_window_blue"
+dirs = 1
+frames = 13
+raw_delay_ds = ["0.2", "0.2", "0.2", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+delay_ds = ["0.2", "0.2", "0.2", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41", "0.41"]
+loop = 1
+rewind = false
+movement = false
+hotspots_raw = []

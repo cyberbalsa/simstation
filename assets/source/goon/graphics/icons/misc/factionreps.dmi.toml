@@ -1,0 +1,18 @@
+format_version = 1
+source_path = "icons/misc/factionreps.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "133355da966bac2d4d238f9bdebe7e15f7191e1e23ff2b6934bbc22060ede4b7"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 48
+
+[[states]]
+name = "ntcommander"
+dirs = 4
+frames = 3
+raw_delay_ds = ["1", "1", "1", "1"]
+delay_ds = ["1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

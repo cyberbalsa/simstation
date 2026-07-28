@@ -1,0 +1,1030 @@
+format_version = 1
+source_path = "icons/obj/artifacts/artifactsitem.dmi"
+source_commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+source_sha256 = "522a893a3d9dc77cdbb221a264b1243bdc858b471310fa2d2fe70391b2014f48"
+dmi_version = "4.0"
+cell_width = 32
+cell_height = 32
+
+[[states]]
+name = "ancient-1"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ancient-1fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ancient-2"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ancient-2fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.51", "1.51", "1.51", "1.51", "1.51", "1.51"]
+delay_ds = ["1.51", "1.51", "1.51", "1.51", "1.51", "1.51"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ancient-3"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ancient-3fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.52", "1.52", "1.52", "1.52", "1.52", "1.52"]
+delay_ds = ["1.52", "1.52", "1.52", "1.52", "1.52", "1.52"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ancient-4"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ancient-4fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.53", "1.53", "1.53", "1.53", "1.53", "1.53"]
+delay_ds = ["1.53", "1.53", "1.53", "1.53", "1.53", "1.53"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ancient-5"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ancient-5fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.54", "1.54", "1.54", "1.54", "1.54", "1.54"]
+delay_ds = ["1.54", "1.54", "1.54", "1.54", "1.54", "1.54"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ancient-6"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ancient-6fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.55", "1.55", "1.55", "1.55", "1.55", "1.55"]
+delay_ds = ["1.55", "1.55", "1.55", "1.55", "1.55", "1.55"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ancient-7"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "ancient-7fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.56", "1.56", "1.56", "1.56", "1.56", "1.56"]
+delay_ds = ["1.56", "1.56", "1.56", "1.56", "1.56", "1.56"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "martian-1"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "martian-1fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["2.5", "2.5", "2.5", "2.5", "2.5", "2.5"]
+delay_ds = ["2.5", "2.5", "2.5", "2.5", "2.5", "2.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "martian-2"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "martian-2fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["2.51", "2.51", "2.51", "2.51", "2.51", "2.51"]
+delay_ds = ["2.51", "2.51", "2.51", "2.51", "2.51", "2.51"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "martian-3"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "martian-3fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["2.52", "2.52", "2.52", "2.52", "2.52", "2.52"]
+delay_ds = ["2.52", "2.52", "2.52", "2.52", "2.52", "2.52"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "martian-4"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "martian-4fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["2.53", "2.53", "2.53", "2.53", "2.53", "2.53"]
+delay_ds = ["2.53", "2.53", "2.53", "2.53", "2.53", "2.53"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "martian-5"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "martian-5fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["2.54", "2.54", "2.54", "2.54", "2.54", "2.54"]
+delay_ds = ["2.54", "2.54", "2.54", "2.54", "2.54", "2.54"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "martian-6"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "martian-6fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["2.55", "2.55", "2.55", "2.55", "2.55", "2.55"]
+delay_ds = ["2.55", "2.55", "2.55", "2.55", "2.55", "2.55"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "martian-7"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "martian-7fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["2.56", "2.56", "2.56", "2.56", "2.56", "2.56"]
+delay_ds = ["2.56", "2.56", "2.56", "2.56", "2.56", "2.56"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-1"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-1-gem"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-1fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-1-glow"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-1-shine"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-2"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-2-gem"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-2fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.01", "1.01", "1.01", "1.01", "1.01", "1.01"]
+delay_ds = ["1.01", "1.01", "1.01", "1.01", "1.01", "1.01"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-2-glow"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.01", "1.01", "1.01", "1.01", "1.01", "1.01"]
+delay_ds = ["1.01", "1.01", "1.01", "1.01", "1.01", "1.01"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-2-shine"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.01", "1.01", "1.01", "1.01", "1.01", "1.01"]
+delay_ds = ["1.01", "1.01", "1.01", "1.01", "1.01", "1.01"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-3"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-3-gem"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-3fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.02", "1.02", "1.02", "1.02", "1.02", "1.02"]
+delay_ds = ["1.02", "1.02", "1.02", "1.02", "1.02", "1.02"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-3-glow"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.02", "1.02", "1.02", "1.02", "1.02", "1.02"]
+delay_ds = ["1.02", "1.02", "1.02", "1.02", "1.02", "1.02"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-3-shine"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.02", "1.02", "1.02", "1.02", "1.02", "1.02"]
+delay_ds = ["1.02", "1.02", "1.02", "1.02", "1.02", "1.02"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-4"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-4-gem"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-4fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.03", "1.03", "1.03", "1.03", "1.03", "1.03"]
+delay_ds = ["1.03", "1.03", "1.03", "1.03", "1.03", "1.03"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-4-glow"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.03", "1.03", "1.03", "1.03", "1.03", "1.03"]
+delay_ds = ["1.03", "1.03", "1.03", "1.03", "1.03", "1.03"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-4-shine"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.03", "1.03", "1.03", "1.03", "1.03", "1.03"]
+delay_ds = ["1.03", "1.03", "1.03", "1.03", "1.03", "1.03"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-5"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-5-gem"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-5fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.04", "1.04", "1.04", "1.04", "1.04", "1.04"]
+delay_ds = ["1.04", "1.04", "1.04", "1.04", "1.04", "1.04"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-5-glow"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.04", "1.04", "1.04", "1.04", "1.04", "1.04"]
+delay_ds = ["1.04", "1.04", "1.04", "1.04", "1.04", "1.04"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-5-shine"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.04", "1.04", "1.04", "1.04", "1.04", "1.04"]
+delay_ds = ["1.04", "1.04", "1.04", "1.04", "1.04", "1.04"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-6"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-6-gem"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-6fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.05", "1.05", "1.05", "1.05", "1.05", "1.05"]
+delay_ds = ["1.05", "1.05", "1.05", "1.05", "1.05", "1.05"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-6-glow"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.05", "1.05", "1.05", "1.05", "1.05", "1.05"]
+delay_ds = ["1.05", "1.05", "1.05", "1.05", "1.05", "1.05"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-6-shine"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.05", "1.05", "1.05", "1.05", "1.05", "1.05"]
+delay_ds = ["1.05", "1.05", "1.05", "1.05", "1.05", "1.05"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-7"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-7-gem"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-7fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.06", "1.06", "1.06", "1.06", "1.06", "1.06"]
+delay_ds = ["1.06", "1.06", "1.06", "1.06", "1.06", "1.06"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-7-glow"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.06", "1.06", "1.06", "1.06", "1.06", "1.06"]
+delay_ds = ["1.06", "1.06", "1.06", "1.06", "1.06", "1.06"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "wizard-7-shine"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.06", "1.06", "1.06", "1.06", "1.06", "1.06"]
+delay_ds = ["1.06", "1.06", "1.06", "1.06", "1.06", "1.06"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eldritch-1"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eldritch-1fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eldritch-2"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eldritch-2fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.51", "1.51", "1.51", "1.51", "1.51", "1.51"]
+delay_ds = ["1.51", "1.51", "1.51", "1.51", "1.51", "1.51"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eldritch-3"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eldritch-3fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.52", "1.52", "1.52", "1.52", "1.52", "1.52"]
+delay_ds = ["1.52", "1.52", "1.52", "1.52", "1.52", "1.52"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eldritch-4"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eldritch-4fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.53", "1.53", "1.53", "1.53", "1.53", "1.53"]
+delay_ds = ["1.53", "1.53", "1.53", "1.53", "1.53", "1.53"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eldritch-5"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eldritch-5fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.54", "1.54", "1.54", "1.54", "1.54", "1.54"]
+delay_ds = ["1.54", "1.54", "1.54", "1.54", "1.54", "1.54"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eldritch-6"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eldritch-6fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.55", "1.55", "1.55", "1.55", "1.55", "1.55"]
+delay_ds = ["1.55", "1.55", "1.55", "1.55", "1.55", "1.55"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eldritch-7"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "eldritch-7fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.56", "1.56", "1.56", "1.56", "1.56", "1.56"]
+delay_ds = ["1.56", "1.56", "1.56", "1.56", "1.56", "1.56"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "precursor-1"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "precursor-1fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5", "1.5"]
+delay_ds = ["1.5", "1.5", "1.5", "1.5", "1.5", "1.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "precursor-2"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "precursor-2fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.51", "1.51", "1.51", "1.51", "1.51", "1.51"]
+delay_ds = ["1.51", "1.51", "1.51", "1.51", "1.51", "1.51"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "precursor-3"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "precursor-3fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.52", "1.52", "1.52", "1.52", "1.52", "1.52"]
+delay_ds = ["1.52", "1.52", "1.52", "1.52", "1.52", "1.52"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "precursor-4"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "precursor-4fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.53", "1.53", "1.53", "1.53", "1.53", "1.53"]
+delay_ds = ["1.53", "1.53", "1.53", "1.53", "1.53", "1.53"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "precursor-5"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "precursor-5fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.54", "1.54", "1.54", "1.54", "1.54", "1.54"]
+delay_ds = ["1.54", "1.54", "1.54", "1.54", "1.54", "1.54"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "precursor-6"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "precursor-6fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1.55", "1.55", "1.55", "1.55", "1.55", "1.55"]
+delay_ds = ["1.55", "1.55", "1.55", "1.55", "1.55", "1.55"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "precursor-7"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "precursor-7fx"
+dirs = 1
+frames = 6
+raw_delay_ds = ["1", "1", "1", "1", "1", "1"]
+delay_ds = ["1", "1", "1", "1", "1", "1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lattice-1"
+dirs = 1
+frames = 1
+raw_delay_ds = []
+delay_ds = ["1"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []
+
+[[states]]
+name = "lattice-1fx"
+dirs = 1
+frames = 4
+raw_delay_ds = ["2.5", "2.5", "2.5", "2.5"]
+delay_ds = ["2.5", "2.5", "2.5", "2.5"]
+loop = 0
+rewind = false
+movement = false
+hotspots_raw = []

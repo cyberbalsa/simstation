@@ -1,0 +1,14 @@
+repository = "https://github.com/goonstation/goonstation.git"
+commit = "1b2b250abb5be747d55e274de0203a59cfc8da78"
+license = "CC-BY-NC-SA-3.0-US"
+import_format = 1
+
+[paths]
+graphics = ["icons", "assets/icons"]
+audio = ["sound"]
+notices = [
+  "LICENSE",
+  "README.md",
+  ".github/AUDIO_GUIDELINES.md",
+  "strings/changelog_attribution/spriters.txt",
+]

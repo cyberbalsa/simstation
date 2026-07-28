@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "definitions": [
+    {
+      "id": "org.simstation.core:structure/floor",
+      "kind": "structure",
+      "replaces": "org.simstation.core:structure/floor",
+      "name_key": "structure.floor",
+      "material_cost": 2,
+      "work_milliticks": 1200,
+      "sprite": "org.simstation.goon:sprite/icons/turf/floors-dmi/white--528cef87d0-o01"
+    }
+  ]
+}
