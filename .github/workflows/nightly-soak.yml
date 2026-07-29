@@ -45,7 +45,7 @@ jobs:
       - name: Set up LuaJIT
         uses: leafo/gh-actions-lua@6919171ccf181b826f44b9bca76307b577217377 # v13
         with:
-          luaVersion: "luajit-2.1.0-beta3"
+          luaVersion: "luajit-2.1"
 
       - name: Run fast audit
         run: python tools/dev.py audit --assets auto

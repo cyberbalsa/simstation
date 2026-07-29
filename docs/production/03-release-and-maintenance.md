@@ -26,7 +26,8 @@ A pull request is ready when:
 4. deterministic and failure/recovery tests cover behavior;
 5. generated artifacts are fresh and reproducible;
 6. author has run `python3 tools/dev.py audit`;
-7. CI passes the required platform/asset/package jobs;
+7. required platform/asset/package evidence is recorded for release-sensitive
+   changes;
 8. reviewer confirms license/notices/SBOM impact; and
 9. performance evidence accompanies a hot-path or budget change.
 
@@ -90,7 +91,8 @@ No open critical/high issue is allowed in stable.
 - A patch release cannot intentionally break an API range or content schema.
 - Removed public IDs receive aliases/migrations for the documented support
   window.
-- Example mods and golden saves from every supported API/schema remain in CI.
+- Example mods and golden saves from every supported API/schema remain covered
+  by the local audit and release validation.
 
 Before 1.0, breakage is permitted only when explicit in release notes and
 reported precisely by the loader.

@@ -115,16 +115,12 @@ truncation, device loss, missing generated files, hook errors, migration
 exceptions, and worker cancellation. Tests may never use untrusted mod code as
 a claim of sandbox security.
 
-## CI gates
+## Validation gates
 
-Pull requests run:
-
-1. `python3 tools/dev.py audit`;
-2. pure tests on Linux;
-3. deterministic golden subset on Windows, Linux, and macOS;
-4. package smoke tests when packaging/runtime files change;
-5. asset fixture builds when compiler/schema files change; and
-6. documentation link/schema-example checks.
+Pull requests and pushes do not run GitHub-hosted CI. Before handoff, authors
+run `python3 tools/dev.py audit` locally and attach any platform, package, or
+asset evidence required by the change. Release candidates still require the
+full cross-platform matrix.
 
 Nightly runs all integration journals, fuzz seed corpus, clean asset
 determinism, long benchmark subset, save compatibility, and 30-shift soak.

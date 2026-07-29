@@ -3,14 +3,10 @@
   "ci": {
     "python": "3.11.9",
     "lua": [
-      "luajit-2.1.0-beta3",
-      "5.1.5"
+      "luajit-2.1"
     ],
     "runners": [
-      "ubuntu-24.04",
-      "windows-2025",
-      "macos-15-intel",
-      "macos-15"
+      "ubuntu-24.04"
     ]
   },
   "github_actions": {
@@ -29,10 +25,6 @@
     "leafo/gh-actions-lua": {
       "revision": "6919171ccf181b826f44b9bca76307b577217377",
       "tag": "v13"
-    },
-    "step-security/msvc-dev-cmd": {
-      "revision": "22c98154b708dbd743e6f27a933cf6ceba3305c4",
-      "tag": "v1.13.1"
     }
   }
 }

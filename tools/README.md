@@ -92,7 +92,8 @@ to a JSON consumer. `--output` writes the same report to a file.
 The 40-tick/s portable gate proves the simulation can supply the 4× scheduler.
 The stricter 12 ms mean / 20 ms p95 release budget remains a reference-machine
 acceptance test and is included in each report. Timing uses process CPU time;
-CI artifacts are trend evidence, not a substitute for the reference machine.
+nightly artifacts are trend evidence, not a substitute for the reference
+machine.
 
 Golden fixtures live in
 [`tests/fixtures/benchmark-baselines.json`](../tests/fixtures/benchmark-baselines.json).
@@ -102,13 +103,14 @@ merely to make a divergence pass.
 
 ## Automation layout
 
-- `ci.yml` runs LuaJIT tests/golden replay on Linux, Windows, and Intel macOS,
-  plus a plain-Lua lane on Apple Silicon, then runs the 100-crew gate on Linux.
 - `nightly-soak.yml` runs one complete shift by default. Manual dispatch can
   select 30 shifts for the M3/release soak.
-- Both workflows skip LFS downloads and preserve JSON benchmark artifacts.
+- Pull requests and pushes do not run GitHub-hosted CI. Authors run
+  `python3 tools/dev.py audit` locally before handoff.
+- The nightly workflow skips LFS downloads and preserves JSON benchmark
+  artifacts.
 - Action revisions and runtime versions are pinned in `toolchain.json`;
   Dependabot opens reviewable action-update pull requests.
 
-GitHub-hosted CI still needs one successful run on each platform before a
-release can claim that runner combination as validated.
+A release can claim a platform only when its required validation evidence was
+recorded separately from the pull-request workflow.

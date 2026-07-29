@@ -31,7 +31,7 @@ change. Review the editable source and generated visual/audio report together.
 
 ## Branch and version policy
 
-- `main` is releasable and protected by audit/CI.
+- `main` is releasable and protected by review plus the mandatory local audit.
 - Work uses focused branches and reviewable commits.
 - Game versions use SemVer. Before 1.0, minor versions are milestone releases.
 - Save, content, asset, audio, and mod API schemas are versioned independently.
