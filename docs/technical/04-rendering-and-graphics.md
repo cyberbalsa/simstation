@@ -138,6 +138,7 @@ The implemented canonical entry points are:
 python3 tools/assets.py fetch-goon
 python3 tools/assets.py import-graphics-source
 python3 tools/assets.py build-graphics
+python3 tools/assets.py build-dm-appearances
 python3 tools/assets.py audit
 ```
 
@@ -285,6 +286,83 @@ may be profiled as optional caches but every package retains the PNG fallback
 ([`newImage`](https://love2d.org/wiki/love.graphics.newImage),
 [`newArrayImage`](https://love2d.org/wiki/love.graphics.newArrayImage)).
 
+## Dynamic lighting
+
+The implemented portable lighting path deliberately divides work between Lua
+and the GPU:
+
+```text
+validated light profiles and bindings
+  → sorted emitter projection
+  → fixed-point tile RGB field with line-of-sight occlusion
+  → 1 texel per world tile RGBA8 Image
+  → one viewport-scissored multiply shader draw
+  → small additive fixture/fire bloom
+```
+
+Lua resolves fixture state, APC lighting-channel service, fire level,
+deterministic flicker, falloff, and opaque-tile visibility. The fragment shader
+does no ray marching and has no emitter array; it samples the filtered light
+texture and multiplies the already-drawn world. Atlas therefore needs a
+192×192, 144 KiB data texture rather than a 6,144×6,144 scene Canvas. The same
+filtered Image drawn with LÖVE's default shader is the mandatory fallback when
+custom shader compilation is unavailable.
+
+The light Image uses `dpiscale = 1`, clamp wrap, no mipmaps, and linear
+filtering. It is drawn at `(0, 0)` with a `32, 32` world-space scale while the
+normal camera transform and viewport scissor are active. Atlas art keeps
+nearest filtering. This preserves the 32px source ratio and the existing
+0.25×, 0.5×, 1×, 2×, and 4× camera alignment while allowing light to interpolate
+between tile centers.
+
+The source-faithful baseline uses Goon's ordinary robust-light constants:
+
+- station ambient is true black; space is full-bright and retains its native
+  starfield;
+- the standard tube is cool white RGB8 `(242, 242, 255)`, brightness 1.6,
+  height 2.4 tiles, and derived radius 3;
+- attenuation is
+  `B × 2.2 / (distance² + height²) - 0.11`, discarded below `2/256`, with
+  source color and brightness applied to the surviving value;
+- walls and closed doors stop a ray after receiving its terminal sample;
+- open doors, windows, grilles, tables, ordinary machinery, and space
+  transmit light; and
+- two touching opaque cardinal tiles close the diagonal between them.
+
+Normal fixture emission requires an installed, unbroken, switched-on fixture
+and served area lighting. For an area with an APC, service currently means the
+grid reaches the area, the controller is operational and unshorted, and its
+`lighting` channel is greater than 1. Goon's channel values `0/1/2/3` therefore
+retain their off/auto-off/on/auto-on effect. Full APC battery discharge and
+load-shedding remain authoritative power-system work; the renderer does not
+invent them. Atlas contains no placed emergency fixture, so ordinary tubes are
+not incorrectly recolored red during an outage.
+
+The current scenario projection still compresses 354 Atlas light appearances
+onto 353 semantic fixture cells. It also does not yet retain 20 placed
+`light_type` color overrides, the 57 area-switch controllers as authoritative
+objects, or two desk-lamp `switchon` overrides. The runtime therefore emits one
+default tube profile per semantic fixture and treats missing area-switch state
+as on. These are importer/entity-model gaps, not shader behavior, and remain
+explicit follow-up fidelity work.
+
+The field rebuilds and uploads only when the normalized emitter list or opaque
+tile signature changes. A stable `power_revision` does not cause a redundant
+upload. Fire uses the same bounded emitter pipeline with an orange profile,
+level curve, and deterministic hash-step flicker; its visible flame and bloom
+remain after the darkness pass. The light field is presentation-only and never
+enters saves, replay hashes, NPC vision, or authoritative simulation results.
+
+Lighting is data-moddable through closed schema-1 `light-profile`,
+`light-binding`, and singleton `lighting-settings` definitions. Profiles own
+RGB8 color, fixed-point radius/height/intensity, falloff, occlusion, bounded
+flicker, priority, and bloom. Bindings select the built-in fixture/fire
+providers, a machine definition, or scenario-scoped source path and declare
+activation/power policy, offset, and optional level curve. The settings
+replacement owns ambient colors, shader/filter choice, and hard budgets of at
+most 4,096 emitters and radius 32 tiles. Invalid data falls back to the
+reviewed core lighting set rather than executing a mod-supplied shader.
+
 ## Mod graphics
 
 Packaged mods ship compiler-produced pages and an index. Loose development mods
@@ -315,17 +393,48 @@ collisions, and decompression bombs.
 - Compare representative animated fixtures against BYOND capture/reference
   output before accepting the importer.
 
-## Implemented foundation
+## Implemented native-map path
 
 `tools/assets.py` has fetched and compiled the complete pinned snapshot into
-eight bundles and 134 atlas pages with source/runtime catalogs. A generated
-foundation selection resolves 29 logical sprites without parsing the
-exhaustive catalog. Its 14 referenced pages cover native turfs, walls,
-windows, grilles, furniture, infrastructure, signage, crew, APC, generator,
-vent, scrubber, fabricator, and refinery art. The presentation renderer
-lazy-loads pages, uses revisioned per-chunk SpriteBatches for imported static
-structure, and draws authored Atlas machines with generated shapes as the
-missing-media fallback.
+eight bundles and 134 atlas pages with source/runtime catalogs. The small
+29-sprite foundation selection remains the portable fallback vocabulary. It is
+not used as a substitute for an imported map's authored tile identity.
+
+For the pinned Atlas crop, `tools/assets.py build-dm-appearances` compiles the
+43,813 ordered turf/object appearance instances emitted by
+`tools/map_import.py` into a map-specific, data-only selection:
+
+- 1,173 reviewed exact type rules;
+- 2,104 selected Goon sprite states;
+- 10,597 frame references and 5,969 unique source rectangles;
+- two compact 2,048×2,048 runtime pages instead of 30 sparsely used full-atlas
+  pages; and
+- 43,802 mapped instances, with 11 explicitly reported decorative/item
+  fallbacks.
+
+The compact compiler keeps the canonical sprite IDs and compares every compact
+frame byte-for-byte with the corresponding full-atlas rectangle during audit.
+The LÖVE runtime lazy-loads only the two compact pages, resolves exact source
+type/icon-state/direction records, bottom-anchors oversized BYOND icons,
+honors map and inherited pixel offsets, and submits contiguous page runs in
+stable painter order. Native appearance activation is gated by the scenario's
+pinned source commit, map path, Git blob, SHA-256, crop, and dimensions.
+
+Editor-only and deferred states are projected at runtime rather than displayed
+as placeholder art. This includes random plating, Supernorn walls, auto
+catwalks, tables, windows/grilles, and the Atlas door families. Door
+open/closed projection covers suffix-based airlocks, poddoors, blast doors,
+wood doors, and stall doors. A semantic replacement layer supplies genuine
+Goon floor, plating, engine-floor, Supernorn wall, reinforced Supernorn wall,
+and Atlas Pyro airlock sprites when construction or dismantling replaces an
+authored map atom.
+
+Native chunks are invalidated by both their local revision and the global
+topology revision so connected sprites also update across chunk boundaries.
+The renderer retains a four-cell source margin because the selected catalog
+contains icons extending up to four tiles beyond their anchor. Underfloor
+utilities and decals remain below turf walls; normal objects remain on the
+object plane.
 
 The runtime keeps Goon's 32×32 source cells square and unscaled at 1×. A
 centered, scissored 7:5 world viewport is built in whole 7×5-tile blocks:
@@ -336,9 +445,12 @@ and a shared snapped camera transform keep rendering and hit testing aligned.
 
 `verify-graphics` compares every one of the 164,558 compiled
 frame-direction cells to its pinned source pixels, and a clean rebuild produces
-identical page/catalog hashes. General page-residency eviction, full
-appearance-layer composition, contact-sheet review, and broader BYOND capture
-fixtures remain M2 work.
+identical page/catalog hashes. The current native catalog deliberately belongs
+to the pinned core Atlas scenario. Pack-owned appearance-catalog registration,
+authoritative constructed-door orientation/appearance identity, full inherited
+DM plane/layer evaluation, animation scheduling, lighting composition, and
+broader BYOND capture fixtures remain follow-up work rather than silent parity
+claims.
 
 The upstream inventory, source license, modification records, and broad
 contributor credit are governed by the

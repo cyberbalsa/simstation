@@ -74,10 +74,11 @@ portable fallback, benchmark proving material value, and migration analysis.
 | makelove | reproducible desktop packaging | no |
 | [AppleCake](https://github.com/EngineerSmith/AppleCake) | opt-in LÖVE trace profiling in developer builds | no |
 
-Tool versions and download hashes live in the repository tool lock. CI uses
-those versions; `latest` is forbidden in release workflows. Asset compiler
-containers/tool archives must pin FFmpeg, libopenmpt, Pillow, and Python patch
-versions because their output bytes participate in provenance.
+Tool versions and download hashes live in the repository tool lock. Scheduled
+automation uses those versions; `latest` is forbidden in release workflows.
+Asset compiler containers/tool archives must pin FFmpeg, libopenmpt, Pillow,
+and Python patch versions because their output bytes participate in
+provenance.
 
 ## Unified developer interface
 
@@ -89,7 +90,7 @@ python3 tools/dev.py info       backward-compatible JSON doctor alias
 python3 tools/dev.py run        start the current game
 python3 tools/dev.py test       run deterministic Lua and map-import fixtures
 python3 tools/dev.py audit      mandatory local handoff gate
-python3 tools/dev.py ci         fast CI-equivalent audit and smoke benchmark
+python3 tools/dev.py ci         fast audit and smoke benchmark
 python3 tools/dev.py benchmark <scenario>
 python3 tools/dev.py soak --shifts <count>
 python3 tools/dev.py mod validate|test|package <folder>

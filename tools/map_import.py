@@ -79,6 +79,7 @@ class Atom:
     path: str
     variables: tuple[str, ...]
     literal_overrides: tuple[tuple[str, int | str | bool], ...] = ()
+    appearance_overrides: tuple[tuple[str, int | str], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -322,26 +323,60 @@ def _literal_override_value(value: str) -> int | str | bool | None:
     return None
 
 
-def _literal_overrides(content: str) -> tuple[tuple[str, int | str | bool], ...]:
-    """Extract top-level ``name = literal`` assignments without running DM."""
+def _override_segments(content: str) -> list[str]:
+    """Split top-level map override assignments without evaluating DM."""
 
-    assignments: dict[str, int | str | bool] = {}
+    masked = list(content)
+    offset = 0
+    quote = ""
+    escaped = False
+    while offset < len(content):
+        character = content[offset]
+        if quote:
+            if escaped:
+                escaped = False
+            elif character == "\\":
+                escaped = True
+            elif character == quote:
+                quote = ""
+            offset += 1
+            continue
+        if character in {'"', "'"}:
+            quote = character
+            offset += 1
+            continue
+        if content.startswith("//", offset):
+            end = content.find("\n", offset + 2)
+            end = len(content) if end < 0 else end
+            masked[offset:end] = " " * (end - offset)
+            offset = end
+            continue
+        if content.startswith("/*", offset):
+            end = content.find("*/", offset + 2)
+            end = len(content) if end < 0 else end + 2
+            for index in range(offset, end):
+                if masked[index] != "\n":
+                    masked[index] = " "
+            offset = end
+            continue
+        offset += 1
+    content = "".join(masked)
     offset = 0
     start = 0
-    quoted = False
+    quote = ""
     escaped = False
     parens = 0
     brackets = 0
     segments: list[str] = []
     while offset < len(content):
         character = content[offset]
-        if quoted:
+        if quote:
             if escaped:
                 escaped = False
             elif character == "\\":
                 escaped = True
-            elif character == '"':
-                quoted = False
+            elif character == quote:
+                quote = ""
             offset += 1
             continue
         if content.startswith("//", offset):
@@ -352,8 +387,8 @@ def _literal_overrides(content: str) -> tuple[tuple[str, int | str | bool], ...]
             end = content.find("*/", offset + 2)
             offset = len(content) if end < 0 else end + 2
             continue
-        if character == '"':
-            quoted = True
+        if character in {'"', "'"}:
+            quote = character
         elif character == "(":
             parens += 1
         elif character == ")":
@@ -367,14 +402,77 @@ def _literal_overrides(content: str) -> tuple[tuple[str, int | str | bool], ...]
             start = offset + 1
         offset += 1
     segments.append(content[start:])
+    return segments
 
-    for segment in segments:
+
+def _literal_overrides(content: str) -> tuple[tuple[str, int | str | bool], ...]:
+    """Extract top-level ``name = literal`` assignments without running DM."""
+
+    assignments: dict[str, int | str | bool] = {}
+    for segment in _override_segments(content):
         match = re.match(r"\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$", segment, re.S)
         if not match:
             continue
         decoded = _literal_override_value(match.group(2))
         if decoded is not None:
             assignments[match.group(1)] = decoded
+    return tuple(sorted(assignments.items()))
+
+
+BYOND_DIRECTIONS = {
+    1: "north",
+    2: "south",
+    4: "east",
+    5: "northeast",
+    6: "southeast",
+    8: "west",
+    9: "northwest",
+    10: "southwest",
+}
+
+
+def _appearance_overrides(content: str) -> tuple[tuple[str, int | str], ...]:
+    """Preserve safe visual overrides as portable, fixed-point metadata."""
+
+    assignments: dict[str, int | str] = {}
+    for segment in _override_segments(content):
+        match = re.match(
+            r"\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$",
+            segment,
+            re.S,
+        )
+        if not match:
+            continue
+        name, raw_value = match.groups()
+        raw_value = raw_value.strip()
+        if name == "icon":
+            resource = re.fullmatch(r"'(icons/[^'\\]+\.dmi)'", raw_value)
+            if resource and ".." not in PurePosixPath(resource.group(1)).parts:
+                assignments["icon_override"] = resource.group(1)
+        elif name == "icon_state":
+            value = _literal_override_value(raw_value)
+            if isinstance(value, str) and value:
+                assignments["icon_state_override"] = value
+        elif name == "dir":
+            value = _literal_override_value(raw_value)
+            if type(value) is int and value in BYOND_DIRECTIONS:
+                assignments["direction"] = BYOND_DIRECTIONS[value]
+        elif name in {"pixel_x", "pixel_y"}:
+            value = _literal_override_value(raw_value)
+            if type(value) is int and -4096 <= value <= 4096:
+                assignments[name] = value
+        elif name == "layer":
+            try:
+                layer = Decimal(raw_value)
+            except InvalidOperation:
+                continue
+            scaled = layer * 1000
+            if (
+                layer.is_finite()
+                and scaled == scaled.to_integral_value()
+                and abs(scaled) <= 1_000_000_000
+            ):
+                assignments["layer_milli"] = int(scaled)
     return tuple(sorted(assignments.items()))
 
 
@@ -396,16 +494,19 @@ def _parse_atoms(body: str, source: str) -> tuple[Atom, ...]:
         offset = _skip_ignored(body, match.end())
         variables: tuple[str, ...] = ()
         literal_overrides: tuple[tuple[str, int | str | bool], ...] = ()
+        appearance_overrides: tuple[tuple[str, int | str], ...] = ()
         if offset < len(body) and body[offset] == "{":
             overrides, offset = _balanced_content(body, offset, "{", "}", source)
             variables = _variable_names(overrides)
             literal_overrides = _literal_overrides(overrides)
+            appearance_overrides = _appearance_overrides(overrides)
             offset = _skip_ignored(body, offset)
         atoms.append(
             Atom(
                 path=path,
                 variables=variables,
                 literal_overrides=literal_overrides,
+                appearance_overrides=appearance_overrides,
             )
         )
         if offset < len(body) and body[offset] != ",":
@@ -991,6 +1092,24 @@ def _is_door_object(path: str) -> bool:
     return _is_type_path(path, "/obj/machinery/door")
 
 
+def _door_atom_is_open(atom: Atom) -> bool:
+    overrides = dict(atom.literal_overrides)
+    return bool(
+        _is_door_object(atom.path)
+        and (
+            overrides.get("density") == 0
+            or overrides.get("icon_state") in {
+                "pdoor0",
+                "bdoorsingle0",
+                "bdoorleft0",
+                "bdoormid0",
+                "bdoorright0",
+                "wood0",
+            }
+        )
+    )
+
+
 def _is_window_object(path: str) -> bool:
     return _is_type_path(path, "/obj/window") or _is_type_path(
         path, "/obj/mapping_helper/wingrille_spawn"
@@ -1179,6 +1298,103 @@ def _native_coordinate(
     return source_x - min_x + 1, max_y - source_y + 1
 
 
+def _appearance_object(path: str) -> bool:
+    """Keep runtime-visible objects while dropping editor-only helpers."""
+
+    if not _is_type_path(path, "/obj"):
+        return False
+    if _is_type_path(path, "/obj/mapping_helper/wingrille_spawn"):
+        return True
+    return not any(
+        _is_type_path(path, root)
+        for root in (
+            "/obj/abstract",
+            "/obj/effects",
+            "/obj/landmark",
+            "/obj/mapping_helper",
+            "/obj/overlay",
+        )
+    )
+
+
+def _path_direction(path: str) -> str:
+    segments = path.lower().strip("/").split("/")
+    for direction in (
+        "northeast",
+        "northwest",
+        "southeast",
+        "southwest",
+        "north",
+        "south",
+        "east",
+        "west",
+    ):
+        if (
+            direction in segments
+            or any(
+                segment.startswith(direction + "_")
+                or segment.endswith("_" + direction)
+                or segment.startswith("autoname_" + direction)
+                for segment in segments
+            )
+        ):
+            return direction
+    return "south"
+
+
+def _space_icon_state(source_x: int, source_y: int, z_level: int) -> str:
+    """Mirror `/turf/space/New()` at the pinned Goon revision."""
+
+    value = ((source_x + source_y) ^ (~(source_x * source_y) + z_level)) % 25
+    return str(value + 1)
+
+
+def collect_appearances(
+    parsed: ParsedMap,
+    selected: dict[tuple[int, int, int], str],
+    crop: tuple[int, int, int, int],
+) -> list[dict[str, int | str]]:
+    """Return deterministic, source-ordered DM appearance records."""
+
+    width = crop[2] - crop[0] + 1
+    appearances: list[dict[str, int | str]] = []
+    for coordinate, key in selected.items():
+        native_x, native_y = _native_coordinate(coordinate, crop)
+        index = (native_y - 1) * width + native_x
+        entry = parsed.entries[key]
+        for order, atom in enumerate(entry.atoms, 1):
+            kind = _atom_kind(atom.path)
+            if kind == "turf":
+                role = "turf"
+            elif kind == "object" and _appearance_object(atom.path):
+                role = "object"
+            else:
+                continue
+            overrides = dict(atom.appearance_overrides)
+            record: dict[str, int | str] = {
+                "index": index,
+                "order": order,
+                "role": role,
+                "source_path": atom.path,
+                "direction": str(
+                    overrides.pop("direction", _path_direction(atom.path))
+                ),
+            }
+            record.update(overrides)
+            if (
+                atom.path == "/turf/space"
+                and "icon_state_override" not in record
+            ):
+                record["resolved_icon_state"] = _space_icon_state(
+                    coordinate[0],
+                    coordinate[1],
+                    coordinate[2],
+                )
+            appearances.append(record)
+    appearances.sort(key=lambda record: (record["index"], record["order"]))
+    return appearances
+
+
 def _station_area_path(entry: DictionaryEntry) -> str:
     for atom in entry.atoms:
         if (
@@ -1226,8 +1442,15 @@ def _cell_contract(
     structure = "wall" if any(_is_wall_turf(path) for path in turfs) else "empty"
     if any(_is_window_object(path) for path in objects):
         structure = "wall"
-    if any(_is_door_object(path) for path in objects):
-        structure = "door_closed"
+    door_atoms = tuple(
+        atom for atom in entry.atoms if _is_door_object(atom.path)
+    )
+    if door_atoms:
+        structure = (
+            "door_open"
+            if all(_door_atom_is_open(atom) for atom in door_atoms)
+            else "door_closed"
+        )
     cable = any(_is_type_path(path, "/obj/cable") for path in objects)
     pressurized = bool(
         area_path
@@ -1237,7 +1460,7 @@ def _cell_contract(
     )
     area_id = area_ids.get(area_path, 0)
     access: str | bool = False
-    if structure == "door_closed":
+    if structure in {"door_closed", "door_open"}:
         access = _door_access(objects, area_path)
     turf_kind = _turf_kind(turfs)
     wall_kind = None
@@ -1402,6 +1625,7 @@ def compile_scenario(
     }
     if not selected:
         raise MapError("crop contains no mapped cells on the requested z level")
+    appearances = collect_appearances(parsed, selected, crop)
 
     area_paths = sorted(
         {
@@ -1687,6 +1911,7 @@ def compile_scenario(
             "default_palette": 1,
             "palette": palette,
             "runs": runs,
+            "appearances": appearances,
         },
         "fixtures": fixtures,
         "spawns": spawns,

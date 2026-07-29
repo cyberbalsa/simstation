@@ -417,6 +417,48 @@ this permits source-faithful shutter-plus-window layers. A `crate` also carries
 occupancy while allowing a source-layered machine fixture to retain the same
 coordinate as dense furniture.
 
+### Ordered native appearances
+
+`map.appearances` is an optional, sorted presentation-provenance array. It does
+not replace the palette's authoritative simulation semantics. Each record
+names one source turf or object at a linear `index` and has an `order` unique
+within that cell. The closed record fields are:
+
+| Field | Required | Meaning |
+|---|---:|---|
+| `index` | yes | 1-based in-bounds cell index |
+| `order` | yes | positive source painter order, unique at that index |
+| `role` | yes | `turf` or `object` |
+| `source_path` | yes | safe absolute DM type path under the matching `/turf` or `/obj` root |
+| `direction` | no | one of the eight canonical BYOND directions |
+| `icon_override` | no | safe relative `icons/*.dmi` path retained from a literal map override |
+| `icon_state_override` | no | bounded literal map state |
+| `resolved_icon_state` | no | deterministic importer-resolved runtime state, such as a space variant |
+| `pixel_x`, `pixel_y` | no | signed source offsets in whole pixels |
+| `layer_milli` | no | literal layer multiplied by 1,000 and stored as an integer |
+
+Records sort by `(index, order)`, may not duplicate that pair, and are capped at
+one million per map. The importer masks comments before reading override blocks
+and accepts only the closed scalar visual subset above; arbitrary DM
+expressions, paths outside `icons/*.dmi`, booleans posing as numeric offsets,
+unknown keys, and executable source are rejected.
+
+The core Atlas scenario carries 43,813 records: one turf for every cell plus
+6,949 source objects. Its compact runtime catalog activates only when the
+scenario provenance matches the catalog's pinned commit, map path, Git blob,
+SHA-256, crop, and dimensions. A scenario with matching-looking type strings
+but different provenance therefore uses the ordinary semantic renderer instead
+of silently borrowing Atlas art rules.
+
+Appearance records describe the authored initial atoms. When authoritative
+runtime state changes, the native renderer first hides records incompatible
+with the current space/floor/plating/engine-floor, standard/reinforced-wall, or
+door state. Connected masks and open/closed families are recomputed from the
+world. If construction or dismantling leaves no compatible native record, the
+Atlas catalog supplies a reviewed Goon semantic default. These replacements are
+presentation fallbacks; saves continue to serialize authoritative tile,
+structure, feature, and interaction state rather than imported DM paths.
+
 ## Areas
 
 `areas` is an array with contiguous `id` values equal to 1-based array

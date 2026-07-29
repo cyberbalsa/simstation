@@ -122,6 +122,26 @@
       ]
     },
     {
+      "canonical_task": "/root/machine_fidelity_tests",
+      "display_name": null,
+      "archive": "dm-appearance-import-audit.md",
+      "last_observed_status": "appearance import, compact-manifest, and dynamic native visual regressions completed; focused and standard tests passed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "observable work record with upstream evidence, implementation contract, coordination, generated-output counts, two focused regression follow-ups, and validation results",
+      "topics": [
+        "DMM appearance overrides",
+        "pinned DM static appearance index",
+        "compact Goon appearance selection",
+        "map-editor placeholder projection",
+        "catwalk connection masks",
+        "wingrille helper expansion",
+        "twotone macro floor states",
+        "bidirectional native door states",
+        "simulation-created native map states",
+        "renderer camera overscan"
+      ]
+    },
+    {
       "canonical_task": "/root/machine_docs_renderer",
       "display_name": null,
       "archive": "machine-docs-renderer.md",
@@ -395,6 +415,104 @@
         "Atlas source coverage",
         "scenario palette validation",
         "lattice and catwalk traversal"
+      ]
+    },
+    {
+      "canonical_task": "/root/machine_docs_renderer",
+      "display_name": null,
+      "archive": "tile-visual-regression.md",
+      "last_observed_status": "implementation and full repository audit completed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible work report with fixture contract, validation results, and externally visible progress updates",
+      "topics": [
+        "Goon tile visual regression",
+        "fallback and placeholder detection",
+        "DMI state and direction fidelity",
+        "atlas pixel provenance",
+        "static painter ordering",
+        "Git LFS-tolerant tests"
+      ]
+    },
+    {
+      "canonical_task": "/root/compact_map_atlas",
+      "display_name": null,
+      "archive": "compact-map-atlas.md",
+      "last_observed_status": "compact compiler, generated output, audit, and archive completed; one stale test expectation reported to parent",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible work report with generated hashes, validation results, and externally visible coordination messages",
+      "topics": [
+        "compact Goon map appearance atlas",
+        "deterministic sprite repacking",
+        "pixel-exact provenance validation",
+        "DEFINE_FLOORS static appearance expansion",
+        "Git LFS runtime pages"
+      ]
+    },
+    {
+      "canonical_task": "/root/visual_runtime_review",
+      "display_name": null,
+      "archive": "visual-runtime-review.md",
+      "last_observed_status": "read-only production review completed; focused runtime, catalog, importer, generated-data, and upstream checks reported",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible work report with runtime smoke evidence and externally visible coordination messages",
+      "topics": [
+        "native Goon map runtime review",
+        "dynamic appearance state projection",
+        "painter ordering and culling",
+        "connected tile parity",
+        "catalog mod extensibility",
+        "compact atlas runtime performance"
+      ]
+    },
+    {
+      "canonical_task": "/root/lighting_runtime_review",
+      "display_name": null,
+      "archive": "lighting-runtime-review.md",
+      "last_observed_status": "read-only dynamic-lighting design and landed-implementation reviews completed; desktop and GLES checks passed; invalidation, ordering, offset, fallback-test, and aggregate-budget findings reported",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "observable read-only audit and implementation-review addendum with focused reproductions, desktop/GLES self-tests, exact integration points, invalidation rules, fallback ladder, and acceptance findings",
+      "topics": [
+        "dynamic station lighting",
+        "CPU occlusion field",
+        "LÖVE shader and multiply composition",
+        "chunk and power invalidation",
+        "camera DPI and zoom alignment",
+        "portable non-Canvas fallback",
+        "lighting tests and performance limits"
+      ]
+    },
+    {
+      "canonical_task": "/root/lighting_mod_contract",
+      "display_name": null,
+      "archive": "lighting-mod-contract.md",
+      "last_observed_status": "architecture audit and archive completed; no production code or generated assets changed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible report with current-state census, smallest shippable schema, APC integration decision, target contract, budgets, and tests",
+      "topics": [
+        "dynamic lighting mod contract",
+        "light profiles and bindings",
+        "APC lighting channel service",
+        "emergency lights and fire",
+        "deterministic flicker and occlusion",
+        "content validation and runtime budgets",
+        "typed lighting hooks"
+      ]
+    },
+    {
+      "canonical_task": "/root/goon_lighting_research",
+      "display_name": null,
+      "archive": "goon-lighting-research.md",
+      "last_observed_status": "pinned-source dynamic-lighting research and implementation handoff completed; no production code changed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible work report with source constants, Atlas census, v1 defaults, implementation recommendations, and externally visible follow-up",
+      "topics": [
+        "Goonstation robust lighting",
+        "fixture colors and falloff",
+        "opacity and light occlusion",
+        "power and emergency lighting",
+        "fire and simple lights",
+        "space starlight and ambient darkness",
+        "portable LÖVE lighting implementation"
       ]
     }
   ]

@@ -19,6 +19,9 @@ local RuntimeContent = require("src.content.runtime")
 local Camera = require("src.presentation.camera")
 local Ui = require("src.presentation.ui")
 local World = require("src.core.world")
+local LightField = require("src.presentation.light_field")
+local LightSources = require("src.presentation.light_sources")
+local LightingContent = require("src.content.lighting")
 
 local tests = {}
 
@@ -159,6 +162,1086 @@ test("camera keeps native pixels aligned inside its world viewport", function()
   truthy(not camera:contains_screen_point(810, 60))
 end)
 
+test("renderer requests four tiles of camera overscan", function()
+  local previous_love = rawget(_G, "love")
+  local previous_renderer = package.loaded["src.presentation.renderer"]
+  _G.love = {
+    graphics = {
+      setScissor = function() end,
+      clear = function() end,
+      setColor = function() end,
+      getStats = function()
+        return { drawcalls = 0 }
+      end,
+    },
+  }
+  package.loaded["src.presentation.renderer"] = nil
+
+  local ok, test_error = xpcall(function()
+    local Renderer = require("src.presentation.renderer")
+    local world = World.new(32, 32)
+    local requested_margin
+    local requested_bounds
+    local camera = {
+      zoom = 1,
+      visible_tile_bounds = function(_, requested_world, margin)
+        equal(requested_world, world)
+        requested_margin = margin
+        return 2, 3, 8, 9
+      end,
+      viewport_rect = function()
+        return 0, 0, 320, 240
+      end,
+      apply = function() end,
+      finish = function() end,
+    }
+    local renderer = {
+      map_appearance = {
+        draw = function(_, requested_world, min_x, min_y, max_x, max_y)
+          equal(requested_world, world)
+          requested_bounds = { min_x, min_y, max_x, max_y }
+          return true, 0
+        end,
+        visible_chunks = 1,
+        rebuilt_chunks = 0,
+      },
+      _draw_static = function() end,
+      _draw_overlays = function() end,
+      _draw_machines = function() end,
+      _draw_crew = function() end,
+      _update_lighting = function() end,
+      _draw_light_field = function() end,
+      _draw_light_glows = function() end,
+      _draw_foreground_effects = function() end,
+      _draw_cursor = function() end,
+    }
+    Renderer.draw(renderer, {
+      world = world,
+      machines = {},
+      crew = {},
+    }, camera)
+    equal(requested_margin, 4)
+    equal(#requested_bounds, 4)
+    equal(requested_bounds[1], 2)
+    equal(requested_bounds[2], 3)
+    equal(requested_bounds[3], 8)
+    equal(requested_bounds[4], 9)
+  end, debug.traceback)
+
+  package.loaded["src.presentation.renderer"] = previous_renderer
+  _G.love = previous_love
+  if not ok then
+    error(test_error, 0)
+  end
+end)
+
+local function lit_test_world(width, height)
+  local world = World.new(width, height)
+  world.areas = {
+    { id = "test:scenario-area/test/room", name = "Room" },
+  }
+  world.area_powered[1] = true
+  for index = 1, world.size do
+    world.tile[index] = Constants.TILE.FLOOR
+    world.turf_kind[index] = Constants.TURF.FLOOR
+    world.area[index] = 1
+    world.powered[index] = true
+  end
+  return world
+end
+
+test("tile light field blocks walls, doors, and closed diagonal corners", function()
+  local contract = LightingContent.resolve(nil)
+  local profile = contract.profiles[
+    "org.simstation.core:light-profile/goon-tube"
+  ]
+  local world = lit_test_world(7, 5)
+  local source = {
+    id = "test-source",
+    index = assert(world:index(2, 3)),
+    tile_x = 2,
+    tile_y = 3,
+    x_256 = (2 - 1) * 256 + 128,
+    y_256 = (3 - 1) * 256 + 128,
+    radius_256 = profile.radius_256,
+    level_ppm = 1000000,
+    profile = profile,
+  }
+  local wall = assert(world:index(4, 3))
+  world.structure[wall] = Constants.STRUCTURE.WALL
+  local field = LightField.build(world, contract.settings, { source })
+  local height = profile.height_256 / 256
+  local attenuation =
+    1.6 * 2.2 / (height * height) - 0.11
+  local expected_source_red = math.floor(
+    profile.color_srgb8[1]
+      * (1.6 * attenuation)
+      * LightField.UNITS
+      / 255
+      + 0.5
+  )
+  equal(field.red[source.index], expected_source_red,
+    "Goon robust-light attenuation constants drifted")
+  truthy(field:channel(wall, 1) > 0, "opaque target should receive edge light")
+  equal(field:channel(assert(world:index(5, 3)), 1), 0)
+
+  world.structure[wall] = Constants.STRUCTURE.DOOR_OPEN
+  field = LightField.build(world, contract.settings, { source })
+  truthy(field:channel(assert(world:index(5, 3)), 1) > 0)
+  world.structure[wall] = Constants.STRUCTURE.DOOR_CLOSED
+  field = LightField.build(world, contract.settings, { source })
+  equal(field:channel(assert(world:index(5, 3)), 1), 0)
+
+  world.structure[wall] = Constants.STRUCTURE.EMPTY
+  world:set_feature(wall, Constants.FEATURE.WINDOW, true)
+  field = LightField.build(world, contract.settings, { source })
+  truthy(field:channel(assert(world:index(5, 3)), 1) > 0,
+    "transparent window should transmit light")
+
+  local corner_world = lit_test_world(4, 4)
+  corner_world.structure[assert(corner_world:index(3, 2))] =
+    Constants.STRUCTURE.WALL
+  corner_world.structure[assert(corner_world:index(2, 3))] =
+    Constants.STRUCTURE.WALL
+  truthy(not LightField.line_visible(corner_world, 2, 2, 3, 3),
+    "two opaque cardinal neighbors must close a diagonal corner")
+  corner_world.structure[assert(corner_world:index(2, 3))] =
+    Constants.STRUCTURE.EMPTY
+  truthy(LightField.line_visible(corner_world, 2, 2, 3, 3),
+    "one open side should transmit a diagonal ray")
+
+  local footprint_world = lit_test_world(7, 7)
+  local footprint_source = {
+    id = "footprint-source",
+    index = assert(footprint_world:index(4, 4)),
+    tile_x = 4,
+    tile_y = 4,
+    x_256 = (4 - 1) * 256 + 128,
+    y_256 = (4 - 1) * 256 + 128,
+    radius_256 = profile.radius_256,
+    level_ppm = 1000000,
+    profile = profile,
+  }
+  field = LightField.build(
+    footprint_world,
+    contract.settings,
+    { footprint_source }
+  )
+  equal(field.candidate_cells, 49,
+    "Goon view(3) should project a square 7x7 candidate footprint")
+  truthy(field:channel(assert(footprint_world:index(1, 1)), 1) > 0,
+    "Goon robust attenuation should retain admitted corner samples")
+end)
+
+test("light sources follow fixture state, APC lighting, fire, and budgets", function()
+  local contract = LightingContent.resolve(nil)
+  local world = lit_test_world(3, 3)
+  local fixture = assert(world:index(2, 2))
+  world:set_feature(fixture, Constants.FEATURE.LIGHT, true)
+  local apc = {
+    id = 1,
+    kind = "apc",
+    index = assert(world:index(1, 1)),
+    status = { broken = false },
+    data = {
+      lighting = 3,
+      equipment = 3,
+      environ = 3,
+      operating = true,
+      do_not_operate = false,
+      shorted = false,
+    },
+  }
+  local fixture_binding
+  for binding_index = 1, #contract.bindings do
+    local binding = contract.bindings[binding_index]
+    if binding.id ==
+      "org.simstation.core:light-binding/station-fixtures"
+    then
+      fixture_binding = binding
+    end
+  end
+  truthy(fixture_binding, "missing fixture light binding")
+  fixture_binding.offset_x_256 = 256
+  local emitters, first_signature =
+    LightSources.collect(world, { apc }, nil, contract, 20)
+  equal(#emitters, 1)
+  equal(emitters[1].index, fixture)
+  equal(emitters[1].tile_x, 3,
+    "cross-tile binding offsets must move the LOS origin")
+  local shifted_field = LightField.build(world, contract.settings, emitters)
+  truthy(
+    shifted_field:channel(assert(world:index(3, 2)), 1)
+      > shifted_field:channel(fixture, 1),
+    "cross-tile binding offsets must move the projected light center"
+  )
+
+  local repeated, repeated_signature =
+    LightSources.collect(world, { apc }, nil, contract, 20)
+  equal(repeated_signature, first_signature)
+  equal(repeated[1].level_ppm, emitters[1].level_ppm)
+
+  apc.data.lighting = 1
+  emitters = LightSources.collect(world, { apc }, nil, contract, 20)
+  equal(#emitters, 0, "APC auto-off must disable normal area fixtures")
+  apc.data.lighting = 3
+  apc.data.shorted = true
+  emitters = LightSources.collect(world, { apc }, nil, contract, 20)
+  equal(#emitters, 0, "shorted APC must not serve its lighting channel")
+  apc.data.shorted = false
+
+  local state = world:ensure_interaction_state(fixture, "light", {})
+  state.broken = true
+  emitters = LightSources.collect(world, { apc }, nil, contract, 20)
+  equal(#emitters, 0)
+  state.broken = false
+  world.fire[fixture] = 4
+  local dropped, work_units
+  emitters, _, dropped, work_units =
+    LightSources.collect(world, { apc }, nil, contract, 20)
+  equal(#emitters, 2, "fixture and fire providers should compose")
+  truthy(emitters[1].id < emitters[2].id, "emitters must have stable ordering")
+  equal(dropped, 0)
+  equal(work_units, 294)
+
+  contract.settings.max_work_units = 147
+  emitters, _, dropped, work_units =
+    LightSources.collect(world, { apc }, nil, contract, 20)
+  equal(#emitters, 1, "aggregate light work budget must truncate emitters")
+  truthy(emitters[1].id:find("/fire#", 1, true),
+    "higher-priority fire light should survive the work budget")
+  equal(dropped, 1)
+  equal(work_units, 147)
+
+  local space = assert(world:index(3, 3))
+  local projection_before = LightField.projection_signature(world)
+  world.tile[space] = Constants.TILE.SPACE
+  truthy(
+    LightField.projection_signature(world) ~= projection_before,
+    "space/floor ambient class must enter the projection signature"
+  )
+  local field = LightField.build(world, contract.settings, {})
+  equal(field:channel(space, 1), LightField.UNITS)
+  equal(field:channel(assert(world:index(1, 3)), 1), 0)
+
+  local machine_before = LightSources.machine_signature({ apc })
+  apc.data.lighting = 1
+  truthy(
+    LightSources.machine_signature({ apc }) ~= machine_before,
+    "APC lighting channel must enter the machine signature"
+  )
+end)
+
+test("representative Goon room resolves native sprites in painter order", function()
+  local function read_json(path)
+    local handle = assert(io.open(path, "rb"))
+    local value = Json.decode(handle:read("*a"))
+    handle:close()
+    return value
+  end
+
+  local function array_equal(actual, expected, message)
+    equal(#actual, #expected, (message or "array lengths differ") .. " length")
+    for index = 1, #expected do
+      equal(
+        actual[index],
+        expected[index],
+        string.format("%s at index %d", message or "arrays differ", index)
+      )
+    end
+  end
+
+  local fixture = read_json("tests/fixtures/visual-room.json")
+  local foundation = read_json(
+    "assets/runtime/goon/graphics/foundation.json"
+  )
+  local previous_love = rawget(_G, "love")
+  local previous_renderer = package.loaded["src.presentation.renderer"]
+  local previous_atlas = package.loaded["src.assets.atlas_catalog"]
+
+  local function mock_image(path, width, height)
+    local image = {
+      path = path,
+      width = width,
+      height = height,
+    }
+    function image:setFilter() end
+    function image:setWrap() end
+    function image:getWidth()
+      return self.width
+    end
+    function image:getHeight()
+      return self.height
+    end
+    return image
+  end
+
+  local function mock_batch(image)
+    local batch = {
+      image = image,
+      entries = {},
+    }
+    function batch:setColor() end
+    function batch:add(...)
+      self.entries[#self.entries + 1] = { ... }
+    end
+    function batch:flush() end
+    return batch
+  end
+
+  _G.love = {
+    filesystem = {
+      read = function(path)
+        local handle, open_error = io.open(path, "rb")
+        if not handle then
+          return nil, open_error
+        end
+        local source = handle:read("*a")
+        handle:close()
+        return source
+      end,
+    },
+    image = {
+      newImageData = function(width, height)
+        local data = {
+          width = width,
+          height = height,
+        }
+        function data:setPixel() end
+        return data
+      end,
+    },
+    graphics = {
+      newImage = function(source)
+        if type(source) == "string" then
+          return mock_image(source, 2048, 2048)
+        end
+        return mock_image("__white__", source.width, source.height)
+      end,
+      newQuad = function(x, y, width, height)
+        return {
+          x = x,
+          y = y,
+          w = width,
+          h = height,
+        }
+      end,
+      newSpriteBatch = function(image)
+        return mock_batch(image)
+      end,
+    },
+  }
+  package.loaded["src.presentation.renderer"] = nil
+  package.loaded["src.assets.atlas_catalog"] = nil
+
+  local ok, test_error = xpcall(function()
+    local Renderer = require("src.presentation.renderer")
+    local world = World.new(fixture.room.width, fixture.room.height)
+    local renderer = Renderer.new(world)
+
+    equal(foundation.source_commit, fixture.source_commit)
+    equal(
+      #Stable.sorted_keys(foundation.sprites),
+      fixture.catalog.sprite_aliases
+    )
+    equal(#foundation.pages, fixture.catalog.referenced_pages)
+    truthy(
+      renderer.media_enabled,
+      "representative room aliases must not fall back to placeholder shapes"
+    )
+
+    local page_paths = {}
+    for page_index = 1, #foundation.pages do
+      local page = foundation.pages[page_index]
+      page_paths[page.bundle .. ":" .. tostring(page.page)] =
+        "assets/runtime/goon/graphics/" .. page.runtime_path
+    end
+
+    local drawable_aliases = {}
+    for _, alias in ipairs(Stable.sorted_keys(fixture.aliases)) do
+      local expected = fixture.aliases[alias]
+      local entry = assert(
+        foundation.sprites[alias],
+        "foundation catalog is missing alias " .. alias
+      )
+      equal(
+        renderer.media_aliases[alias],
+        alias,
+        "static alias must not be remapped to a placeholder: " .. alias
+      )
+      equal(entry.id, expected.id, "sprite ID drift for " .. alias)
+      equal(
+        entry.source_path,
+        expected.source_path,
+        "source DMI drift for " .. alias
+      )
+      equal(
+        entry.source_state,
+        expected.source_state,
+        "source DMI state drift for " .. alias
+      )
+      equal(
+        entry.source_state_occurrence,
+        expected.source_state_occurrence,
+        "source DMI occurrence drift for " .. alias
+      )
+      equal(entry.cell_width, fixture.catalog.cell_size)
+      equal(entry.cell_height, fixture.catalog.cell_size)
+      equal(entry.dirs, #expected.directions)
+      equal(
+        #Stable.sorted_keys(entry.directions),
+        #expected.directions,
+        "direction count drift for " .. alias
+      )
+
+      for direction_index = 1, #expected.directions do
+        local direction = expected.directions[direction_index]
+        local frame = assert(
+          entry.directions[direction],
+          alias .. " is missing direction " .. direction
+        )[1]
+        local sprite = assert(renderer.atlas:sprite(alias, direction, 1))
+        equal(sprite.alias, alias)
+        equal(sprite.id, expected.id)
+        equal(sprite.width, fixture.catalog.cell_size)
+        equal(sprite.height, fixture.catalog.cell_size)
+        equal(sprite.quad.x, frame.x)
+        equal(sprite.quad.y, frame.y)
+        equal(sprite.quad.w, frame.w)
+        equal(sprite.quad.h, frame.h)
+        equal(
+          sprite.image.path,
+          assert(page_paths[entry.bundle .. ":" .. tostring(frame.page)])
+        )
+      end
+
+      if entry.dirs == 1 then
+        local south = assert(renderer.atlas:sprite(alias, "south", 1))
+        local fallback = assert(renderer.atlas:sprite(alias, "east", 1))
+        equal(
+          fallback.quad,
+          south.quad,
+          "one-direction sprite must resolve unsupported directions to south"
+        )
+      end
+
+      local south_frame = entry.directions.south[1]
+      local signature = table.concat({
+        assert(page_paths[
+          entry.bundle .. ":" .. tostring(south_frame.page)
+        ]),
+        south_frame.x,
+        south_frame.y,
+        south_frame.w,
+        south_frame.h,
+      }, ":")
+      truthy(
+        not drawable_aliases[signature],
+        string.format(
+          "aliases %s and %s resolve to the same placeholder cell",
+          tostring(drawable_aliases[signature]),
+          alias
+        )
+      )
+      drawable_aliases[signature] = alias
+    end
+
+    local turf = {
+      floor = Constants.TURF.FLOOR,
+      plating = Constants.TURF.PLATING,
+      reinforced_floor = Constants.TURF.REINFORCED_FLOOR,
+    }
+    local structures = {
+      wall = Constants.STRUCTURE.WALL,
+      door_closed = Constants.STRUCTURE.DOOR_CLOSED,
+      door_open = Constants.STRUCTURE.DOOR_OPEN,
+    }
+    local wall_kinds = {
+      standard = Constants.WALL.STANDARD,
+      reinforced = Constants.WALL.REINFORCED,
+    }
+    local features = {
+      catwalk = Constants.FEATURE.CATWALK,
+      chair = Constants.FEATURE.CHAIR,
+      crate = Constants.FEATURE.CRATE,
+      decal = Constants.FEATURE.DECAL,
+      disposal = Constants.FEATURE.DISPOSAL,
+      grille = Constants.FEATURE.GRILLE,
+      lattice = Constants.FEATURE.LATTICE,
+      light = Constants.FEATURE.LIGHT,
+      pipe = Constants.FEATURE.PIPE,
+      sign = Constants.FEATURE.SIGN,
+      storage = Constants.FEATURE.STORAGE,
+      table = Constants.FEATURE.TABLE,
+      window = Constants.FEATURE.WINDOW,
+    }
+    for cell_index = 1, #fixture.room.cells do
+      local cell = fixture.room.cells[cell_index]
+      local index = assert(world:index(cell.x, cell.y))
+      world.tile[index] = Constants.TILE.FLOOR
+      world.turf_kind[index] = assert(turf[cell.turf])
+      if cell.structure then
+        world.structure[index] = assert(structures[cell.structure])
+      end
+      if cell.wall_kind then
+        world.wall_kind[index] = assert(wall_kinds[cell.wall_kind])
+      end
+      world.cable[index] = cell.cable == true
+      for feature_index = 1, #(cell.features or {}) do
+        local feature = cell.features[feature_index]
+        assert(world:set_feature(index, assert(features[feature]), true))
+      end
+    end
+
+    assert(renderer:_rebuild_media_chunk(world, 1, 1, 1))
+    local chunk = assert(renderer.chunks[1])
+    truthy(chunk.media, "representative room must use native atlas media")
+
+    local south_aliases = {}
+    for _, alias in ipairs(Stable.sorted_keys(fixture.aliases)) do
+      local entry = foundation.sprites[alias]
+      local frame = entry.directions.south[1]
+      local signature = table.concat({
+        assert(page_paths[entry.bundle .. ":" .. tostring(frame.page)]),
+        frame.x,
+        frame.y,
+        frame.w,
+        frame.h,
+      }, ":")
+      south_aliases[signature] = alias
+    end
+
+    local observed_by_cell = {}
+    local observed_aliases = {}
+    for batch_index = 1, #chunk.media_batches do
+      local batch = chunk.media_batches[batch_index]
+      for entry_index = 1, #batch.entries do
+        local arguments = batch.entries[entry_index]
+        local alias
+        local draw_x
+        local draw_y
+        if type(arguments[1]) == "table" then
+          local quad = arguments[1]
+          local signature = table.concat({
+            batch.image.path,
+            quad.x,
+            quad.y,
+            quad.w,
+            quad.h,
+          }, ":")
+          alias = assert(
+            south_aliases[signature],
+            "rendered atlas cell is not a declared room alias: " .. signature
+          )
+          draw_x = arguments[2]
+          draw_y = arguments[3]
+        else
+          equal(batch.image.path, "__white__")
+          alias = "cable"
+          draw_x = arguments[1]
+          draw_y = arguments[2]
+        end
+        local x = math.floor(draw_x / Constants.TILE_SIZE) + 1
+        local y = math.floor(draw_y / Constants.TILE_SIZE) + 1
+        local cell_key = tostring(x) .. ":" .. tostring(y)
+        local observed = observed_by_cell[cell_key] or {}
+        observed[#observed + 1] = alias
+        observed_by_cell[cell_key] = observed
+        observed_aliases[alias] = true
+      end
+    end
+
+    for cell_index = 1, #fixture.room.cells do
+      local cell = fixture.room.cells[cell_index]
+      local key = tostring(cell.x) .. ":" .. tostring(cell.y)
+      array_equal(
+        observed_by_cell[key] or {},
+        cell.expected_draw_order,
+        "painter order drift at room cell " .. key
+      )
+    end
+    array_equal(
+      Stable.sorted_keys(observed_aliases),
+      fixture.room.expected_drawn_aliases,
+      "representative room alias coverage drift"
+    )
+  end, debug.traceback)
+
+  package.loaded["src.presentation.renderer"] = previous_renderer
+  package.loaded["src.assets.atlas_catalog"] = previous_atlas
+  _G.love = previous_love
+  if not ok then
+    error(test_error, 0)
+  end
+end)
+
+test("map editor tile states project to runtime Goon states", function()
+  local manifest_handle = assert(io.open(
+    "assets/runtime/goon/graphics/dm-appearances.json",
+    "rb"
+  ))
+  local manifest = Json.decode(manifest_handle:read("*a"))
+  manifest_handle:close()
+
+  local previous_love = rawget(_G, "love")
+  local previous_catalog =
+    package.loaded["src.assets.dm_appearance_catalog"]
+  local previous_map_appearance =
+    package.loaded["src.presentation.map_appearance"]
+
+  local function mock_image(path)
+    local image = {
+      path = path,
+      width = 2048,
+      height = 2048,
+    }
+    function image:setFilter() end
+    function image:setWrap() end
+    function image:getWidth()
+      return self.width
+    end
+    function image:getHeight()
+      return self.height
+    end
+    return image
+  end
+
+  _G.love = {
+    filesystem = {
+      read = function(path)
+        local handle, open_error = io.open(path, "rb")
+        if not handle then
+          return nil, open_error
+        end
+        local source = handle:read("*a")
+        handle:close()
+        return source
+      end,
+    },
+    graphics = {
+      newImage = function(path)
+        return mock_image(path)
+      end,
+      newQuad = function(x, y, width, height)
+        return {
+          x = x,
+          y = y,
+          w = width,
+          h = height,
+        }
+      end,
+    },
+  }
+  package.loaded["src.assets.dm_appearance_catalog"] = nil
+  package.loaded["src.presentation.map_appearance"] = nil
+
+  local ok, test_error = xpcall(function()
+    local MapAppearance = require("src.presentation.map_appearance")
+    local crop = manifest.source_map.crop
+    local width = crop.max_x - crop.min_x + 1
+    local height = crop.max_y - crop.min_y + 1
+    local world = World.new(width, height)
+    local scenario_id = "org.simstation.core:scenario/goon-atlas"
+
+    local function new_view(test_world, appearances)
+      test_world.map_id = scenario_id
+      local scenario = {
+        map = {
+          width = width,
+          height = height,
+          appearances = appearances,
+        },
+        provenance = {
+          sources = {
+            {
+              commit = manifest.source_commit,
+              path = manifest.source_map.path,
+              git_blob = manifest.source_map.git_blob,
+              sha256 = manifest.source_map.sha256,
+            },
+          },
+        },
+      }
+      local view = MapAppearance.new(
+        test_world,
+        { by_id = { [scenario_id] = scenario } }
+      )
+      truthy(view.active, view.error)
+      return view
+    end
+
+    local plating_index = assert(world:index(2, 2))
+    local catwalk_index = assert(world:index(10, 10))
+    world.tile[plating_index] = Constants.TILE.FLOOR
+    world.turf_kind[plating_index] = Constants.TURF.PLATING
+    world.tile[catwalk_index] = Constants.TILE.FLOOR
+    world.turf_kind[catwalk_index] = Constants.TURF.PLATING
+    assert(world:set_feature(
+      catwalk_index,
+      Constants.FEATURE.CATWALK,
+      true
+    ))
+    for _, neighbor in ipairs({
+      { 10, 9 },
+      { 10, 11 },
+      { 11, 10 },
+      { 9, 10 },
+    }) do
+      assert(world:set_feature(
+        assert(world:index(neighbor[1], neighbor[2])),
+        Constants.FEATURE.CATWALK,
+        true
+      ))
+    end
+
+    local appearances = {
+      {
+        direction = "south",
+        index = plating_index,
+        order = 1,
+        role = "turf",
+        source_path = "/turf/simulated/floor/plating/random",
+      },
+      {
+        direction = "south",
+        index = catwalk_index,
+        order = 1,
+        role = "turf",
+        source_path =
+          "/turf/simulated/floor/airless/plating/catwalk/auto",
+      },
+    }
+    local view = new_view(world, appearances)
+    local chunk = view:_rebuild_chunk(
+      world,
+      assert(world:chunk_index(2, 2))
+    )
+    local states = {}
+    for command_index = 1, #chunk.commands do
+      local drawable = chunk.commands[command_index].drawable
+      local key = drawable.source_path .. ":" .. drawable.source_state
+      states[key] = (states[key] or 0) + 1
+    end
+    equal(states["icons/turf/floors.dmi:plating"], 1)
+    equal(states["icons/turf/catwalk_support.dmi:15"], 1)
+    equal(states["icons/turf/floors.dmi:plating_random"], nil)
+    equal(states["icons/turf/catwalk_support.dmi:auto"], nil)
+    equal(chunk.dynamic_fallbacks, 0)
+
+    local door_world = World.new(width, height)
+    local door_cases = {
+      {
+        path = "/obj/machinery/door/airlock/pyro",
+        authored = "door_open",
+        structure = Constants.STRUCTURE.DOOR_CLOSED,
+        expected = "door_closed",
+      },
+      {
+        path = "/obj/machinery/door/airlock/pyro",
+        structure = Constants.STRUCTURE.DOOR_OPEN,
+        expected = "door_open",
+      },
+      {
+        path = "/obj/machinery/door/poddoor/pyro",
+        authored = "pdoor0",
+        structure = Constants.STRUCTURE.DOOR_CLOSED,
+        expected = "pdoor1",
+      },
+      {
+        path = "/obj/machinery/door/poddoor/pyro",
+        structure = Constants.STRUCTURE.DOOR_OPEN,
+        expected = "pdoor0",
+      },
+      {
+        path = "/obj/machinery/door/poddoor/blast/pyro",
+        authored = "bdoorsingle0",
+        structure = Constants.STRUCTURE.DOOR_CLOSED,
+        expected = "bdoorsingle1",
+      },
+      {
+        path = "/obj/machinery/door/poddoor/blast/pyro",
+        structure = Constants.STRUCTURE.DOOR_OPEN,
+        expected = "bdoorsingle0",
+      },
+      {
+        path = "/obj/machinery/door/unpowered/wood/pyro",
+        authored = "wood0",
+        structure = Constants.STRUCTURE.DOOR_CLOSED,
+        expected = "wood1",
+      },
+      {
+        path = "/obj/machinery/door/unpowered/wood/pyro",
+        structure = Constants.STRUCTURE.DOOR_OPEN,
+        expected = "wood0",
+      },
+      {
+        path = "/obj/machinery/door/unpowered/wood/stall",
+        authored = "door0",
+        structure = Constants.STRUCTURE.DOOR_CLOSED,
+        expected = "door1",
+      },
+      {
+        path = "/obj/machinery/door/unpowered/wood/stall",
+        structure = Constants.STRUCTURE.DOOR_OPEN,
+        expected = "door0",
+      },
+    }
+    local door_appearances = {}
+    for case_index = 1, #door_cases do
+      local case = door_cases[case_index]
+      local x = case_index + 1
+      local index = assert(door_world:index(x, 20))
+      door_world.tile[index] = Constants.TILE.FLOOR
+      door_world.turf_kind[index] = Constants.TURF.FLOOR
+      door_world.structure[index] = case.structure
+      local appearance = {
+        direction = "south",
+        index = index,
+        order = 1,
+        role = "object",
+        source_path = case.path,
+      }
+      if case.authored then
+        appearance.icon_state_override = case.authored
+      end
+      door_appearances[#door_appearances + 1] = appearance
+    end
+    local door_view = new_view(door_world, door_appearances)
+    local door_chunk = door_view:_rebuild_chunk(
+      door_world,
+      assert(door_world:chunk_index(2, 20))
+    )
+    local door_states_by_x = {}
+    for command_index = 1, #door_chunk.commands do
+      local command = door_chunk.commands[command_index]
+      if command.drawable.source_path:find(
+        "icons/obj/doors/",
+        1,
+        true
+      ) == 1 then
+        door_states_by_x[command.x] = command.drawable.source_state
+      end
+    end
+    for case_index = 1, #door_cases do
+      equal(
+        door_states_by_x[case_index + 1],
+        door_cases[case_index].expected,
+        "door runtime projection is not bidirectional"
+      )
+    end
+    equal(door_chunk.dynamic_fallbacks, 0)
+    equal(door_chunk.unresolved, 0)
+
+    local transition_world = World.new(width, height)
+    local wall_index = assert(transition_world:index(2, 2))
+    local door_index = assert(transition_world:index(3, 2))
+    for _, index in ipairs({ wall_index, door_index }) do
+      transition_world.tile[index] = Constants.TILE.FLOOR
+      transition_world.turf_kind[index] = Constants.TURF.FLOOR
+    end
+    local transition_view = new_view(transition_world, {
+      {
+        direction = "south",
+        index = wall_index,
+        order = 1,
+        role = "turf",
+        source_path = "/turf/simulated/floor",
+      },
+      {
+        direction = "south",
+        index = door_index,
+        order = 1,
+        role = "turf",
+        source_path = "/turf/simulated/floor",
+      },
+    })
+    local transition_chunk_index =
+      assert(transition_world:chunk_index(2, 2))
+    local function rebuild_transition()
+      local rebuilt = transition_view:_rebuild_chunk(
+        transition_world,
+        transition_chunk_index
+      )
+      equal(rebuilt.dynamic_fallbacks, 0)
+      equal(rebuilt.unresolved, 0)
+      return rebuilt
+    end
+    local function drawable_count(rebuilt, source_path, source_state)
+      local count = 0
+      for command_index = 1, #rebuilt.commands do
+        local drawable = rebuilt.commands[command_index].drawable
+        if drawable.source_path == source_path
+          and drawable.source_state == source_state
+        then
+          count = count + 1
+        end
+      end
+      return count
+    end
+
+    local transition_chunk = rebuild_transition()
+    equal(drawable_count(
+      transition_chunk,
+      "icons/turf/floors.dmi",
+      "floor"
+    ), 2)
+
+    transition_world.structure[wall_index] = Constants.STRUCTURE.WALL
+    transition_world.wall_kind[wall_index] = Constants.WALL.STANDARD
+    transition_world:touch(2, 2, true)
+    transition_chunk = rebuild_transition()
+    equal(drawable_count(
+      transition_chunk,
+      "icons/turf/floors.dmi",
+      "floor"
+    ), 1)
+    equal(drawable_count(
+      transition_chunk,
+      "icons/turf/walls/supernorn/smooth.dmi",
+      "norn-0"
+    ), 1)
+
+    transition_world.structure[wall_index] = Constants.STRUCTURE.EMPTY
+    transition_world.wall_kind[wall_index] = Constants.WALL.NONE
+    transition_world:touch(2, 2, true)
+    transition_chunk = rebuild_transition()
+    equal(drawable_count(
+      transition_chunk,
+      "icons/turf/floors.dmi",
+      "floor"
+    ), 2)
+
+    transition_world.structure[door_index] =
+      Constants.STRUCTURE.DOOR_CLOSED
+    transition_world:touch(3, 2, true)
+    transition_chunk = rebuild_transition()
+    equal(drawable_count(
+      transition_chunk,
+      "icons/obj/doors/SL_doors.dmi",
+      "door_closed"
+    ), 1)
+
+    transition_world.structure[door_index] =
+      Constants.STRUCTURE.DOOR_OPEN
+    transition_world:touch(3, 2, true)
+    transition_chunk = rebuild_transition()
+    equal(drawable_count(
+      transition_chunk,
+      "icons/obj/doors/SL_doors.dmi",
+      "door_open"
+    ), 1)
+
+    local semantic_world = World.new(width, height)
+    local semantic_floor_index = assert(semantic_world:index(2, 2))
+    local semantic_wall_index = assert(semantic_world:index(6, 6))
+    semantic_world.tile[semantic_floor_index] = Constants.TILE.FLOOR
+    semantic_world.turf_kind[semantic_floor_index] =
+      Constants.TURF.FLOOR
+    semantic_world.tile[semantic_wall_index] = Constants.TILE.FLOOR
+    semantic_world.turf_kind[semantic_wall_index] =
+      Constants.TURF.FLOOR
+    semantic_world.structure[semantic_wall_index] =
+      Constants.STRUCTURE.WALL
+    semantic_world.wall_kind[semantic_wall_index] =
+      Constants.WALL.STANDARD
+    local semantic_view = new_view(semantic_world, {
+      {
+        direction = "south",
+        index = semantic_floor_index,
+        order = 1,
+        role = "turf",
+        source_path = "/turf/simulated/floor",
+      },
+      {
+        direction = "south",
+        index = semantic_wall_index,
+        order = 1,
+        role = "turf",
+        source_path = "/turf/simulated/wall/auto/supernorn",
+      },
+    })
+    local semantic_chunk_index =
+      assert(semantic_world:chunk_index(2, 2))
+    local function rebuild_semantic()
+      local rebuilt = semantic_view:_rebuild_chunk(
+        semantic_world,
+        semantic_chunk_index
+      )
+      equal(rebuilt.dynamic_fallbacks, 0)
+      equal(rebuilt.unresolved, 0)
+      return rebuilt
+    end
+
+    local semantic_chunk = rebuild_semantic()
+    equal(drawable_count(
+      semantic_chunk,
+      "icons/turf/floors.dmi",
+      "floor"
+    ), 1)
+    equal(drawable_count(
+      semantic_chunk,
+      "icons/turf/walls/supernorn/smooth.dmi",
+      "norn-0"
+    ), 1)
+
+    semantic_world.turf_kind[semantic_floor_index] =
+      Constants.TURF.PLATING
+    semantic_world.wall_kind[semantic_wall_index] =
+      Constants.WALL.REINFORCED
+    semantic_world:touch(2, 2, false)
+    semantic_world:touch(6, 6, true)
+    semantic_chunk = rebuild_semantic()
+    equal(drawable_count(
+      semantic_chunk,
+      "icons/turf/floors.dmi",
+      "floor"
+    ), 0)
+    equal(drawable_count(
+      semantic_chunk,
+      "icons/turf/floors.dmi",
+      "plating"
+    ), 1)
+    equal(drawable_count(
+      semantic_chunk,
+      "icons/turf/walls/supernorn/smooth.dmi",
+      "norn-0"
+    ), 0)
+    equal(drawable_count(
+      semantic_chunk,
+      "icons/turf/walls/supernorn/smooth.dmi",
+      "norn-R-0"
+    ), 1)
+
+    semantic_world.turf_kind[semantic_floor_index] =
+      Constants.TURF.REINFORCED_FLOOR
+    semantic_world:touch(2, 2, false)
+    semantic_chunk = rebuild_semantic()
+    equal(drawable_count(
+      semantic_chunk,
+      "icons/turf/floors.dmi",
+      "floor"
+    ), 0)
+    equal(drawable_count(
+      semantic_chunk,
+      "icons/turf/floors.dmi",
+      "plating"
+    ), 0)
+    equal(drawable_count(
+      semantic_chunk,
+      "icons/turf/floors.dmi",
+      "engine"
+    ), 1)
+  end, debug.traceback)
+
+  package.loaded["src.assets.dm_appearance_catalog"] = previous_catalog
+  package.loaded["src.presentation.map_appearance"] =
+    previous_map_appearance
+  _G.love = previous_love
+  if not ok then
+    error(test_error, 0)
+  end
+end)
+
 test("content IDs enforce namespace and kind", function()
   local parsed = assert(ContentId.parse("org.simstation.core:item/steel-sheet"))
   equal(parsed.pack, "org.simstation.core")
@@ -280,12 +1363,95 @@ local function load_core_runtime_content()
     "content/materials.json",
     "content/recipes.json",
     "content/structures.json",
+    "content/lighting.json",
   })
   local session = assert(ModLoader.load({
     { root = root, files = files },
   }, { api_version = "0.1.0" }))
   return RuntimeContent.from_registry(session.registry), session
 end
+
+test("shipped lighting profiles and bindings resolve through the mod registry",
+function()
+  local content, session = load_core_runtime_content()
+  equal(session.registry:report().definition_count, 41)
+  local contract = LightingContent.resolve(content)
+  equal(#contract.errors, 0)
+  equal(#contract.bindings, 2)
+  truthy(contract.settings.shader)
+  truthy(
+    contract.profiles["org.simstation.core:light-profile/goon-tube"]
+  )
+  local defaults = LightingContent.default_definitions()
+  for index = 1, #defaults do
+    equal(
+      Stable.hash(content.by_id[defaults[index].id]),
+      Stable.hash(defaults[index]),
+      "runtime lighting fallback drifted from core mod data"
+    )
+  end
+
+  local invalid = defaults[2]
+  invalid.radius_256 = 9000
+  local profile, profile_error =
+    LightingContent.validate_profile(invalid)
+  equal(profile, nil)
+  truthy(profile_error:find("radius_256", 1, true))
+
+  local schema_one_settings = LightingContent.default_definitions()[1]
+  schema_one_settings.max_work_units = nil
+  local normalized_settings =
+    assert(LightingContent.validate_settings(schema_one_settings))
+  equal(
+    normalized_settings.max_work_units,
+    LightingContent.DEFAULT_MAX_WORK_UNITS,
+    "schema-1 settings must retain the documented work-budget default"
+  )
+end)
+
+test("runtime mod loading rejects invalid lighting before registry seal",
+function()
+  local manifest = [[
+schema = 1
+id = "org.example.invalid-lights"
+version = "0.1.0"
+name = "Invalid lights"
+description = "Runtime lighting validation fixture."
+authors = ["Sim Station tests"]
+license = "CC0-1.0"
+api = "^0.1.0"
+class = "data"
+load_priority = 0
+content = ["content/*.json"]
+localization = []
+scenario_maps = []
+dependencies = []
+optional_dependencies = []
+conflicts = []
+load_after = []
+load_before = []
+replaces = []
+]]
+  local invalid_profile = LightingContent.default_definitions()[2]
+  invalid_profile.id =
+    "org.example.invalid-lights:light-profile/too-large"
+  invalid_profile.radius_256 = 9000
+  local session, load_error = ModLoader.load({
+    {
+      root = "invalid-lights",
+      files = {
+        ["mod.toml"] = manifest,
+        ["content/lights.json"] = Json.encode({
+          schema = 1,
+          definitions = { invalid_profile },
+        }),
+      },
+    },
+  }, { api_version = "0.1.0" })
+  equal(session, nil)
+  equal(load_error.stage, "content-validation")
+  truthy(load_error.message:find("radius_256", 1, true))
+end)
 
 local function add_test_machine(
   sim,
@@ -378,6 +1544,7 @@ test("base content and trusted-code example load through one mod path", function
     "content/materials.json",
     "content/recipes.json",
     "content/structures.json",
+    "content/lighting.json",
     "scenarios/goon-atlas.json",
     "locales/en.json",
   })
@@ -395,7 +1562,7 @@ test("base content and trusted-code example load through one mod path", function
     api_version = "0.1.0",
     trusted_code = { ["org.simstation.example.smart-grid"] = true },
   }))
-  equal(session.registry:report().definition_count, 37)
+  equal(session.registry:report().definition_count, 42)
   local allowed, reason = session.hooks:validate(
     "org.simstation.core:hook/command/validate",
     { kind = "disconnect_network", payload = { essential = true } },
@@ -1764,6 +2931,307 @@ test("native Atlas scenario manufactures and round-trips", function()
     restored:step()
   end
   equal(restored:state_hash(), sim:state_hash())
+end)
+
+local Gas = require("src.core.gas")
+local Pipes = require("src.core.pipes")
+
+local function pipe_test_sim()
+  -- 48x48 procedural world: the seeded core spans x 9..39 / y 13..35 with
+  -- pressurized interior tiles; everything else is space.
+  return Simulation.new({
+    seed = 4242,
+    width = 48,
+    height = 48,
+    crew_count = 0,
+  })
+end
+
+
+local function add_pipe(world, x, y, kind, dir, id_suffix)
+  local index = assert(world:index(x, y))
+  local gas = Gas.new(Pipes.KIND_VOLUME_L[kind], Gas.T20C_MK)
+  local pipe = {
+    id = string.format(
+      "org.simstation.core:scenario-pipe/test/pipe-x%03d-y%03d%s",
+      x,
+      y,
+      id_suffix or ""
+    ),
+    index = index,
+    x = x,
+    y = y,
+    kind = kind,
+    dir = dir,
+    gas = gas,
+  }
+  world.pipes[#world.pipes + 1] = pipe
+  return pipe
+end
+
+local function finish_pipes(world)
+  table.sort(world.pipes, function(a, b)
+    return a.id < b.id
+  end)
+  world.topology_revision = world.topology_revision + 1
+end
+
+local function total_species(mixtures, species)
+  local total = 0
+  for index = 1, #mixtures do
+    total = total + mixtures[index][species]
+  end
+  return total
+end
+
+-- A sealed 2x2 loop of corner pipes anchored at (x, y): no exposed ends, so
+-- mingle never runs and species assertions stay exact.
+local function add_sealed_loop(world, x, y, kind)
+  kind = kind or "simple"
+  local a = add_pipe(world, x, y, kind, 6) -- south+east
+  local b = add_pipe(world, x + 1, y, kind, 10) -- south+west
+  local c = add_pipe(world, x, y + 1, kind, 5) -- north+east
+  local d = add_pipe(world, x + 1, y + 1, kind, 9) -- north+west
+  return a, b, c, d
+end
+
+test("gas mixtures merge, remove, and pressure with pinned Goon math", function()
+  local hot = Gas.new(200, 400000)
+  hot.oxygen = 1000
+  local cold = Gas.new(200, 300000)
+  cold.nitrogen = 2000
+  -- merge weights temperature by heat capacity: (400000*40000 +
+  -- 300000*100000) / 140000 = 328571 mK.
+  Gas.merge(hot, cold)
+  equal(hot.temperature_mk, 328571)
+  equal(hot.oxygen, 1000)
+  equal(hot.nitrogen, 2000)
+
+  -- remove is proportional with QUANTIZE rounding and clamps to contents.
+  local removed = Gas.remove_qmol(hot, 300)
+  equal(removed.oxygen, 100)
+  equal(removed.nitrogen, 200)
+  equal(removed.temperature_mk, 328571)
+  equal(hot.oxygen, 900)
+  equal(hot.nitrogen, 1800)
+  local everything = Gas.remove_qmol(hot, 999999)
+  equal(everything.oxygen, 900)
+  equal(everything.nitrogen, 1800)
+  equal(Gas.total_qmol(hot), 0)
+  equal(Gas.remove_qmol(hot, 10), nil)
+
+  -- One standard cell: 1,039,280 qmol at 20C in 2500 L is one atmosphere.
+  local cell = Gas.new(2500, 293150)
+  cell.oxygen = 218249
+  cell.nitrogen = 821031
+  local pressure = Gas.pressure_pa(cell)
+  truthy(pressure >= 101280 and pressure <= 101370,
+    "standard cell should be about one atmosphere, got " .. pressure)
+end)
+
+test("plasma combustion matches the pinned fire vector", function()
+  -- 70 L pipe at 1000 K holding 0.05 mol plasma and 1 mol oxygen burns in
+  -- the fullburn branch: scale 0.276145, burn rate 34.518 qmol.
+  local mix = Gas.new(70, 1000000)
+  mix.toxins = 500
+  mix.oxygen = 10000
+  truthy(Gas.react(mix, 1), "hot plasma and oxygen must combust")
+  equal(mix.toxins, 488)
+  equal(mix.oxygen, 9961)
+  equal(mix.carbon_dioxide, 12)
+  equal(mix.temperature_mk, 1225439)
+
+  -- At exactly the fire floor (373.15 K) nothing burns: threshold is strict.
+  local floor_mix = Gas.new(70, 373150)
+  floor_mix.toxins = 500
+  floor_mix.oxygen = 10000
+  equal(Gas.react(floor_mix, 1), false)
+  equal(floor_mix.toxins, 500)
+
+  -- The agent-B branch needs 900 K, plasma, and CO2 present.
+  local catalyst = Gas.new(200, 950000)
+  catalyst.toxins = 4000
+  catalyst.carbon_dioxide = 1000
+  catalyst.oxygen_agent_b = 100
+  truthy(Gas.react(catalyst, 1), "agent B catalyses above 900 K")
+  equal(catalyst.carbon_dioxide, 995)
+  equal(catalyst.oxygen, 5)
+  equal(catalyst.oxygen_agent_b, 100)
+  local cold_catalyst = Gas.new(200, 900000)
+  cold_catalyst.toxins = 4000
+  cold_catalyst.carbon_dioxide = 1000
+  cold_catalyst.oxygen_agent_b = 100
+  equal(Gas.react(cold_catalyst, 1), false)
+end)
+
+test("pipelines assemble deterministically from segment topology", function()
+  local sim = pipe_test_sim()
+  local world = sim.world
+  -- East-west run into a south+west corner, down to a junction whose dir
+  -- (south) side takes heat pipes and whose north side takes the run.
+  add_pipe(world, 4, 4, "simple", 4)
+  add_pipe(world, 5, 4, "simple", 8)
+  add_pipe(world, 6, 4, "simple", 10) -- corner south+west
+  add_pipe(world, 6, 5, "simple", 1)
+  add_pipe(world, 6, 6, "junction", 2)
+  add_pipe(world, 6, 7, "heat_exchanging", 1)
+  -- A plain pipe beside the heat exchanger may not join it.
+  add_pipe(world, 7, 7, "simple", 4, "-b")
+  finish_pipes(world)
+
+  local topology = Pipes.ensure_topology(sim)
+  equal(#topology.pipelines, 2)
+  equal(#topology.pipelines[1].segments, 6)
+  equal(#topology.pipelines[2].segments, 1)
+  equal(topology.pipelines[1].volume_l, 420)
+  equal(topology.pipelines[2].segments[1].x, 7)
+  equal(#topology.networks, 2)
+
+  -- Shuffled insertion produces the identical partition.
+  local shuffled = pipe_test_sim()
+  local shuffled_world = shuffled.world
+  add_pipe(shuffled_world, 6, 7, "heat_exchanging", 1)
+  add_pipe(shuffled_world, 7, 7, "simple", 4, "-b")
+  add_pipe(shuffled_world, 6, 6, "junction", 2)
+  add_pipe(shuffled_world, 6, 5, "simple", 1)
+  add_pipe(shuffled_world, 6, 4, "simple", 10)
+  add_pipe(shuffled_world, 5, 4, "simple", 8)
+  add_pipe(shuffled_world, 4, 4, "simple", 4)
+  finish_pipes(shuffled_world)
+  local shuffled_topology = Pipes.ensure_topology(shuffled)
+  equal(#shuffled_topology.pipelines, #topology.pipelines)
+  for index = 1, #topology.pipelines do
+    equal(
+      shuffled_topology.pipelines[index].id,
+      topology.pipelines[index].id
+    )
+    equal(
+      #shuffled_topology.pipelines[index].segments,
+      #topology.pipelines[index].segments
+    )
+  end
+end)
+
+test("pipe networks reconcile by volume ratio and conserve moles", function()
+  local sim = pipe_test_sim()
+  local world = sim.world
+  local a, b, c, d = add_sealed_loop(world, 11, 11)
+  local far = add_sealed_loop(world, 30, 4)
+  finish_pipes(world)
+  a.gas.oxygen = 10500
+  a.gas.temperature_mk = 400000
+  b.gas.nitrogen = 700
+
+  local topology = Pipes.ensure_topology(sim)
+  equal(#topology.networks, 2)
+  Pipes.step(sim, 8)
+
+  -- Four equal 70 L members split every species exactly four ways.
+  equal(a.gas.oxygen, 2625)
+  equal(b.gas.oxygen, 2625)
+  equal(c.gas.oxygen, 2625)
+  equal(d.gas.oxygen, 2625)
+  equal(a.gas.nitrogen, 175)
+  equal(total_species({ a.gas, b.gas, c.gas, d.gas }, "oxygen"), 10500)
+  equal(total_species({ a.gas, b.gas, c.gas, d.gas }, "nitrogen"), 700)
+  equal(a.gas.temperature_mk, d.gas.temperature_mk)
+  -- The detached loop is a different network and receives nothing.
+  equal(far.gas.oxygen, 0)
+end)
+
+test("heat exchanging pipes radiate toward space bounds", function()
+  local sim = pipe_test_sim()
+  local world = sim.world
+  local r1, r2, r3, r4 = add_sealed_loop(world, 2, 2, "heat_exchanging")
+  local insulated = add_sealed_loop(world, 2, 20, "insulated")
+  finish_pipes(world)
+  equal(world.tile[world:index(2, 2)], Constants.TILE.SPACE)
+  r1.gas.nitrogen = 5000
+  r1.gas.temperature_mk = 600000
+  insulated.gas.nitrogen = 5000
+  insulated.gas.temperature_mk = 600000
+
+  for _ = 1, 40 do
+    Pipes.step(sim, 8)
+  end
+  truthy(r1.gas.temperature_mk < 600000,
+    "radiator must cool toward space")
+  truthy(r1.gas.temperature_mk >= Gas.SPACE_TEMPERATURE_MK,
+    "radiator may not undershoot the space bath")
+  equal(
+    total_species({ r1.gas, r2.gas, r3.gas, r4.gas }, "nitrogen"),
+    5000
+  )
+  -- Insulated pipes exchange nothing even in space.
+  equal(insulated.gas.temperature_mk, 600000)
+
+  -- A sealed plain loop under the 300 K station delta exchanges nothing.
+  local mild_sim = pipe_test_sim()
+  local mild = add_sealed_loop(mild_sim.world, 20, 20)
+  finish_pipes(mild_sim.world)
+  mild.gas.nitrogen = 5000
+  mild.gas.temperature_mk = 400000 -- tile is 293150: delta under 300 K
+  local tile_index = mild_sim.world:index(20, 20)
+  local before_tile = mild_sim.world.temperature_mk[tile_index]
+  Pipes.step(mild_sim, 8)
+  equal(mild_sim.world.temperature_mk[tile_index], before_tile)
+  equal(mild.gas.temperature_mk, 400000)
+end)
+
+test("exposed pipe ends mingle with tiles and count space venting", function()
+  local sim = pipe_test_sim()
+  local world = sim.world
+  local inside = add_pipe(world, 20, 20, "simple", 1)
+  finish_pipes(world)
+  inside.gas.toxins = 70000
+  inside.gas.temperature_mk = 293150
+  local tile_index = world:index(20, 20)
+  local before_units = world.plasma[tile_index]
+  Pipes.step(sim, 8)
+  -- 70 L pipe against a 2500 L cell keeps 70/2570 of the pool.
+  local tile_units = world.plasma[tile_index]
+  truthy(tile_units > before_units, "tile must gain plasma from the pipe")
+  equal(inside.gas.toxins + (tile_units - before_units) * 10, 70000)
+
+  local vented_sim = pipe_test_sim()
+  local vented_world = vented_sim.world
+  local outside = add_pipe(vented_world, 2, 2, "simple", 1)
+  finish_pipes(vented_world)
+  outside.gas.toxins = 70000
+  equal(vented_world.gas_vented_qmol, 0)
+  Pipes.step(vented_sim, 8)
+  truthy(vented_world.gas_vented_qmol > 0, "space venting must be counted")
+  equal(outside.gas.toxins + vented_world.gas_vented_qmol, 70000)
+end)
+
+test("pipe state save load continues identically", function()
+  local function build()
+    local sim = pipe_test_sim()
+    local world = sim.world
+    local a = add_pipe(world, 20, 20, "simple", 4)
+    local b = add_pipe(world, 21, 20, "simple", 4)
+    add_pipe(world, 22, 20, "heat_exchanging", 4)
+    add_pipe(world, 22, 20, "junction", 8, "-j")
+    finish_pipes(world)
+    a.gas.oxygen = 40000
+    a.gas.toxins = 3000
+    a.gas.temperature_mk = 500000
+    b.gas.nitrogen = 9000
+    return sim
+  end
+  local sim = build()
+  for _ = 1, 7 do
+    sim:step()
+  end
+  local snapshot = sim:snapshot()
+  local restored = Simulation.from_snapshot(snapshot)
+  equal(restored:state_hash(), sim:state_hash())
+  for _ = 1, 33 do
+    sim:step()
+    restored:step()
+  end
+  equal(restored:state_hash(), sim:state_hash())
+  truthy(#restored.world.pipes == 4, "restored world must keep its pipes")
 end)
 
 local failures = 0

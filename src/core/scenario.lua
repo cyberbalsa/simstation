@@ -2,12 +2,15 @@ local Constants = require("src.core.constants")
 local Stable = require("src.core.stable")
 local World = require("src.core.world")
 local ContentId = require("src.content.id")
+local Gas = require("src.core.gas")
+local Pipes = require("src.core.pipes")
 
 local Scenario = {}
 
 local MAX_DIMENSION = 256
 local MAX_PALETTE = 2048
 local MAX_RUNS = 200000
+local MAX_APPEARANCES = 1000000
 local MAX_AREAS = 1024
 local MAX_FIXTURES = 8192
 local MAX_SPAWNS = 1024
@@ -98,6 +101,7 @@ local DEFINITION_KEYS = {
   map = true,
   meteor_targets = true,
   name = true,
+  pipes = true,
   power_supply_w = true,
   provenance = true,
   replaces = true,
@@ -107,12 +111,27 @@ local DEFINITION_KEYS = {
 }
 
 local MAP_KEYS = {
+  appearances = true,
   default_palette = true,
   format = true,
   height = true,
   palette = true,
   runs = true,
   width = true,
+}
+
+local APPEARANCE_KEYS = {
+  direction = true,
+  icon_override = true,
+  icon_state_override = true,
+  index = true,
+  layer_milli = true,
+  order = true,
+  pixel_x = true,
+  pixel_y = true,
+  resolved_icon_state = true,
+  role = true,
+  source_path = true,
 }
 
 local AREA_KEYS = {
@@ -164,6 +183,41 @@ local TARGET_KEYS = {
   x = true,
   y = true,
 }
+
+local MAX_PIPES = 4096
+local MAX_PIPES_PER_TILE = 4
+
+local PIPE_KEYS = {
+  dir = true,
+  gas = true,
+  kind = true,
+  temperature_mk = true,
+  x = true,
+  y = true,
+}
+
+-- BYOND direction bitfield values accepted for pipes.
+local PIPE_DIRS = {
+  [1] = true,
+  [2] = true,
+  [4] = true,
+  [8] = true,
+  [5] = true,
+  [6] = true,
+  [9] = true,
+  [10] = true,
+}
+
+local CARDINAL_ONLY_PIPE_KINDS = {
+  junction = true,
+  manifold = true,
+  vertical = true,
+}
+
+local PIPE_GAS_KEYS = {}
+for index = 1, #Gas.SPECIES do
+  PIPE_GAS_KEYS[Gas.SPECIES[index]] = true
+end
 
 local function closed_keys(value, allowed, name)
   local keys = Stable.sorted_keys(value)
@@ -380,6 +434,133 @@ local function validate_runs(map, width, height, palette_count, default_palette)
   return runs
 end
 
+local APPEARANCE_DIRECTIONS = {
+  east = true,
+  north = true,
+  northeast = true,
+  northwest = true,
+  south = true,
+  southeast = true,
+  southwest = true,
+  west = true,
+}
+
+local function safe_dm_type_path(path, root)
+  return type(path) == "string"
+    and (
+      path == root
+      or path:sub(1, #root + 1) == root .. "/"
+    )
+    and path:match("^/[-A-Za-z0-9_/]+$") ~= nil
+    and not path:find("//", 1, true)
+end
+
+local function safe_dmi_path(path)
+  if type(path) ~= "string"
+    or path:sub(1, 6) ~= "icons/"
+    or path:sub(-4):lower() ~= ".dmi"
+    or path:find("\\", 1, true)
+    or path:find("//", 1, true)
+  then
+    return false
+  end
+  for component in path:gmatch("[^/]+") do
+    if component == "." or component == ".." then
+      return false
+    end
+  end
+  return true
+end
+
+local function validate_appearances(map, width, height)
+  local appearances = map.appearances or {}
+  assert(type(appearances) == "table", "map.appearances must be an array")
+  assert(#appearances <= MAX_APPEARANCES,
+    "scenario map has too many appearances")
+  local previous_index = 0
+  local previous_order = 0
+  for appearance_index = 1, #appearances do
+    local appearance = appearances[appearance_index]
+    assert(type(appearance) == "table", "map appearance must be an object")
+    closed_keys(appearance, APPEARANCE_KEYS, "map appearance")
+    local index = integer(
+      appearance.index,
+      "map appearance.index",
+      1,
+      width * height
+    )
+    local order = integer(
+      appearance.order,
+      "map appearance.order",
+      1,
+      4096
+    )
+    assert(
+      index > previous_index
+        or (index == previous_index and order > previous_order),
+      "map appearances must be sorted by index and unique order"
+    )
+    previous_index = index
+    previous_order = order
+    assert(
+      appearance.role == "turf" or appearance.role == "object",
+      "map appearance role must be turf or object"
+    )
+    local source_path = nonempty_string(
+      appearance.source_path,
+      "map appearance.source_path",
+      1024
+    )
+    local source_root = appearance.role == "turf" and "/turf" or "/obj"
+    assert(safe_dm_type_path(source_path, source_root),
+      "map appearance role and source path must match")
+    if appearance.direction ~= nil then
+      assert(APPEARANCE_DIRECTIONS[appearance.direction],
+        "unknown map appearance direction")
+    end
+    if appearance.icon_override ~= nil then
+      local icon = nonempty_string(
+        appearance.icon_override,
+        "map appearance.icon_override",
+        1024
+      )
+      assert(
+        safe_dmi_path(icon),
+        "map appearance icon override must name an icons/*.dmi source"
+      )
+    end
+    if appearance.icon_state_override ~= nil then
+      nonempty_string(
+        appearance.icon_state_override,
+        "map appearance.icon_state_override",
+        256
+      )
+    end
+    if appearance.resolved_icon_state ~= nil then
+      nonempty_string(
+        appearance.resolved_icon_state,
+        "map appearance.resolved_icon_state",
+        256
+      )
+    end
+    if appearance.pixel_x ~= nil then
+      integer(appearance.pixel_x, "map appearance.pixel_x", -4096, 4096)
+    end
+    if appearance.pixel_y ~= nil then
+      integer(appearance.pixel_y, "map appearance.pixel_y", -4096, 4096)
+    end
+    if appearance.layer_milli ~= nil then
+      integer(
+        appearance.layer_milli,
+        "map appearance.layer_milli",
+        -1000000000,
+        1000000000
+      )
+    end
+  end
+  return appearances
+end
+
 local function validate_fixtures(definition, width, height, scenario_id)
   local fixtures = definition.fixtures or {}
   assert(type(fixtures) == "table", "scenario fixtures must be an array")
@@ -475,6 +656,48 @@ local function validate_spawns(definition, width, height, scenario_id)
   return spawns
 end
 
+local function validate_pipes(definition, width, height)
+  local pipes = definition.pipes or {}
+  assert(type(pipes) == "table", "scenario pipes must be an array")
+  assert(#pipes <= MAX_PIPES, "scenario has too many pipes")
+  local per_tile = {}
+  for index = 1, #pipes do
+    local pipe = pipes[index]
+    assert(type(pipe) == "table", "scenario pipe must be an object")
+    closed_keys(pipe, PIPE_KEYS, "scenario pipe")
+    validate_position(pipe, width, height, "scenario pipe")
+    assert(type(pipe.kind) == "string" and Pipes.KIND_VOLUME_L[pipe.kind],
+      "unknown pipe kind: " .. tostring(pipe.kind))
+    assert(type(pipe.dir) == "number" and PIPE_DIRS[pipe.dir],
+      "scenario pipe dir must be a BYOND direction")
+    if CARDINAL_ONLY_PIPE_KINDS[pipe.kind] then
+      assert(pipe.dir == 1 or pipe.dir == 2 or pipe.dir == 4 or pipe.dir == 8,
+        pipe.kind .. " pipes require a cardinal dir")
+    end
+    if pipe.temperature_mk ~= nil then
+      integer(pipe.temperature_mk, "pipe.temperature_mk", 0, 10000000)
+    end
+    if pipe.gas ~= nil then
+      assert(type(pipe.gas) == "table", "pipe.gas must be an object")
+      closed_keys(pipe.gas, PIPE_GAS_KEYS, "pipe.gas")
+      local species = Stable.sorted_keys(pipe.gas)
+      for species_index = 1, #species do
+        integer(
+          pipe.gas[species[species_index]],
+          "pipe.gas." .. species[species_index],
+          0,
+          1000000000000
+        )
+      end
+    end
+    local key = tostring(pipe.y) .. ":" .. tostring(pipe.x)
+    per_tile[key] = (per_tile[key] or 0) + 1
+    assert(per_tile[key] <= MAX_PIPES_PER_TILE,
+      "too many pipes on one tile at " .. key)
+  end
+  return pipes
+end
+
 local function validate_targets(definition, width, height)
   local targets = definition.meteor_targets or {}
   assert(type(targets) == "table", "meteor_targets must be an array")
@@ -518,9 +741,11 @@ function Scenario.validate(definition, content)
     #palette
   )
   validate_runs(map, width, height, #palette, default_palette)
+  validate_appearances(map, width, height)
   validate_fixtures(definition, width, height, scenario_id)
   validate_spawns(definition, width, height, scenario_id)
   validate_targets(definition, width, height)
+  validate_pipes(definition, width, height)
 
   integer(definition.power_supply_w or 0, "scenario.power_supply_w", 0, 1000000000)
   local inventory = definition.starting_inventory or {}
@@ -742,6 +967,57 @@ function Scenario.instantiate(definition, content)
       }
     end
   end
+  local pipe_entries = Stable.deep_copy(definition.pipes or {})
+  local entry_order = {}
+  for index = 1, #pipe_entries do
+    entry_order[pipe_entries[index]] = index
+  end
+  table.sort(pipe_entries, function(a, b)
+    if a.y ~= b.y then
+      return a.y < b.y
+    end
+    if a.x ~= b.x then
+      return a.x < b.x
+    end
+    return entry_order[a] < entry_order[b]
+  end)
+  local scenario_content_id = ContentId.parse(definition.id)
+  local tile_counts = {}
+  for index = 1, #pipe_entries do
+    local entry = pipe_entries[index]
+    local tile_index = assert(world:index(entry.x, entry.y))
+    local tile_key = tostring(tile_index)
+    tile_counts[tile_key] = (tile_counts[tile_key] or 0) + 1
+    local suffix = tile_counts[tile_key] > 1
+      and string.format("-%d", tile_counts[tile_key])
+      or ""
+    local gas = Gas.new(
+      Pipes.KIND_VOLUME_L[entry.kind],
+      entry.temperature_mk or Gas.T20C_MK
+    )
+    for species, amount in pairs(entry.gas or {}) do
+      gas[species] = amount
+    end
+    world.pipes[#world.pipes + 1] = {
+      id = string.format(
+        "%s:scenario-pipe/%s/pipe-x%03d-y%03d%s",
+        scenario_content_id.pack,
+        scenario_content_id.name,
+        entry.x,
+        entry.y,
+        suffix
+      ),
+      index = tile_index,
+      x = entry.x,
+      y = entry.y,
+      kind = entry.kind,
+      dir = entry.dir,
+      gas = gas,
+    }
+  end
+  table.sort(world.pipes, function(a, b)
+    return a.id < b.id
+  end)
   local spawns = Stable.deep_copy(definition.spawns or {})
   table.sort(spawns, function(a, b)
     return a.id < b.id

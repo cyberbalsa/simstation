@@ -1,0 +1,289 @@
+{
+  "format_version": 1,
+  "kind": "goon-dm-appearance-profile",
+  "source_commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+  "source_map": {
+    "crop": {
+      "max_x": 252,
+      "max_y": 252,
+      "min_x": 61,
+      "min_y": 61,
+      "z": 1
+    },
+    "path": "maps/atlas.dmm"
+  },
+  "connected_state_families": [
+    {
+      "fidelity": "connected-state-deferred",
+      "match": "subtree",
+      "state_regex": "^norn-",
+      "type_path": "/turf/simulated/wall/auto/supernorn"
+    },
+    {
+      "fidelity": "connected-state-deferred",
+      "match": "subtree",
+      "state_regex": "^norn-R-",
+      "type_path": "/turf/simulated/wall/auto/reinforced/supernorn"
+    },
+    {
+      "fidelity": "connected-state-deferred",
+      "match": "subtree",
+      "state_regex": "^(?:[0-9]|1[0-5])(?:\\$\\$.*)?$",
+      "type_path": "/obj/table/auto"
+    },
+    {
+      "fidelity": "connected-state-deferred",
+      "match": "subtree",
+      "state_regex": "^(?:[0-9]|1[0-5])(?:\\$\\$.*)?$",
+      "type_path": "/obj/table/round/auto"
+    },
+    {
+      "fidelity": "connected-state-deferred",
+      "match": "subtree",
+      "state_regex": "^(?:[0-9]|1[0-5])(?:\\$\\$.*)?$",
+      "type_path": "/obj/table/wood/auto"
+    },
+    {
+      "fidelity": "connected-state-deferred",
+      "match": "subtree",
+      "state_regex": "^(?:[0-9]|1[0-5])(?:\\$\\$.*)?$",
+      "type_path": "/obj/table/wood/round/auto"
+    },
+    {
+      "fidelity": "connected-state-deferred",
+      "match": "subtree",
+      "state_regex": "^(?:[0-9]|1[0-5])(?:\\$\\$.*)?$",
+      "type_path": "/obj/table/reinforced/auto"
+    },
+    {
+      "fidelity": "connected-state-deferred",
+      "match": "subtree",
+      "state_regex": "^(?:[0-9]|1[0-5])(?:\\$\\$.*)?$",
+      "type_path": "/obj/table/reinforced/bar/auto"
+    },
+    {
+      "fidelity": "connected-state-deferred",
+      "match": "subtree",
+      "state_regex": "^(?:[0-9]|1[0-5])(?:\\$\\$.*)?$",
+      "type_path": "/obj/table/reinforced/chemistry/auto"
+    },
+    {
+      "fidelity": "connected-state-deferred",
+      "match": "exact",
+      "state_regex": "^(?:[0-9]+|catwalk|catwalk_cross|auto)",
+      "type_path": "/turf/simulated/floor/airless/plating/catwalk/auto"
+    }
+  ],
+  "dynamic_state_families": [
+    {
+      "match": "subtree",
+      "state_regex": "^apc",
+      "type_path": "/obj/machinery/power/apc"
+    },
+    {
+      "match": "subtree",
+      "state_regex": "^smes",
+      "type_path": "/obj/machinery/power/smes"
+    },
+    {
+      "match": "subtree",
+      "state_regex": "^(?:fab-|indicator-|light-)",
+      "type_path": "/obj/machinery/manufacturer"
+    },
+    {
+      "match": "subtree",
+      "state_regex": "^fab[23]-",
+      "type_path": "/obj/machinery/nanofab"
+    },
+    {
+      "match": "subtree",
+      "state_regex": "^pscrubber:",
+      "type_path": "/obj/machinery/portable_atmospherics/scrubber"
+    },
+    {
+      "match": "subtree",
+      "state_regex": "^(?:vent|hvent)",
+      "type_path": "/obj/machinery/atmospherics/unary/vent"
+    },
+    {
+      "match": "subtree",
+      "state_regex": "^(?:out|in|off|alert|h)",
+      "type_path": "/obj/machinery/atmospherics/unary/vent_pump"
+    },
+    {
+      "match": "subtree",
+      "state_regex": "^circ[12]-",
+      "type_path": "/obj/machinery/atmospherics/binary/circulatorTemp"
+    },
+    {
+      "match": "subtree",
+      "state_regex": "^teg",
+      "type_path": "/obj/machinery/power/generatorTemp"
+    },
+    {
+      "match": "subtree",
+      "state_regex": "^(?:tube|bulb|floor|runway|green|lamp|tripod|flamp)",
+      "type_path": "/obj/machinery/light"
+    },
+    {
+      "match": "subtree",
+      "state_regex": "^(?:.*_(?:closed|open|opening|closing|deny|locked|spark)|pdoor[01]|bdoor.*[01]|wood[01]|doorc?[01])$",
+      "type_path": "/obj/machinery/door"
+    }
+  ],
+  "explicit_rules": [
+    {
+      "fidelity": "deterministic-runtime-state",
+      "match": "exact",
+      "parts": [
+        {
+          "direction_policy": "fixed",
+          "fixed_direction": "south",
+          "include_state_regex": "^(?:[1-9]|1[0-9]|2[0-5])$",
+          "source_icon": "icons/turf/space.dmi",
+          "source_state": "1"
+        }
+      ],
+      "role": "turf",
+      "source": {
+        "file": "code/turf/turf.dm",
+        "line": 330
+      },
+      "type_path": "/turf/space"
+    },
+    {
+      "fidelity": "runtime-state-deferred",
+      "match": "exact",
+      "parts": [
+        {
+          "direction_policy": "map",
+          "include_state_regex": "^door_(?:closed|open)$",
+          "source_icon": "icons/obj/doors/SL_doors.dmi",
+          "source_state": "door_closed"
+        }
+      ],
+      "role": "object",
+      "source": {
+        "file": "code/obj/machinery/door/airlock_pyro.dm",
+        "line": 3
+      },
+      "type_path": "/obj/machinery/door/airlock/pyro"
+    },
+    {
+      "fidelity": "map-helper-expanded",
+      "match": "exact",
+      "parts": [
+        {
+          "direction_policy": "fixed",
+          "fixed_direction": "south",
+          "include_state_regex": "^grille(?:1|3|4|6|8|10|12|14)-[0-3]$",
+          "source_icon": "icons/obj/SL_windows_grilles.dmi",
+          "source_state": "grille1-0",
+          "state_prefix": "grille",
+          "state_suffix": "-0"
+        },
+        {
+          "direction_policy": "fixed",
+          "fixed_direction": "northeast",
+          "include_state_regex": "^W-",
+          "source_icon": "icons/obj/window_pyro.dmi",
+          "source_state": "W-0",
+          "state_prefix": "W-"
+        }
+      ],
+      "role": "object",
+      "source": {
+        "file": "code/modules/mapping/helpers/wingrille_spawner.dm",
+        "line": 90
+      },
+      "type_path": "/obj/mapping_helper/wingrille_spawn/auto"
+    },
+    {
+      "fidelity": "map-helper-expanded",
+      "match": "exact",
+      "parts": [
+        {
+          "direction_policy": "fixed",
+          "fixed_direction": "south",
+          "include_state_regex": "^grille(?:1|3|4|6|8|10|12|14)-[0-3]$",
+          "source_icon": "icons/obj/SL_windows_grilles.dmi",
+          "source_state": "grille1-0",
+          "state_prefix": "grille",
+          "state_suffix": "-0"
+        },
+        {
+          "direction_policy": "fixed",
+          "fixed_direction": "northeast",
+          "include_state_regex": "^W-",
+          "source_icon": "icons/obj/window_pyro.dmi",
+          "source_state": "W-0",
+          "state_prefix": "W-"
+        }
+      ],
+      "role": "object",
+      "source": {
+        "file": "code/modules/mapping/helpers/wingrille_spawner.dm",
+        "line": 104
+      },
+      "type_path": "/obj/mapping_helper/wingrille_spawn/auto/crystal"
+    },
+    {
+      "fidelity": "map-helper-expanded",
+      "match": "exact",
+      "parts": [
+        {
+          "direction_policy": "fixed",
+          "fixed_direction": "south",
+          "include_state_regex": "^grille(?:1|3|4|6|8|10|12|14)-[0-3]$",
+          "source_icon": "icons/obj/SL_windows_grilles.dmi",
+          "source_state": "grille1-0",
+          "state_prefix": "grille",
+          "state_suffix": "-0"
+        },
+        {
+          "direction_policy": "fixed",
+          "fixed_direction": "northeast",
+          "include_state_regex": "^R-",
+          "source_icon": "icons/obj/window_pyro.dmi",
+          "source_state": "R-0",
+          "state_prefix": "R-"
+        }
+      ],
+      "role": "object",
+      "source": {
+        "file": "code/modules/mapping/helpers/wingrille_spawner.dm",
+        "line": 127
+      },
+      "type_path": "/obj/mapping_helper/wingrille_spawn/auto/reinforced"
+    },
+    {
+      "fidelity": "map-helper-expanded",
+      "match": "exact",
+      "parts": [
+        {
+          "direction_policy": "fixed",
+          "fixed_direction": "south",
+          "include_state_regex": "^grille(?:1|3|4|6|8|10|12|14)-[0-3]$",
+          "source_icon": "icons/obj/SL_windows_grilles.dmi",
+          "source_state": "grille1-0",
+          "state_prefix": "grille",
+          "state_suffix": "-0"
+        },
+        {
+          "direction_policy": "fixed",
+          "fixed_direction": "northeast",
+          "include_state_regex": "^R-",
+          "source_icon": "icons/obj/window_pyro.dmi",
+          "source_state": "R-0",
+          "state_prefix": "R-"
+        }
+      ],
+      "role": "object",
+      "source": {
+        "file": "code/modules/mapping/helpers/wingrille_spawner.dm",
+        "line": 138
+      },
+      "type_path": "/obj/mapping_helper/wingrille_spawn/auto/reinforced/crystal"
+    }
+  ]
+}

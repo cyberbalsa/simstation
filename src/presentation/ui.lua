@@ -24,7 +24,7 @@ end
 
 function Ui.new()
   return setmetatable({
-    help_visible = true,
+    help_visible = false,
     notification = "Foundation loaded",
     notification_until = 6,
     selected_tool = "inspect",
@@ -288,22 +288,32 @@ function Ui:draw(snapshot, renderer, camera, now)
       "F5 / F9                  Save / load",
       "F1                       Close this help",
       "",
-      "Crew autonomously claim and complete work. Blue overlays mark low",
-      "pressure; red marks fire. Goon-derived sprites and sounds are loaded",
-      "from compact native LÖVE catalogs with deterministic shape fallbacks.",
+      "Crew autonomously claim and complete work. Powered fixtures and fires",
+      "feed an occlusion-aware light field composited by a portable shader.",
+      "Goon-derived sprites and sounds load from compact native LÖVE catalogs.",
     }, "\n")
     love.graphics.printf(help, left + 30, top + 55, panel_width - 60, "left")
   end
 
+  local lighting = renderer.lighting
+    and renderer.lighting:diagnostics()
+    or {
+      emitters = 0,
+      shader = false,
+      build_ms = 0,
+    }
   love.graphics.setColor(0.52, 0.62, 0.68, 1)
   love.graphics.print(
     string.format(
-      "tick %d  hash %d  chunks %d (+%d)  draws %d  zoom %.2f",
+      "tick %d  hash %d  chunks %d (+%d)  draws %d  lights %d/%s %.1fms  zoom %.2f",
       snapshot.tick,
       snapshot.state_hash,
       renderer.visible_chunks,
       renderer.rebuilt_chunks,
       renderer.last_draw_calls,
+      lighting.emitters,
+      lighting.shader and "gpu" or "fallback",
+      lighting.build_ms,
       camera.zoom
     ),
     12,

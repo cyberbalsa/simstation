@@ -24,7 +24,8 @@ SEMVER = re.compile(
 )
 CONTENT_ID = re.compile(
     r"^(?P<pack>[a-z0-9][a-z0-9-]*(?:\.[a-z0-9][a-z0-9-]*)+)"
-    r":(?P<kind>[a-z][a-z0-9-]*)/(?P<name>[a-z0-9][a-z0-9/_-]*)$"
+    r":(?P<kind>[a-z][a-z0-9_-]*)/"
+    r"(?P<name>[a-z0-9][a-z0-9_-]*(?:/[a-z0-9][a-z0-9_-]*)*)$"
 )
 ROOT_KEYS = {
     "schema",
@@ -310,6 +311,7 @@ def validate_scenario(definition: dict, path: str, index: int) -> None:
     unknown = sorted(
         set(map_data)
         - {
+            "appearances",
             "format",
             "width",
             "height",
@@ -525,6 +527,115 @@ def validate_scenario(definition: dict, path: str, index: int) -> None:
     previous_end = 0
     previous_palette = 0
     size = width * height
+    appearances = map_data.get("appearances", [])
+    if not isinstance(appearances, list) or len(appearances) > 1_000_000:
+        raise ModError(f"{prefix}: invalid map appearances")
+    previous_appearance = (0, 0)
+    appearance_directions = {
+        "south",
+        "north",
+        "east",
+        "west",
+        "southeast",
+        "southwest",
+        "northeast",
+        "northwest",
+    }
+    for appearance_index, appearance in enumerate(appearances, 1):
+        if not isinstance(appearance, dict) or set(appearance) - {
+            "direction",
+            "icon_override",
+            "icon_state_override",
+            "index",
+            "layer_milli",
+            "order",
+            "pixel_x",
+            "pixel_y",
+            "resolved_icon_state",
+            "role",
+            "source_path",
+        }:
+            raise ModError(
+                f"{prefix}: invalid map appearance {appearance_index}"
+            )
+        cell_index = appearance.get("index")
+        order = appearance.get("order")
+        role = appearance.get("role")
+        source_path = appearance.get("source_path")
+        if (
+            not exact_integer(cell_index)
+            or not 1 <= cell_index <= size
+            or not exact_integer(order)
+            or not 1 <= order <= 4096
+            or (cell_index, order) <= previous_appearance
+            or role not in {"turf", "object"}
+            or not isinstance(source_path, str)
+            or not (
+                source_path == ("/turf" if role == "turf" else "/obj")
+                or source_path.startswith(
+                    ("/turf/" if role == "turf" else "/obj/")
+                )
+            )
+            or not re.fullmatch(r"/[-A-Za-z0-9_/]+", source_path)
+            or "//" in source_path
+            or len(source_path) > 1024
+        ):
+            raise ModError(
+                f"{prefix}: invalid/unsorted map appearance {appearance_index}"
+            )
+        previous_appearance = (cell_index, order)
+        direction = appearance.get("direction")
+        if direction is not None and direction not in appearance_directions:
+            raise ModError(
+                f"{prefix}: invalid map appearance direction {appearance_index}"
+            )
+        icon_override = appearance.get("icon_override")
+        if icon_override is not None and (
+            not isinstance(icon_override, str)
+            or not icon_override.startswith("icons/")
+            or not icon_override.lower().endswith(".dmi")
+            or "\\" in icon_override
+            or "//" in icon_override
+            or ".." in PurePosixPath(icon_override).parts
+            or len(icon_override) > 1024
+        ):
+            raise ModError(
+                f"{prefix}: invalid map appearance icon {appearance_index}"
+            )
+        icon_state = appearance.get("icon_state_override")
+        if icon_state is not None and (
+            not isinstance(icon_state, str)
+            or not icon_state
+            or len(icon_state) > 256
+        ):
+            raise ModError(
+                f"{prefix}: invalid map appearance state {appearance_index}"
+            )
+        resolved_icon_state = appearance.get("resolved_icon_state")
+        if resolved_icon_state is not None and (
+            not isinstance(resolved_icon_state, str)
+            or not resolved_icon_state
+            or len(resolved_icon_state) > 256
+        ):
+            raise ModError(
+                f"{prefix}: invalid resolved map state {appearance_index}"
+            )
+        for offset_key in ("pixel_x", "pixel_y"):
+            offset = appearance.get(offset_key)
+            if offset is not None and (
+                not exact_integer(offset) or not -4096 <= offset <= 4096
+            ):
+                raise ModError(
+                    f"{prefix}: invalid map appearance offset {appearance_index}"
+                )
+        layer_milli = appearance.get("layer_milli")
+        if layer_milli is not None and (
+            not exact_integer(layer_milli)
+            or not -1_000_000_000 <= layer_milli <= 1_000_000_000
+        ):
+            raise ModError(
+                f"{prefix}: invalid map appearance layer {appearance_index}"
+            )
     dense = [default_palette] * size
     for run_index, run in enumerate(runs, 1):
         if (
@@ -1396,6 +1507,327 @@ def validate_structure(definition: dict, path: str, index: int) -> None:
         ledger_features.add(record["feature"])
 
 
+def _lighting_integer(
+    value: object,
+    minimum: int,
+    maximum: int,
+    label: str,
+) -> int:
+    if not exact_integer(value) or not minimum <= value <= maximum:
+        raise ModError(
+            f"{label}: expected integer from {minimum} through {maximum}"
+        )
+    return value
+
+
+def _lighting_rgb8(value: object, label: str) -> None:
+    if (
+        not isinstance(value, list)
+        or len(value) != 3
+        or any(
+            not exact_integer(channel) or not 0 <= channel <= 255
+            for channel in value
+        )
+    ):
+        raise ModError(f"{label}: expected exactly three RGB8 channels")
+
+
+def validate_light_profile(definition: dict, path: str, index: int) -> None:
+    prefix = f"{path}/definitions/{index}"
+    allowed = {
+        "bloom_ppm",
+        "bloom_radius_256",
+        "color_srgb8",
+        "falloff",
+        "flicker",
+        "height_256",
+        "id",
+        "intensity_ppm",
+        "kind",
+        "name_key",
+        "occlusion",
+        "priority",
+        "radius_256",
+        "replaces",
+        "schema",
+    }
+    unknown = sorted(set(definition) - allowed)
+    if unknown:
+        raise ModError(
+            f"{prefix}: unknown light-profile keys: {', '.join(unknown)}"
+        )
+    if definition.get("kind") != "light-profile" or definition.get("schema") != 1:
+        raise ModError(
+            f"{prefix}: light profiles require kind=light-profile/schema=1"
+        )
+    content_id_kind(definition.get("id"), "light-profile", f"{prefix}/id")
+    if (
+        not isinstance(definition.get("name_key"), str)
+        or not definition["name_key"]
+    ):
+        raise ModError(f"{prefix}: light-profile name_key is required")
+    _lighting_rgb8(definition.get("color_srgb8"), f"{prefix}/color_srgb8")
+    _lighting_integer(definition.get("radius_256"), 0, 8192, f"{prefix}/radius_256")
+    _lighting_integer(
+        definition.get("intensity_ppm"),
+        0,
+        4_000_000,
+        f"{prefix}/intensity_ppm",
+    )
+    _lighting_integer(
+        definition.get("height_256"), 1, 4096, f"{prefix}/height_256"
+    )
+    if definition.get("falloff") not in {
+        "constant",
+        "goon-robust",
+        "linear",
+        "smoothstep",
+    }:
+        raise ModError(f"{prefix}: unsupported light-profile falloff")
+    if definition.get("occlusion") not in {"none", "tile-transmission"}:
+        raise ModError(f"{prefix}: unsupported light-profile occlusion")
+    _lighting_integer(
+        definition.get("priority"), -1_000_000, 1_000_000, f"{prefix}/priority"
+    )
+    _lighting_integer(
+        definition.get("bloom_ppm", 0),
+        0,
+        1_000_000,
+        f"{prefix}/bloom_ppm",
+    )
+    _lighting_integer(
+        definition.get("bloom_radius_256", 0),
+        0,
+        4096,
+        f"{prefix}/bloom_radius_256",
+    )
+    flicker = definition.get("flicker")
+    if not isinstance(flicker, dict):
+        raise ModError(f"{prefix}: light-profile flicker must be an object")
+    if flicker.get("mode") == "none":
+        if set(flicker) != {"mode"}:
+            raise ModError(f"{prefix}: none flicker accepts only mode")
+    elif flicker.get("mode") == "hash-step":
+        if set(flicker) != {"mode", "amplitude_ppm", "period_ticks"}:
+            raise ModError(f"{prefix}: invalid hash-step flicker keys")
+        _lighting_integer(
+            flicker.get("amplitude_ppm"),
+            0,
+            500_000,
+            f"{prefix}/flicker/amplitude_ppm",
+        )
+        _lighting_integer(
+            flicker.get("period_ticks"),
+            1,
+            600,
+            f"{prefix}/flicker/period_ticks",
+        )
+    else:
+        raise ModError(f"{prefix}: unsupported light-profile flicker mode")
+
+
+def validate_light_binding(definition: dict, path: str, index: int) -> None:
+    prefix = f"{path}/definitions/{index}"
+    allowed = {
+        "activation",
+        "id",
+        "kind",
+        "level_curve",
+        "level_ppm",
+        "offset_x_256",
+        "offset_y_256",
+        "profile_id",
+        "replaces",
+        "schema",
+        "selector",
+    }
+    unknown = sorted(set(definition) - allowed)
+    if unknown:
+        raise ModError(
+            f"{prefix}: unknown light-binding keys: {', '.join(unknown)}"
+        )
+    if definition.get("kind") != "light-binding" or definition.get("schema") != 1:
+        raise ModError(
+            f"{prefix}: light bindings require kind=light-binding/schema=1"
+        )
+    content_id_kind(definition.get("id"), "light-binding", f"{prefix}/id")
+    content_id_kind(
+        definition.get("profile_id"),
+        "light-profile",
+        f"{prefix}/profile_id",
+    )
+    selector = definition.get("selector")
+    if not isinstance(selector, dict):
+        raise ModError(f"{prefix}: light-binding selector must be an object")
+    selector_kind = selector.get("kind")
+    if selector_kind == "provider":
+        if set(selector) != {"kind", "provider_id"} or selector.get(
+            "provider_id"
+        ) not in {
+            "org.simstation.core:light-provider/fire-tile-v1",
+            "org.simstation.core:light-provider/light-feature-v1",
+        }:
+            raise ModError(f"{prefix}: invalid light provider selector")
+    elif selector_kind == "definition":
+        if set(selector) != {"kind", "definition_id"}:
+            raise ModError(f"{prefix}: invalid definition light selector")
+        content_id_kind(
+            selector.get("definition_id"),
+            "machine",
+            f"{prefix}/selector/definition_id",
+        )
+    elif selector_kind == "source-path":
+        if set(selector) != {"kind", "path_root", "scenario_ids"}:
+            raise ModError(f"{prefix}: invalid source-path light selector")
+        scenario_ids = selector.get("scenario_ids")
+        if (
+            not isinstance(scenario_ids, list)
+            or not 1 <= len(scenario_ids) <= 64
+            or not all(isinstance(value, str) for value in scenario_ids)
+        ):
+            raise ModError(f"{prefix}: scenario IDs must be strings")
+        if scenario_ids != sorted(set(scenario_ids)):
+            raise ModError(f"{prefix}: scenario IDs must be sorted and unique")
+        for scenario_id in scenario_ids:
+            content_id_kind(
+                scenario_id,
+                "scenario",
+                f"{prefix}/selector/scenario_ids",
+            )
+        root = selector.get("path_root")
+        if (
+            not isinstance(root, str)
+            or not root.startswith("/obj/")
+            or len(root) > 1024
+            or any(part in {"", ".", ".."} for part in root.split("/")[1:])
+        ):
+            raise ModError(f"{prefix}: unsafe source-path selector root")
+    else:
+        raise ModError(f"{prefix}: unsupported light selector kind")
+
+    activation = definition.get("activation")
+    if (
+        not isinstance(activation, dict)
+        or set(activation) != {"mode", "power_channel"}
+        or activation.get("mode")
+        not in {"always", "emergency", "independent", "normal", "signal"}
+        or activation.get("power_channel")
+        not in {"environment", "equipment", "lighting", "none"}
+        or (
+            activation.get("mode") in {"always", "independent"}
+            and activation.get("power_channel") != "none"
+        )
+        or (
+            activation.get("mode") in {"emergency", "normal", "signal"}
+            and activation.get("power_channel") == "none"
+        )
+    ):
+        raise ModError(f"{prefix}: invalid light-binding activation")
+    _lighting_integer(
+        definition.get("offset_x_256", 0),
+        -4096,
+        4096,
+        f"{prefix}/offset_x_256",
+    )
+    _lighting_integer(
+        definition.get("offset_y_256", 0),
+        -4096,
+        4096,
+        f"{prefix}/offset_y_256",
+    )
+    _lighting_integer(
+        definition.get("level_ppm"),
+        0,
+        4_000_000,
+        f"{prefix}/level_ppm",
+    )
+    curve = definition.get("level_curve")
+    if curve is not None:
+        if not isinstance(curve, list) or not 2 <= len(curve) <= 16:
+            raise ModError(f"{prefix}: level_curve needs 2 through 16 points")
+        previous = -1
+        for point_index, point in enumerate(curve):
+            if not isinstance(point, dict) or set(point) != {
+                "input",
+                "output_ppm",
+            }:
+                raise ModError(f"{prefix}: invalid level curve point {point_index}")
+            input_value = _lighting_integer(
+                point.get("input"),
+                0,
+                1_000_000,
+                f"{prefix}/level_curve/{point_index}/input",
+            )
+            if input_value <= previous:
+                raise ModError(f"{prefix}: level curve inputs must increase")
+            previous = input_value
+            _lighting_integer(
+                point.get("output_ppm"),
+                0,
+                4_000_000,
+                f"{prefix}/level_curve/{point_index}/output_ppm",
+            )
+
+
+def validate_lighting_settings(definition: dict, path: str, index: int) -> None:
+    prefix = f"{path}/definitions/{index}"
+    allowed = {
+        "id",
+        "kind",
+        "linear_filter",
+        "max_emitters",
+        "max_radius_256",
+        "max_work_units",
+        "replaces",
+        "schema",
+        "shader",
+        "space_ambient_srgb8",
+        "station_ambient_srgb8",
+    }
+    unknown = sorted(set(definition) - allowed)
+    if unknown:
+        raise ModError(
+            f"{prefix}: unknown lighting-settings keys: {', '.join(unknown)}"
+        )
+    if (
+        definition.get("id")
+        != "org.simstation.core:lighting-settings/station"
+        or definition.get("kind") != "lighting-settings"
+        or definition.get("schema") != 1
+    ):
+        raise ModError(f"{prefix}: invalid station lighting-settings identity")
+    _lighting_rgb8(
+        definition.get("station_ambient_srgb8"),
+        f"{prefix}/station_ambient_srgb8",
+    )
+    _lighting_rgb8(
+        definition.get("space_ambient_srgb8"),
+        f"{prefix}/space_ambient_srgb8",
+    )
+    _lighting_integer(
+        definition.get("max_emitters"),
+        1,
+        4096,
+        f"{prefix}/max_emitters",
+    )
+    _lighting_integer(
+        definition.get("max_radius_256"),
+        0,
+        8192,
+        f"{prefix}/max_radius_256",
+    )
+    _lighting_integer(
+        definition.get("max_work_units", 4_000_000),
+        1,
+        64_000_000,
+        f"{prefix}/max_work_units",
+    )
+    if not isinstance(definition.get("shader"), bool) or not isinstance(
+        definition.get("linear_filter"), bool
+    ):
+        raise ModError(f"{prefix}: shader/filter settings must be booleans")
+
+
 def validate_content(manifest: dict, files: dict[str, bytes]) -> dict:
     names = sorted(files)
     selected_by_field: dict[str, list[str]] = {
@@ -1456,6 +1888,12 @@ def validate_content(manifest: dict, files: dict[str, bytes]) -> dict:
                 validate_machine(definition, path, index)
             elif match.group("kind") == "structure":
                 validate_structure(definition, path, index)
+            elif match.group("kind") == "light-profile":
+                validate_light_profile(definition, path, index)
+            elif match.group("kind") == "light-binding":
+                validate_light_binding(definition, path, index)
+            elif match.group("kind") == "lighting-settings":
+                validate_lighting_settings(definition, path, index)
             definitions += 1
     return {
         "content_files": sorted(set(selected_by_field["content"])),

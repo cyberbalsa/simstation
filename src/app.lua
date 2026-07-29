@@ -129,6 +129,15 @@ function App.new(args)
       10
     )
   end
+  local lighting_errors =
+    app.renderer.lighting:diagnostics().content_errors
+  if mod_session and #lighting_errors > 0 then
+    app.ui:set_notification(
+      "Lighting data fallback: " .. lighting_errors[1],
+      0,
+      10
+    )
+  end
   return app
 end
 

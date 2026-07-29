@@ -1,0 +1,372 @@
+{
+  "schema_version": 1,
+  "source_commit": "1b2b250abb5be747d55e274de0203a59cfc8da78",
+  "catalog": {
+    "sprite_aliases": 29,
+    "referenced_pages": 14,
+    "cell_size": 32
+  },
+  "aliases": {
+    "catwalk": {
+      "id": "org.simstation.goon:sprite/icons/obj/grille-dmi/catwalk--b98443a7fa-o01",
+      "source_path": "icons/obj/grille.dmi",
+      "source_state": "catwalk",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south",
+        "north",
+        "east",
+        "west",
+        "southeast",
+        "southwest",
+        "northeast",
+        "northwest"
+      ],
+      "pixel_sha256": "151c9301deb765972b178c1ea1676b9a539554eb4afdd648533f9a4ea168fabe"
+    },
+    "chair": {
+      "id": "org.simstation.goon:sprite/icons/obj/furniture/chairs-dmi/chair--851e13a653-o01",
+      "source_path": "icons/obj/furniture/chairs.dmi",
+      "source_state": "chair",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south",
+        "north",
+        "east",
+        "west"
+      ],
+      "pixel_sha256": "f09c8b6d55923da59ea50a531eabcb6787507ff43e2bab99774b4bea405e384e"
+    },
+    "crate": {
+      "id": "org.simstation.goon:sprite/icons/obj/storage/crate-dmi/crate--1673dc3970-o01",
+      "source_path": "icons/obj/storage/crate.dmi",
+      "source_state": "crate",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south"
+      ],
+      "pixel_sha256": "14199142603dd07816d6c9daac845d2dd6d606d48c88f89c776f10243bcf1f30"
+    },
+    "decal": {
+      "id": "org.simstation.goon:sprite/icons/obj/hazard_stripes-dmi/stripe--2fcb5a43a4-o01",
+      "source_path": "icons/obj/hazard_stripes.dmi",
+      "source_state": "stripe",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south",
+        "north",
+        "east",
+        "west"
+      ],
+      "pixel_sha256": "41eeb09a7957bdd29f6a5b030bbd1fbcecb290078a9eca95fd2c5d021de5b9b9"
+    },
+    "disposal": {
+      "id": "org.simstation.goon:sprite/icons/obj/disposal-dmi/disposal--4edc28b0fb-o01",
+      "source_path": "icons/obj/disposal.dmi",
+      "source_state": "disposal",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south"
+      ],
+      "pixel_sha256": "97139698f56b1f2b0892b5a54b9b401b8c4d75ae6268bb53f4d4f6d6479e5612"
+    },
+    "door_closed": {
+      "id": "org.simstation.goon:sprite/icons/obj/doors/doorclassic-dmi/door_closed--553558f5ff-o01",
+      "source_path": "icons/obj/doors/Doorclassic.dmi",
+      "source_state": "door_closed",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south"
+      ],
+      "pixel_sha256": "cd560362d3f16f9aca007c5d5470d24957801ea358c6720a8289a30e1d9fa7a8"
+    },
+    "door_open": {
+      "id": "org.simstation.goon:sprite/icons/obj/doors/doorclassic-dmi/door_open--5fe7ebb3c8-o01",
+      "source_path": "icons/obj/doors/Doorclassic.dmi",
+      "source_state": "door_open",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south"
+      ],
+      "pixel_sha256": "f40912abe6b260bec4f4d10afbf88688b701f8094cc08af8f3f2f4975a255d0c"
+    },
+    "floor": {
+      "id": "org.simstation.goon:sprite/icons/turf/floors-dmi/floor--3684c9d3c0-o01",
+      "source_path": "icons/turf/floors.dmi",
+      "source_state": "floor",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south"
+      ],
+      "pixel_sha256": "ab15e8bf695fda871b5e7878c06098b4bae3754af068c972f167aaaaf965fcc2"
+    },
+    "grille": {
+      "id": "org.simstation.goon:sprite/icons/obj/grille-dmi/grille-0--59a5a19a50-o01",
+      "source_path": "icons/obj/grille.dmi",
+      "source_state": "grille-0",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south"
+      ],
+      "pixel_sha256": "aeac9da00917fe04903eccffdce09f6af153999e63bf28b99950dd05b92b6446"
+    },
+    "lattice": {
+      "id": "org.simstation.goon:sprite/icons/obj/structures-dmi/lattice--6e0a57eb0d-o01",
+      "source_path": "icons/obj/structures.dmi",
+      "source_state": "lattice",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south"
+      ],
+      "pixel_sha256": "e3e82adce8b0d5652ac4b65d63300c3d8046c0ee4bc84f4f53427151269a7a6c"
+    },
+    "light": {
+      "id": "org.simstation.goon:sprite/icons/obj/lighting-dmi/tube1--75faa72913-o01",
+      "source_path": "icons/obj/lighting.dmi",
+      "source_state": "tube1",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south",
+        "north",
+        "east",
+        "west"
+      ],
+      "pixel_sha256": "6d3174bc55eb80df092ff2075523a937cd787b637e82a0a31bdb585e98a57644"
+    },
+    "pipe": {
+      "id": "org.simstation.goon:sprite/icons/obj/atmospherics/pipes/pipe-dmi/normal--9c2a6e4809-o01",
+      "source_path": "icons/obj/atmospherics/pipes/pipe.dmi",
+      "source_state": "normal",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south",
+        "north",
+        "east",
+        "west",
+        "southeast",
+        "southwest",
+        "northeast",
+        "northwest"
+      ],
+      "pixel_sha256": "61d6fb80dfbb1378b24fcf532a571e718add91ce1a42a852cdd7191feae3df27"
+    },
+    "plating": {
+      "id": "org.simstation.goon:sprite/icons/turf/floors-dmi/plating--eea474ed21-o01",
+      "source_path": "icons/turf/floors.dmi",
+      "source_state": "plating",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south"
+      ],
+      "pixel_sha256": "6a00c43367d837d5cbda607fd79e420f7ae1ed498f7be3486e8469dfc3c17a87"
+    },
+    "reinforced_floor": {
+      "id": "org.simstation.goon:sprite/icons/turf/floors-dmi/engine--c64033672f-o01",
+      "source_path": "icons/turf/floors.dmi",
+      "source_state": "engine",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south"
+      ],
+      "pixel_sha256": "67bf08e7d3ed2b6661ab9622203abed252d0b2fc5f95506fd64066e1ec3f80c8"
+    },
+    "reinforced_wall": {
+      "id": "org.simstation.goon:sprite/icons/turf/walls-dmi/r_wall--a3c258120b-o01",
+      "source_path": "icons/turf/walls.dmi",
+      "source_state": "r_wall",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south"
+      ],
+      "pixel_sha256": "853c6f030f696044b47cc3057f452a9e083bd8e15d221426580a464fe861c158"
+    },
+    "sign": {
+      "id": "org.simstation.goon:sprite/icons/obj/decals/wallsigns-dmi/wall_caution--1756bab6e8-o01",
+      "source_path": "icons/obj/decals/wallsigns.dmi",
+      "source_state": "wall_caution",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south"
+      ],
+      "pixel_sha256": "ab091fbc5ea3f20362cf8b253d8c11a3c05c2e18fd5ae3f3abcc3f44a0b47710"
+    },
+    "storage": {
+      "id": "org.simstation.goon:sprite/icons/obj/storage/locker-dmi/closed--ea88fbaa99-o01",
+      "source_path": "icons/obj/storage/locker.dmi",
+      "source_state": "closed",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south"
+      ],
+      "pixel_sha256": "2a5d6399fd5cbde64e65d707ae5ba7d27299ff7a0c4bf97ee04dc67746d828a7"
+    },
+    "table": {
+      "id": "org.simstation.goon:sprite/icons/obj/furniture/table-dmi/0--b6589fc6ab-o01",
+      "source_path": "icons/obj/furniture/table.dmi",
+      "source_state": "0",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south"
+      ],
+      "pixel_sha256": "d9a2dda7611cc8db10bab16386bb1ce85b1f1a7ecb5029d91de324c2f9343e33"
+    },
+    "wall": {
+      "id": "org.simstation.goon:sprite/icons/turf/walls-dmi/riveted--b2df855a7c-o01",
+      "source_path": "icons/turf/walls.dmi",
+      "source_state": "riveted",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south"
+      ],
+      "pixel_sha256": "7b8a2d08438ddb41881a5b92c43982afd22559acfff62ee41a02348f41842af4"
+    },
+    "window": {
+      "id": "org.simstation.goon:sprite/icons/obj/window-dmi/window--320ad267d8-o01",
+      "source_path": "icons/obj/window.dmi",
+      "source_state": "window",
+      "source_state_occurrence": 1,
+      "directions": [
+        "south",
+        "north",
+        "east",
+        "west",
+        "southeast",
+        "southwest",
+        "northeast",
+        "northwest"
+      ],
+      "pixel_sha256": "1255e7cf4f87914cbc3b28a804a5b7e6d3ae56fb7a088b177941b06a834283a9"
+    }
+  },
+  "room": {
+    "width": 16,
+    "height": 16,
+    "cells": [
+      {
+        "x": 1,
+        "y": 1,
+        "turf": "floor",
+        "cable": true,
+        "features": [
+          "catwalk",
+          "chair",
+          "decal",
+          "disposal",
+          "lattice",
+          "light",
+          "pipe",
+          "storage",
+          "table"
+        ],
+        "expected_draw_order": [
+          "floor",
+          "cable",
+          "decal",
+          "lattice",
+          "catwalk",
+          "pipe",
+          "disposal",
+          "table",
+          "chair",
+          "storage",
+          "light"
+        ]
+      },
+      {
+        "x": 2,
+        "y": 1,
+        "turf": "plating",
+        "features": [
+          "crate",
+          "sign"
+        ],
+        "expected_draw_order": [
+          "plating",
+          "crate",
+          "sign"
+        ]
+      },
+      {
+        "x": 3,
+        "y": 1,
+        "turf": "reinforced_floor",
+        "structure": "wall",
+        "wall_kind": "reinforced",
+        "expected_draw_order": [
+          "reinforced_floor",
+          "reinforced_wall"
+        ]
+      },
+      {
+        "x": 4,
+        "y": 1,
+        "turf": "floor",
+        "structure": "wall",
+        "wall_kind": "standard",
+        "expected_draw_order": [
+          "floor",
+          "wall"
+        ]
+      },
+      {
+        "x": 5,
+        "y": 1,
+        "turf": "floor",
+        "structure": "door_closed",
+        "expected_draw_order": [
+          "floor",
+          "door_closed"
+        ]
+      },
+      {
+        "x": 6,
+        "y": 1,
+        "turf": "floor",
+        "structure": "door_open",
+        "expected_draw_order": [
+          "floor",
+          "door_open"
+        ]
+      },
+      {
+        "x": 7,
+        "y": 1,
+        "turf": "floor",
+        "structure": "wall",
+        "wall_kind": "standard",
+        "features": [
+          "grille",
+          "window"
+        ],
+        "expected_draw_order": [
+          "floor",
+          "grille",
+          "window"
+        ]
+      }
+    ],
+    "expected_drawn_aliases": [
+      "cable",
+      "catwalk",
+      "chair",
+      "crate",
+      "decal",
+      "disposal",
+      "door_closed",
+      "door_open",
+      "floor",
+      "grille",
+      "lattice",
+      "light",
+      "pipe",
+      "plating",
+      "reinforced_floor",
+      "reinforced_wall",
+      "sign",
+      "storage",
+      "table",
+      "wall",
+      "window"
+    ]
+  }
+}

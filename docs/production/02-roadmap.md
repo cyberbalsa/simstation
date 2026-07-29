@@ -25,7 +25,7 @@ Exit:
 - base content travels through the ordinary mod loader;
 - save/reload/replay and one schema migration pass;
 - public examples are fixtures;
-- `audit` is the mandatory CI/handoff gate.
+- `audit` is the mandatory local handoff and release gate.
 
 The existing bootstrap is an early M1 subset. Its abbreviated public shapes
 must be upgraded before M1 exit.

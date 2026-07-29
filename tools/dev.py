@@ -103,7 +103,15 @@ def command_test(_: argparse.Namespace) -> int:
     if lua_result.returncode:
         return lua_result.returncode
     return run(
-        [sys.executable, "-m", "unittest", "-v", "tests.test_map_import"]
+        [
+            sys.executable,
+            "-m",
+            "unittest",
+            "-v",
+            "tests.test_map_import",
+            "tests.test_dm_appearances",
+            "tests.test_mods",
+        ]
     ).returncode
 
 
@@ -791,7 +799,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     ci_parser = subparsers.add_parser(
         "ci",
-        help="run the same fast gate used by continuous integration",
+        help="run the fast local audit and smoke benchmark",
     )
     ci_parser.set_defaults(callback=command_ci)
 

@@ -72,6 +72,11 @@ function World.new(width, height)
     dirty = filled_array(size, 0),
     area = filled_array(size, 0),
     areas = {},
+    -- Authoritative pipe segments (src.core.pipes); pipelines and networks
+    -- are derived. Empty worlds omit the array from snapshots so legacy
+    -- state hashes are unchanged.
+    pipes = {},
+    gas_vented_qmol = 0,
     door_access = filled_array(size, false),
     door_close_tick = filled_array(size, 0),
     open_door_indices = {},
@@ -791,6 +796,9 @@ function World:snapshot()
     dirty = self.dirty,
     area = self.area,
     areas = self.areas,
+    pipes = #self.pipes > 0 and self.pipes or nil,
+    gas_vented_qmol = self.gas_vented_qmol ~= 0 and self.gas_vented_qmol
+      or nil,
     door_access = self.door_access,
     door_close_tick = self.door_close_tick,
     open_door_indices = self.open_door_indices,
@@ -831,6 +839,7 @@ function World.from_snapshot(snapshot)
     "fire",
     "dirty",
     "area",
+    "pipes",
     "door_access",
     "door_close_tick",
     "open_door_indices",
@@ -845,6 +854,7 @@ function World.from_snapshot(snapshot)
     end
   end
   world.map_id = snapshot.map_id or false
+  world.gas_vented_qmol = snapshot.gas_vented_qmol or 0
   world.areas = Stable.deep_copy(snapshot.areas or {})
   world.area_powered = Stable.deep_copy(snapshot.area_powered or {})
   world.topology_revision = snapshot.topology_revision

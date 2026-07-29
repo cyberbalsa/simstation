@@ -13,6 +13,8 @@
   "item.cable-coil": "Cable Coil",
   "item.circuit": "Circuit",
   "item.control-assembly": "Control Assembly",
+  "light_profile.goon_fire": "Open Flame",
+  "light_profile.goon_tube": "Station Light Tube",
   "structure.floor": "Floor",
   "structure.wall": "Wall",
   "structure.door": "Airlock"

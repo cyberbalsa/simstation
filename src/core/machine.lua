@@ -3,6 +3,7 @@ local Rng = require("src.core.rng")
 local ContentId = require("src.content.id")
 local Behaviors = require("src.core.machines")
 local Shared = require("src.core.machines.shared")
+local Pipes = require("src.core.pipes")
 
 local Machine = {}
 
@@ -903,6 +904,11 @@ function Machine.step_all(simulation, target_ds)
         process_machine(simulation, machine, now_ds)
         process.next_due_ds = process.next_due_ds + process.interval_ds
       end
+    end
+    -- Pipe networks reconcile every 16 ds with the +4 ds phase after the
+    -- atmosphere machines (docs/technical/09, authoritative ds schedule).
+    if now_ds % 16 == 8 then
+      Pipes.step(simulation, now_ds)
     end
     for index = 1, #ordered do
       local machine = ordered[index]
