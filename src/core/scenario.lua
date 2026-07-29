@@ -2,6 +2,8 @@ local Constants = require("src.core.constants")
 local Stable = require("src.core.stable")
 local World = require("src.core.world")
 local ContentId = require("src.content.id")
+local Gas = require("src.core.gas")
+local Pipes = require("src.core.pipes")
 
 local Scenario = {}
 
@@ -99,6 +101,7 @@ local DEFINITION_KEYS = {
   map = true,
   meteor_targets = true,
   name = true,
+  pipes = true,
   power_supply_w = true,
   provenance = true,
   replaces = true,
@@ -180,6 +183,41 @@ local TARGET_KEYS = {
   x = true,
   y = true,
 }
+
+local MAX_PIPES = 4096
+local MAX_PIPES_PER_TILE = 4
+
+local PIPE_KEYS = {
+  dir = true,
+  gas = true,
+  kind = true,
+  temperature_mk = true,
+  x = true,
+  y = true,
+}
+
+-- BYOND direction bitfield values accepted for pipes.
+local PIPE_DIRS = {
+  [1] = true,
+  [2] = true,
+  [4] = true,
+  [8] = true,
+  [5] = true,
+  [6] = true,
+  [9] = true,
+  [10] = true,
+}
+
+local CARDINAL_ONLY_PIPE_KINDS = {
+  junction = true,
+  manifold = true,
+  vertical = true,
+}
+
+local PIPE_GAS_KEYS = {}
+for index = 1, #Gas.SPECIES do
+  PIPE_GAS_KEYS[Gas.SPECIES[index]] = true
+end
 
 local function closed_keys(value, allowed, name)
   local keys = Stable.sorted_keys(value)
@@ -618,6 +656,48 @@ local function validate_spawns(definition, width, height, scenario_id)
   return spawns
 end
 
+local function validate_pipes(definition, width, height)
+  local pipes = definition.pipes or {}
+  assert(type(pipes) == "table", "scenario pipes must be an array")
+  assert(#pipes <= MAX_PIPES, "scenario has too many pipes")
+  local per_tile = {}
+  for index = 1, #pipes do
+    local pipe = pipes[index]
+    assert(type(pipe) == "table", "scenario pipe must be an object")
+    closed_keys(pipe, PIPE_KEYS, "scenario pipe")
+    validate_position(pipe, width, height, "scenario pipe")
+    assert(type(pipe.kind) == "string" and Pipes.KIND_VOLUME_L[pipe.kind],
+      "unknown pipe kind: " .. tostring(pipe.kind))
+    assert(type(pipe.dir) == "number" and PIPE_DIRS[pipe.dir],
+      "scenario pipe dir must be a BYOND direction")
+    if CARDINAL_ONLY_PIPE_KINDS[pipe.kind] then
+      assert(pipe.dir == 1 or pipe.dir == 2 or pipe.dir == 4 or pipe.dir == 8,
+        pipe.kind .. " pipes require a cardinal dir")
+    end
+    if pipe.temperature_mk ~= nil then
+      integer(pipe.temperature_mk, "pipe.temperature_mk", 0, 10000000)
+    end
+    if pipe.gas ~= nil then
+      assert(type(pipe.gas) == "table", "pipe.gas must be an object")
+      closed_keys(pipe.gas, PIPE_GAS_KEYS, "pipe.gas")
+      local species = Stable.sorted_keys(pipe.gas)
+      for species_index = 1, #species do
+        integer(
+          pipe.gas[species[species_index]],
+          "pipe.gas." .. species[species_index],
+          0,
+          1000000000000
+        )
+      end
+    end
+    local key = tostring(pipe.y) .. ":" .. tostring(pipe.x)
+    per_tile[key] = (per_tile[key] or 0) + 1
+    assert(per_tile[key] <= MAX_PIPES_PER_TILE,
+      "too many pipes on one tile at " .. key)
+  end
+  return pipes
+end
+
 local function validate_targets(definition, width, height)
   local targets = definition.meteor_targets or {}
   assert(type(targets) == "table", "meteor_targets must be an array")
@@ -665,6 +745,7 @@ function Scenario.validate(definition, content)
   validate_fixtures(definition, width, height, scenario_id)
   validate_spawns(definition, width, height, scenario_id)
   validate_targets(definition, width, height)
+  validate_pipes(definition, width, height)
 
   integer(definition.power_supply_w or 0, "scenario.power_supply_w", 0, 1000000000)
   local inventory = definition.starting_inventory or {}
@@ -886,6 +967,57 @@ function Scenario.instantiate(definition, content)
       }
     end
   end
+  local pipe_entries = Stable.deep_copy(definition.pipes or {})
+  local entry_order = {}
+  for index = 1, #pipe_entries do
+    entry_order[pipe_entries[index]] = index
+  end
+  table.sort(pipe_entries, function(a, b)
+    if a.y ~= b.y then
+      return a.y < b.y
+    end
+    if a.x ~= b.x then
+      return a.x < b.x
+    end
+    return entry_order[a] < entry_order[b]
+  end)
+  local scenario_content_id = ContentId.parse(definition.id)
+  local tile_counts = {}
+  for index = 1, #pipe_entries do
+    local entry = pipe_entries[index]
+    local tile_index = assert(world:index(entry.x, entry.y))
+    local tile_key = tostring(tile_index)
+    tile_counts[tile_key] = (tile_counts[tile_key] or 0) + 1
+    local suffix = tile_counts[tile_key] > 1
+      and string.format("-%d", tile_counts[tile_key])
+      or ""
+    local gas = Gas.new(
+      Pipes.KIND_VOLUME_L[entry.kind],
+      entry.temperature_mk or Gas.T20C_MK
+    )
+    for species, amount in pairs(entry.gas or {}) do
+      gas[species] = amount
+    end
+    world.pipes[#world.pipes + 1] = {
+      id = string.format(
+        "%s:scenario-pipe/%s/pipe-x%03d-y%03d%s",
+        scenario_content_id.pack,
+        scenario_content_id.name,
+        entry.x,
+        entry.y,
+        suffix
+      ),
+      index = tile_index,
+      x = entry.x,
+      y = entry.y,
+      kind = entry.kind,
+      dir = entry.dir,
+      gas = gas,
+    }
+  end
+  table.sort(world.pipes, function(a, b)
+    return a.id < b.id
+  end)
   local spawns = Stable.deep_copy(definition.spawns or {})
   table.sort(spawns, function(a, b)
     return a.id < b.id

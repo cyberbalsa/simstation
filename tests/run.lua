@@ -2933,6 +2933,307 @@ test("native Atlas scenario manufactures and round-trips", function()
   equal(restored:state_hash(), sim:state_hash())
 end)
 
+local Gas = require("src.core.gas")
+local Pipes = require("src.core.pipes")
+
+local function pipe_test_sim()
+  -- 48x48 procedural world: the seeded core spans x 9..39 / y 13..35 with
+  -- pressurized interior tiles; everything else is space.
+  return Simulation.new({
+    seed = 4242,
+    width = 48,
+    height = 48,
+    crew_count = 0,
+  })
+end
+
+
+local function add_pipe(world, x, y, kind, dir, id_suffix)
+  local index = assert(world:index(x, y))
+  local gas = Gas.new(Pipes.KIND_VOLUME_L[kind], Gas.T20C_MK)
+  local pipe = {
+    id = string.format(
+      "org.simstation.core:scenario-pipe/test/pipe-x%03d-y%03d%s",
+      x,
+      y,
+      id_suffix or ""
+    ),
+    index = index,
+    x = x,
+    y = y,
+    kind = kind,
+    dir = dir,
+    gas = gas,
+  }
+  world.pipes[#world.pipes + 1] = pipe
+  return pipe
+end
+
+local function finish_pipes(world)
+  table.sort(world.pipes, function(a, b)
+    return a.id < b.id
+  end)
+  world.topology_revision = world.topology_revision + 1
+end
+
+local function total_species(mixtures, species)
+  local total = 0
+  for index = 1, #mixtures do
+    total = total + mixtures[index][species]
+  end
+  return total
+end
+
+-- A sealed 2x2 loop of corner pipes anchored at (x, y): no exposed ends, so
+-- mingle never runs and species assertions stay exact.
+local function add_sealed_loop(world, x, y, kind)
+  kind = kind or "simple"
+  local a = add_pipe(world, x, y, kind, 6) -- south+east
+  local b = add_pipe(world, x + 1, y, kind, 10) -- south+west
+  local c = add_pipe(world, x, y + 1, kind, 5) -- north+east
+  local d = add_pipe(world, x + 1, y + 1, kind, 9) -- north+west
+  return a, b, c, d
+end
+
+test("gas mixtures merge, remove, and pressure with pinned Goon math", function()
+  local hot = Gas.new(200, 400000)
+  hot.oxygen = 1000
+  local cold = Gas.new(200, 300000)
+  cold.nitrogen = 2000
+  -- merge weights temperature by heat capacity: (400000*40000 +
+  -- 300000*100000) / 140000 = 328571 mK.
+  Gas.merge(hot, cold)
+  equal(hot.temperature_mk, 328571)
+  equal(hot.oxygen, 1000)
+  equal(hot.nitrogen, 2000)
+
+  -- remove is proportional with QUANTIZE rounding and clamps to contents.
+  local removed = Gas.remove_qmol(hot, 300)
+  equal(removed.oxygen, 100)
+  equal(removed.nitrogen, 200)
+  equal(removed.temperature_mk, 328571)
+  equal(hot.oxygen, 900)
+  equal(hot.nitrogen, 1800)
+  local everything = Gas.remove_qmol(hot, 999999)
+  equal(everything.oxygen, 900)
+  equal(everything.nitrogen, 1800)
+  equal(Gas.total_qmol(hot), 0)
+  equal(Gas.remove_qmol(hot, 10), nil)
+
+  -- One standard cell: 1,039,280 qmol at 20C in 2500 L is one atmosphere.
+  local cell = Gas.new(2500, 293150)
+  cell.oxygen = 218249
+  cell.nitrogen = 821031
+  local pressure = Gas.pressure_pa(cell)
+  truthy(pressure >= 101280 and pressure <= 101370,
+    "standard cell should be about one atmosphere, got " .. pressure)
+end)
+
+test("plasma combustion matches the pinned fire vector", function()
+  -- 70 L pipe at 1000 K holding 0.05 mol plasma and 1 mol oxygen burns in
+  -- the fullburn branch: scale 0.276145, burn rate 34.518 qmol.
+  local mix = Gas.new(70, 1000000)
+  mix.toxins = 500
+  mix.oxygen = 10000
+  truthy(Gas.react(mix, 1), "hot plasma and oxygen must combust")
+  equal(mix.toxins, 488)
+  equal(mix.oxygen, 9961)
+  equal(mix.carbon_dioxide, 12)
+  equal(mix.temperature_mk, 1225439)
+
+  -- At exactly the fire floor (373.15 K) nothing burns: threshold is strict.
+  local floor_mix = Gas.new(70, 373150)
+  floor_mix.toxins = 500
+  floor_mix.oxygen = 10000
+  equal(Gas.react(floor_mix, 1), false)
+  equal(floor_mix.toxins, 500)
+
+  -- The agent-B branch needs 900 K, plasma, and CO2 present.
+  local catalyst = Gas.new(200, 950000)
+  catalyst.toxins = 4000
+  catalyst.carbon_dioxide = 1000
+  catalyst.oxygen_agent_b = 100
+  truthy(Gas.react(catalyst, 1), "agent B catalyses above 900 K")
+  equal(catalyst.carbon_dioxide, 995)
+  equal(catalyst.oxygen, 5)
+  equal(catalyst.oxygen_agent_b, 100)
+  local cold_catalyst = Gas.new(200, 900000)
+  cold_catalyst.toxins = 4000
+  cold_catalyst.carbon_dioxide = 1000
+  cold_catalyst.oxygen_agent_b = 100
+  equal(Gas.react(cold_catalyst, 1), false)
+end)
+
+test("pipelines assemble deterministically from segment topology", function()
+  local sim = pipe_test_sim()
+  local world = sim.world
+  -- East-west run into a south+west corner, down to a junction whose dir
+  -- (south) side takes heat pipes and whose north side takes the run.
+  add_pipe(world, 4, 4, "simple", 4)
+  add_pipe(world, 5, 4, "simple", 8)
+  add_pipe(world, 6, 4, "simple", 10) -- corner south+west
+  add_pipe(world, 6, 5, "simple", 1)
+  add_pipe(world, 6, 6, "junction", 2)
+  add_pipe(world, 6, 7, "heat_exchanging", 1)
+  -- A plain pipe beside the heat exchanger may not join it.
+  add_pipe(world, 7, 7, "simple", 4, "-b")
+  finish_pipes(world)
+
+  local topology = Pipes.ensure_topology(sim)
+  equal(#topology.pipelines, 2)
+  equal(#topology.pipelines[1].segments, 6)
+  equal(#topology.pipelines[2].segments, 1)
+  equal(topology.pipelines[1].volume_l, 420)
+  equal(topology.pipelines[2].segments[1].x, 7)
+  equal(#topology.networks, 2)
+
+  -- Shuffled insertion produces the identical partition.
+  local shuffled = pipe_test_sim()
+  local shuffled_world = shuffled.world
+  add_pipe(shuffled_world, 6, 7, "heat_exchanging", 1)
+  add_pipe(shuffled_world, 7, 7, "simple", 4, "-b")
+  add_pipe(shuffled_world, 6, 6, "junction", 2)
+  add_pipe(shuffled_world, 6, 5, "simple", 1)
+  add_pipe(shuffled_world, 6, 4, "simple", 10)
+  add_pipe(shuffled_world, 5, 4, "simple", 8)
+  add_pipe(shuffled_world, 4, 4, "simple", 4)
+  finish_pipes(shuffled_world)
+  local shuffled_topology = Pipes.ensure_topology(shuffled)
+  equal(#shuffled_topology.pipelines, #topology.pipelines)
+  for index = 1, #topology.pipelines do
+    equal(
+      shuffled_topology.pipelines[index].id,
+      topology.pipelines[index].id
+    )
+    equal(
+      #shuffled_topology.pipelines[index].segments,
+      #topology.pipelines[index].segments
+    )
+  end
+end)
+
+test("pipe networks reconcile by volume ratio and conserve moles", function()
+  local sim = pipe_test_sim()
+  local world = sim.world
+  local a, b, c, d = add_sealed_loop(world, 11, 11)
+  local far = add_sealed_loop(world, 30, 4)
+  finish_pipes(world)
+  a.gas.oxygen = 10500
+  a.gas.temperature_mk = 400000
+  b.gas.nitrogen = 700
+
+  local topology = Pipes.ensure_topology(sim)
+  equal(#topology.networks, 2)
+  Pipes.step(sim, 8)
+
+  -- Four equal 70 L members split every species exactly four ways.
+  equal(a.gas.oxygen, 2625)
+  equal(b.gas.oxygen, 2625)
+  equal(c.gas.oxygen, 2625)
+  equal(d.gas.oxygen, 2625)
+  equal(a.gas.nitrogen, 175)
+  equal(total_species({ a.gas, b.gas, c.gas, d.gas }, "oxygen"), 10500)
+  equal(total_species({ a.gas, b.gas, c.gas, d.gas }, "nitrogen"), 700)
+  equal(a.gas.temperature_mk, d.gas.temperature_mk)
+  -- The detached loop is a different network and receives nothing.
+  equal(far.gas.oxygen, 0)
+end)
+
+test("heat exchanging pipes radiate toward space bounds", function()
+  local sim = pipe_test_sim()
+  local world = sim.world
+  local r1, r2, r3, r4 = add_sealed_loop(world, 2, 2, "heat_exchanging")
+  local insulated = add_sealed_loop(world, 2, 20, "insulated")
+  finish_pipes(world)
+  equal(world.tile[world:index(2, 2)], Constants.TILE.SPACE)
+  r1.gas.nitrogen = 5000
+  r1.gas.temperature_mk = 600000
+  insulated.gas.nitrogen = 5000
+  insulated.gas.temperature_mk = 600000
+
+  for _ = 1, 40 do
+    Pipes.step(sim, 8)
+  end
+  truthy(r1.gas.temperature_mk < 600000,
+    "radiator must cool toward space")
+  truthy(r1.gas.temperature_mk >= Gas.SPACE_TEMPERATURE_MK,
+    "radiator may not undershoot the space bath")
+  equal(
+    total_species({ r1.gas, r2.gas, r3.gas, r4.gas }, "nitrogen"),
+    5000
+  )
+  -- Insulated pipes exchange nothing even in space.
+  equal(insulated.gas.temperature_mk, 600000)
+
+  -- A sealed plain loop under the 300 K station delta exchanges nothing.
+  local mild_sim = pipe_test_sim()
+  local mild = add_sealed_loop(mild_sim.world, 20, 20)
+  finish_pipes(mild_sim.world)
+  mild.gas.nitrogen = 5000
+  mild.gas.temperature_mk = 400000 -- tile is 293150: delta under 300 K
+  local tile_index = mild_sim.world:index(20, 20)
+  local before_tile = mild_sim.world.temperature_mk[tile_index]
+  Pipes.step(mild_sim, 8)
+  equal(mild_sim.world.temperature_mk[tile_index], before_tile)
+  equal(mild.gas.temperature_mk, 400000)
+end)
+
+test("exposed pipe ends mingle with tiles and count space venting", function()
+  local sim = pipe_test_sim()
+  local world = sim.world
+  local inside = add_pipe(world, 20, 20, "simple", 1)
+  finish_pipes(world)
+  inside.gas.toxins = 70000
+  inside.gas.temperature_mk = 293150
+  local tile_index = world:index(20, 20)
+  local before_units = world.plasma[tile_index]
+  Pipes.step(sim, 8)
+  -- 70 L pipe against a 2500 L cell keeps 70/2570 of the pool.
+  local tile_units = world.plasma[tile_index]
+  truthy(tile_units > before_units, "tile must gain plasma from the pipe")
+  equal(inside.gas.toxins + (tile_units - before_units) * 10, 70000)
+
+  local vented_sim = pipe_test_sim()
+  local vented_world = vented_sim.world
+  local outside = add_pipe(vented_world, 2, 2, "simple", 1)
+  finish_pipes(vented_world)
+  outside.gas.toxins = 70000
+  equal(vented_world.gas_vented_qmol, 0)
+  Pipes.step(vented_sim, 8)
+  truthy(vented_world.gas_vented_qmol > 0, "space venting must be counted")
+  equal(outside.gas.toxins + vented_world.gas_vented_qmol, 70000)
+end)
+
+test("pipe state save load continues identically", function()
+  local function build()
+    local sim = pipe_test_sim()
+    local world = sim.world
+    local a = add_pipe(world, 20, 20, "simple", 4)
+    local b = add_pipe(world, 21, 20, "simple", 4)
+    add_pipe(world, 22, 20, "heat_exchanging", 4)
+    add_pipe(world, 22, 20, "junction", 8, "-j")
+    finish_pipes(world)
+    a.gas.oxygen = 40000
+    a.gas.toxins = 3000
+    a.gas.temperature_mk = 500000
+    b.gas.nitrogen = 9000
+    return sim
+  end
+  local sim = build()
+  for _ = 1, 7 do
+    sim:step()
+  end
+  local snapshot = sim:snapshot()
+  local restored = Simulation.from_snapshot(snapshot)
+  equal(restored:state_hash(), sim:state_hash())
+  for _ = 1, 33 do
+    sim:step()
+    restored:step()
+  end
+  equal(restored:state_hash(), sim:state_hash())
+  truthy(#restored.world.pipes == 4, "restored world must keep its pipes")
+end)
+
 local failures = 0
 local started = os.clock()
 for i = 1, #tests do
