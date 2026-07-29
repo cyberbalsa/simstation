@@ -778,11 +778,11 @@ Changing a sprite layer cannot change which object an NPC repairs.
 
 ### Current presentation slice
 
-The foundation graphics selection now publishes 29 logical aliases. Every
-selected frame cell is a pinned 32×32 source cell. Twenty aliases serve the
-static world, two serve crew, six serve the current machine-family fallback
-set, and `floor_white` is retained as a catalog-only floor reserve. The
-static world aliases cover:
+The foundation graphics selection publishes 29 logical aliases. Every selected
+frame cell is a pinned 32×32 source cell. Twenty aliases serve the portable
+semantic fallback world, two serve crew, six serve the current machine-family
+fallback set, and `floor_white` is retained as a catalog-only floor reserve.
+The static fallback aliases cover:
 
 - floor, plating, and reinforced floor;
 - ordinary and reinforced wall plus open and closed door;
@@ -793,6 +793,14 @@ static world aliases cover:
 - lattice and catwalk;
 - pipe and disposal; and
 - sign and decal.
+
+The pinned Atlas scenario no longer flattens its authored cells into those 20
+aliases. Its separate compact selection resolves 43,813 ordered source
+appearances through 1,173 type rules and 2,104 selected sprite states on two
+runtime pages. Exact map direction and literal visual overrides are retained;
+connected wall, window, grille, table, and catwalk states and door open/closed
+families are projected from authoritative runtime topology. The foundation
+aliases remain the fallback for scenarios without a matching native catalog.
 
 Floor, wall, and door state aliases come from the ordinary structure
 definition's `sprites` map, so a data mod can replace them without a renderer
@@ -982,15 +990,15 @@ This table distinguishes the executable repository from the complete target.
 | Door access and maintenance | **adapted** | Tile airlock profiles preserve access/power denial, passability, open/close, pry, panel, weld, and simple autoclose state. Descriptive durations are not scheduled work; exact operation timing, damage, wires, shock, bolts, hacking, safety/crush, and direction are deferred. |
 | Windows | **adapted** | A native feature and bounded anchored/pane/health profile expose knock, pry, fastener, repair, and dismantle verbs before the coarse wall profile. Intact windows block movement and gas; dismantling the final adapted frame releases the synthetic full-tile boundary. Edge direction, exact assembly graph, material products, typed damage, and stateful appearance remain deferred. |
 | Directional window doors | **deferred** | Source edge identity, direction, operation timing, access, density release, and appearance are not executable. |
-| Grilles | **adapted** | The importer recognizes the real `/obj/mesh/grille` hierarchy. Intact grilles block actors without blocking gas; a bounded intact/ruined cut-and-repair profile persists state. Construction, anchoring, rods, current, shock, typed damage, window composition, and connected appearance remain deferred. |
+| Grilles | **adapted** | The importer recognizes the real `/obj/mesh/grille` hierarchy. Intact grilles block actors without blocking gas; a bounded intact/ruined cut-and-repair profile persists state. Atlas grille and wingrille visuals now select connected native states. Construction, anchoring, rods, current, shock, typed damage, and full window assembly state remain deferred. |
 | Tables | **adapted** | Presence, dense actor traversal, and bounded flip and wrench-dismantle state are executable. Table-passing, item placement, grabs/slams, physical parts, reinforcement, materials, tool precedence, and connected variants remain deferred. |
 | Lights | **adapted** | Presence plus bounded installed/broken/on state and remove/replace/toggle verbs are executable. Separate lamp identity, source hand/tool precedence, area switching, burns, shock, parts, direction, fixture appearance, and emitted light remain deferred. |
-| Lattices and catwalks | **adapted** | Imported lattice/catwalk presence provides an actor-passable surface over legacy space tiles without creating a gas cell. Their inspect affordance is public; construction, dismantling, grip/slip behavior, damage, and connected appearance remain deferred. |
+| Lattices and catwalks | **adapted** | Imported lattice/catwalk presence provides an actor-passable surface over legacy space tiles without creating a gas cell. Native Atlas auto-catwalk visuals select their cardinal mask. Their inspect affordance is public; construction, dismantling, grip/slip behavior, and damage remain deferred. |
 | Click/hand/held-item/after-action phases | **deferred** | Machine verbs and bounded tile actions prove typed commands, but the general target-first/item-second dispatch is not yet public runtime behavior. |
 | NPC physical affordances | **adapted** | Stable sorted availability, denial codes, requirements, source symbols, and duration metadata cover bounded turf and fixture verbs. Descriptors do not yet schedule duration; independent entity/edge targets, reservations, hazards, products, knowledge filtering, and complete source phases remain target work. |
 | Trusted-mod tile surface | **adapted** | Context queries expose tile state and actor-specific actions, and a serial `tile_action` reaches a validation hook. World behavior registration, effect validation, transform/observation phases, independent targets, and full hook schemas remain deferred. |
-| Native static appearance selection | **adapted** | Chunk rendering selects plating/reinforced floor, reinforced wall, windows, grilles, table/chair, light, storage/crate, lattice/catwalk, pipe/disposal, and sign/decal from authoritative coarse state. It still uses south frame 1 and lacks semantic direction, connection masks, animation, material, damage, maintenance, and light-emission layers. |
-| Static batching | **adapted** | Each dirty 16×16 chunk preserves fixed painter groups while aliases sharing an atlas page within a group share a static `SpriteBatch`. The optimization is bounded to nonoverlapping tile-sized appearances and cannot reorder future overlapping entities or overlays. |
+| Native static appearance selection | **adapted** | The pinned Atlas crop carries 43,813 ordered source records. A provenance-gated compact catalog resolves exact type/icon state, map direction, offsets, oversized icon bounds, connected families, door state, and construction replacement defaults for 43,802 instances; 11 item/decorative instances remain explicit fallbacks. Animation timing, complete inherited DM plane/layer, material/damage/maintenance overlays, emitted lighting, and pack-owned catalog registration remain deferred. |
+| Static batching | **adapted** | Each dirty 16×16 native chunk preserves the stable appearance sort and batches only contiguous commands sharing one of two compact atlas pages. Local and topology revisions invalidate connected state; a four-cell source margin retains oversized sprites. The portable semantic fallback still uses fixed painter groups. |
 | Pixel and viewport mapping | **adapted** | DPI-scaled LÖVE coordinates, 32-unit source cells, nearest filtering, discrete `0.25/0.5/1/2/4` zoom, screen-unit camera snapping, a centered scissored `7:5` viewport made from whole `7×5` tile blocks, and shared resize/mouse transforms provide a deterministic portable presentation. The minimum window exactly exposes the upstream `21×15` field. This is an engine contract, not an upstream appearance-completeness claim. |
 | Breach behavior | **adapted** | The meteor incident removes a structure and starts local fire. Source-specific turf/object damage, floor-to-space, products, and derived compartment events are deferred. |
 

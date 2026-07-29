@@ -1,5 +1,6 @@
 local Constants = require("src.core.constants")
 local AtlasCatalog = require("src.assets.atlas_catalog")
+local MapAppearance = require("src.presentation.map_appearance")
 
 local Renderer = {}
 Renderer.__index = Renderer
@@ -27,14 +28,55 @@ local COLORS = {
   storage = { 0.30, 0.42, 0.48, 1 },
   table = { 0.46, 0.49, 0.51, 1 },
   window = { 0.35, 0.78, 0.92, 0.72 },
-  powered = { 0.98, 0.85, 0.32, 0.16 },
+  powered = { 0.98, 0.85, 0.32, 0.52 },
   blueprint = { 0.20, 0.75, 1.00, 0.52 },
-  low_pressure = { 0.30, 0.55, 1.00, 0.20 },
+  low_pressure = { 0.30, 0.55, 1.00, 0.60 },
   fire = { 1.00, 0.25, 0.05, 0.68 },
-  grid = { 0.28, 0.34, 0.39, 0.34 },
   machine = { 0.34, 0.48, 0.58, 1 },
-  machine_powered = { 0.28, 0.95, 0.48, 1 },
   machine_unpowered = { 0.95, 0.25, 0.18, 1 },
+}
+
+local DIRECTIONS = {
+  "south",
+  "north",
+  "east",
+  "west",
+  "southeast",
+  "southwest",
+  "northeast",
+  "northwest",
+}
+
+local BYOND_DIRECTIONS = {
+  [1] = "north",
+  [2] = "south",
+  [4] = "east",
+  [8] = "west",
+  [5] = "northeast",
+  [6] = "southeast",
+  [9] = "northwest",
+  [10] = "southwest",
+}
+
+local CHAIR_DIRECTIONS = {
+  "south",
+  "west",
+  "north",
+  "east",
+}
+
+local CARDINAL_NEIGHBORS = {
+  { dx = 0, dy = -1, direction = "north", opposite = "south" },
+  { dx = 1, dy = 0, direction = "east", opposite = "west" },
+  { dx = 0, dy = 1, direction = "south", opposite = "north" },
+  { dx = -1, dy = 0, direction = "west", opposite = "east" },
+}
+
+local STAR_COLORS = {
+  { 0.82, 0.88, 1.00, 0.72 },
+  { 0.98, 0.98, 0.90, 0.82 },
+  { 0.72, 0.84, 1.00, 0.68 },
+  { 1.00, 0.73, 0.48, 0.62 },
 }
 
 -- The foundation media catalog intentionally opens only six machine sprites.
@@ -140,6 +182,29 @@ local function make_white_image()
   return image
 end
 
+local function make_light_image()
+  local size = 65
+  local radius = (size - 1) / 2
+  local data = love.image.newImageData(size, size, "rgba8")
+  for y = 0, size - 1 do
+    for x = 0, size - 1 do
+      local dx = x - radius
+      local dy = y - radius
+      local distance = math.sqrt(dx * dx + dy * dy) / radius
+      local alpha = math.max(0, 1 - distance)
+      data:setPixel(x, y, 1.00, 0.88, 0.50, alpha * alpha * 0.075)
+    end
+  end
+  local image = love.graphics.newImage(data, {
+    mipmaps = false,
+    linear = false,
+    dpiscale = 1,
+  })
+  image:setFilter("nearest", "nearest", 1)
+  image:setWrap("clamp", "clamp")
+  return image
+end
+
 local function resolve_media_aliases(content)
   local aliases = {}
   for key, alias in pairs(DEFAULT_MEDIA_ALIASES) do
@@ -179,10 +244,21 @@ end
 
 function Renderer.new(world, content)
   local atlas = AtlasCatalog.new()
+  local map_appearance = MapAppearance.new(world, content)
   local media_aliases = resolve_media_aliases(content)
+  local light_image = make_light_image()
+  local light_batch = love.graphics.newSpriteBatch(
+    light_image,
+    math.max(64, math.min(world.size, 4096)),
+    "stream"
+  )
+  light_batch:setColor(1, 1, 1, 1)
   return setmetatable({
     image = make_white_image(),
+    light_image = light_image,
+    light_batch = light_batch,
     atlas = atlas,
+    map_appearance = map_appearance,
     media_aliases = media_aliases,
     media_enabled = atlas:has_all(required_media_aliases(media_aliases)),
     crew_media_enabled = atlas:has_all({ "crew_male", "crew_female" }),
@@ -199,6 +275,7 @@ function Renderer.new(world, content)
     selected_y = false,
     hovered_x = false,
     hovered_y = false,
+    diagnostics_enabled = false,
     visible_chunks = 0,
     rebuilt_chunks = 0,
     last_draw_calls = 0,
@@ -217,9 +294,53 @@ function Renderer:set_hover(x, y)
   self.hovered_y = y
 end
 
+function Renderer:set_diagnostics(enabled)
+  self.diagnostics_enabled = enabled == true
+end
+
 local function add_fallback_rect(batch, color, x, y, width, height)
   set_batch_color(batch, color)
   batch:add(x, y, 0, width, height)
+end
+
+local function star_hash(x, y, salt)
+  return (
+    x * 73856093
+      + y * 19349663
+      + (salt or 0) * 83492791
+  ) % 2147483647
+end
+
+local function add_space_stars(batch, draw_x, draw_y, x, y)
+  local hash = star_hash(x, y, 1)
+  local count = 0
+  if hash % 5 == 0 then
+    local size = hash % 59 == 0 and 2 or 1
+    local color = STAR_COLORS[hash % #STAR_COLORS + 1]
+    set_batch_color(batch, color)
+    batch:add(
+      draw_x + 2 + hash % 28,
+      draw_y + 2 + math.floor(hash / 31) % 28,
+      0,
+      size,
+      size
+    )
+    count = count + 1
+  end
+  local second_hash = star_hash(x, y, 7)
+  if second_hash % 31 == 0 then
+    local color = STAR_COLORS[second_hash % #STAR_COLORS + 1]
+    set_batch_color(batch, color)
+    batch:add(
+      draw_x + 2 + second_hash % 28,
+      draw_y + 2 + math.floor(second_hash / 37) % 28,
+      0,
+      1,
+      1
+    )
+    count = count + 1
+  end
+  return count
 end
 
 local function has_intact_feature(world, index, feature, component)
@@ -227,8 +348,79 @@ local function has_intact_feature(world, index, feature, component)
     and world:feature_is_intact(index, component)
 end
 
+local function connected_direction(world, x, y, feature)
+  local connected = {}
+  for neighbor_index = 1, #CARDINAL_NEIGHBORS do
+    local neighbor = CARDINAL_NEIGHBORS[neighbor_index]
+    local index = world:index(x + neighbor.dx, y + neighbor.dy)
+    connected[neighbor.direction] = index
+      and world:has_feature(index, feature)
+      or false
+  end
+  if connected.north and connected.east
+    and not connected.south and not connected.west
+  then
+    return "northeast"
+  elseif connected.north and connected.west
+    and not connected.south and not connected.east
+  then
+    return "northwest"
+  elseif connected.south and connected.east
+    and not connected.north and not connected.west
+  then
+    return "southeast"
+  elseif connected.south and connected.west
+    and not connected.north and not connected.east
+  then
+    return "southwest"
+  elseif connected.north or connected.south then
+    return "north"
+  elseif connected.east or connected.west then
+    return "east"
+  end
+  return "south"
+end
+
+local function direction_toward_feature(world, x, y, feature)
+  for neighbor_index = 1, #CARDINAL_NEIGHBORS do
+    local neighbor = CARDINAL_NEIGHBORS[neighbor_index]
+    local index = world:index(x + neighbor.dx, y + neighbor.dy)
+    if index and world:has_feature(index, feature) then
+      return neighbor.direction
+    end
+  end
+  return nil
+end
+
+local function light_direction(world, x, y)
+  for neighbor_index = 1, #CARDINAL_NEIGHBORS do
+    local neighbor = CARDINAL_NEIGHBORS[neighbor_index]
+    local index = world:index(x + neighbor.dx, y + neighbor.dy)
+    local structure = index and world.structure[index]
+    if structure == Constants.STRUCTURE.WALL
+      or structure == Constants.STRUCTURE.DOOR_CLOSED
+    then
+      return neighbor.opposite
+    end
+  end
+  return "south"
+end
+
+local function chair_direction(world, index, x, y)
+  local state = world:peek_interaction_state(index, "chair")
+  if state and CHAIR_DIRECTIONS[state.direction] then
+    return CHAIR_DIRECTIONS[state.direction]
+  end
+  return direction_toward_feature(
+    world,
+    x,
+    y,
+    Constants.FEATURE.TABLE
+  ) or "south"
+end
+
 function Renderer:_rebuild_fallback_chunk(world, chunk_x, chunk_y, chunk_index)
-  local max_sprites = Constants.CHUNK_SIZE * Constants.CHUNK_SIZE * 24
+  local max_sprites = Constants.CHUNK_SIZE * Constants.CHUNK_SIZE * 28
   local batch = love.graphics.newSpriteBatch(self.image, max_sprites, "static")
   local start_x = (chunk_x - 1) * Constants.CHUNK_SIZE + 1
   local start_y = (chunk_y - 1) * Constants.CHUNK_SIZE + 1
@@ -241,6 +433,9 @@ function Renderer:_rebuild_fallback_chunk(world, chunk_x, chunk_y, chunk_index)
       local index = world:index(x, y)
       local draw_x = (x - 1) * tile_size
       local draw_y = (y - 1) * tile_size
+      if world.tile[index] == Constants.TILE.SPACE then
+        add_space_stars(batch, draw_x, draw_y, x, y)
+      end
       if world.tile[index] == Constants.TILE.FLOOR then
         local floor_color = COLORS.floor
         if world.turf_kind[index] == Constants.TURF.PLATING then
@@ -489,16 +684,18 @@ function Renderer:_rebuild_fallback_chunk(world, chunk_x, chunk_y, chunk_index)
   self.rebuilt_chunks = self.rebuilt_chunks + 1
 end
 
-local function add_media_sprite(media, x, y, tile_size)
-  media.owner.batch:add(
-    media.quad,
+local function add_media_sprite(media, x, y, tile_size, direction)
+  local sprite = media.by_direction[direction or "south"]
+    or media.by_direction.south
+  sprite.owner.batch:add(
+    sprite.quad,
     x,
     y,
     0,
-    tile_size / media.width,
-    tile_size / media.height
+    tile_size / sprite.width,
+    tile_size / sprite.height
   )
-  media.owner.count = media.owner.count + 1
+  sprite.owner.count = sprite.owner.count + 1
 end
 
 local function create_media_groups(renderer, tile_capacity)
@@ -514,34 +711,45 @@ local function create_media_groups(renderer, tile_capacity)
     for key_index = 1, #keys do
       local key = keys[key_index]
       local alias = renderer.media_aliases[key]
-      local sprite, sprite_error = renderer.atlas:sprite(alias, "south", 1)
-      if not sprite then
-        return nil, nil, sprite_error
-      end
-      local owner = group.by_image[sprite.image]
-      if not owner then
-        local ok, batch = pcall(
-          love.graphics.newSpriteBatch,
-          sprite.image,
-          tile_capacity * #keys,
-          "static"
+      local by_direction = {}
+      for direction_index = 1, #DIRECTIONS do
+        local direction = DIRECTIONS[direction_index]
+        local sprite, sprite_error = renderer.atlas:sprite(
+          alias,
+          direction,
+          1
         )
-        if not ok then
-          return nil, nil, batch
+        if not sprite then
+          return nil, nil, sprite_error
         end
-        batch:setColor(1, 1, 1, 1)
-        owner = {
-          batch = batch,
-          count = 0,
+        local owner = group.by_image[sprite.image]
+        if not owner then
+          local ok, batch = pcall(
+            love.graphics.newSpriteBatch,
+            sprite.image,
+            tile_capacity * #keys,
+            "static"
+          )
+          if not ok then
+            return nil, nil, batch
+          end
+          batch:setColor(1, 1, 1, 1)
+          owner = {
+            batch = batch,
+            count = 0,
+          }
+          group.by_image[sprite.image] = owner
+          group.batches[#group.batches + 1] = owner
+        end
+        by_direction[direction] = {
+          owner = owner,
+          quad = sprite.quad,
+          width = sprite.width,
+          height = sprite.height,
         }
-        group.by_image[sprite.image] = owner
-        group.batches[#group.batches + 1] = owner
       end
       media[key] = {
-        owner = owner,
-        quad = sprite.quad,
-        width = sprite.width,
-        height = sprite.height,
+        by_direction = by_direction,
       }
     end
   end
@@ -572,12 +780,12 @@ function Renderer:_rebuild_media_chunk(
   if not groups then
     return nil, media_error
   end
-  local cable_batch = love.graphics.newSpriteBatch(
+  local detail_batch = love.graphics.newSpriteBatch(
     self.image,
-    tile_capacity,
+    tile_capacity * 3,
     "static"
   )
-  local cable_count = 0
+  local detail_count = 0
 
   local start_x = (chunk_x - 1) * Constants.CHUNK_SIZE + 1
   local start_y = (chunk_y - 1) * Constants.CHUNK_SIZE + 1
@@ -590,6 +798,10 @@ function Renderer:_rebuild_media_chunk(
       local index = world:index(x, y)
       local draw_x = (x - 1) * tile_size
       local draw_y = (y - 1) * tile_size
+      if world.tile[index] == Constants.TILE.SPACE then
+        detail_count = detail_count
+          + add_space_stars(detail_batch, draw_x, draw_y, x, y)
+      end
       if world.tile[index] == Constants.TILE.FLOOR then
         local floor_key = "floor"
         if world.turf_kind[index] == Constants.TURF.PLATING then
@@ -609,10 +821,22 @@ function Renderer:_rebuild_media_chunk(
         add_media_sprite(media.lattice, draw_x, draw_y, tile_size)
       end
       if world:has_feature(index, Constants.FEATURE.CATWALK) then
-        add_media_sprite(media.catwalk, draw_x, draw_y, tile_size)
+        add_media_sprite(
+          media.catwalk,
+          draw_x,
+          draw_y,
+          tile_size,
+          connected_direction(world, x, y, Constants.FEATURE.CATWALK)
+        )
       end
       if world:has_feature(index, Constants.FEATURE.PIPE) then
-        add_media_sprite(media.pipe, draw_x, draw_y, tile_size)
+        add_media_sprite(
+          media.pipe,
+          draw_x,
+          draw_y,
+          tile_size,
+          connected_direction(world, x, y, Constants.FEATURE.PIPE)
+        )
       end
       if world:has_feature(index, Constants.FEATURE.DISPOSAL) then
         add_media_sprite(media.disposal, draw_x, draw_y, tile_size)
@@ -637,15 +861,15 @@ function Renderer:_rebuild_media_chunk(
       end
 
       if world.cable[index] then
-        set_batch_color(cable_batch, COLORS.cable)
-        cable_batch:add(
+        set_batch_color(detail_batch, COLORS.cable)
+        detail_batch:add(
           draw_x + tile_size / 2 - 1,
           draw_y + tile_size / 2 - 1,
           0,
           3,
           3
         )
-        cable_count = cable_count + 1
+        detail_count = detail_count + 1
       end
       if has_intact_feature(
         world,
@@ -662,7 +886,13 @@ function Renderer:_rebuild_media_chunk(
         add_media_sprite(media.table, draw_x, draw_y, tile_size)
       end
       if world:has_feature(index, Constants.FEATURE.CHAIR) then
-        add_media_sprite(media.chair, draw_x, draw_y, tile_size)
+        add_media_sprite(
+          media.chair,
+          draw_x,
+          draw_y,
+          tile_size,
+          chair_direction(world, index, x, y)
+        )
       end
       if world:has_feature(index, Constants.FEATURE.STORAGE)
         and not has_crate
@@ -673,7 +903,13 @@ function Renderer:_rebuild_media_chunk(
         add_media_sprite(media.crate, draw_x, draw_y, tile_size)
       end
       if world:has_feature(index, Constants.FEATURE.LIGHT) then
-        add_media_sprite(media.light, draw_x, draw_y, tile_size)
+        add_media_sprite(
+          media.light,
+          draw_x,
+          draw_y,
+          tile_size,
+          light_direction(world, x, y)
+        )
       end
       if has_sign then
         add_media_sprite(media.sign, draw_x, draw_y, tile_size)
@@ -681,11 +917,11 @@ function Renderer:_rebuild_media_chunk(
     end
   end
 
-  cable_batch:flush()
+  detail_batch:flush()
   local media_batches = {}
   append_populated_batches(media_batches, groups[1])
-  if cable_count > 0 then
-    media_batches[#media_batches + 1] = cable_batch
+  if detail_count > 0 then
+    media_batches[#media_batches + 1] = detail_batch
   end
   for group_index = 2, #groups do
     append_populated_batches(media_batches, groups[group_index])
@@ -747,31 +983,36 @@ function Renderer:_draw_static(world, min_x, min_y, max_x, max_y)
   end
 end
 
-function Renderer:_draw_overlays(world, min_x, min_y, max_x, max_y, zoom)
+function Renderer:_draw_overlays(world, min_x, min_y, max_x, max_y)
   local tile_size = Constants.TILE_SIZE
   for y = min_y, max_y do
     for x = min_x, max_x do
       local index = world:index(x, y)
       local draw_x = (x - 1) * tile_size
       local draw_y = (y - 1) * tile_size
-      if world.powered[index] and world.tile[index] == Constants.TILE.FLOOR then
-        set_color(COLORS.powered)
-        love.graphics.rectangle("fill", draw_x, draw_y, tile_size, tile_size)
-      end
-      if world:is_gas_cell(index) and world:pressure_dkpa(index) < 500 then
-        set_color(COLORS.low_pressure)
-        love.graphics.rectangle("fill", draw_x, draw_y, tile_size, tile_size)
-      end
-      if world.fire[index] > 0 then
-        set_color(COLORS.fire)
-        local inset = math.max(2, 8 - world.fire[index])
-        love.graphics.rectangle(
-          "fill",
-          draw_x + inset,
-          draw_y + inset,
-          tile_size - inset * 2,
-          tile_size - inset * 2
-        )
+      if self.diagnostics_enabled then
+        if world.powered[index]
+          and world.tile[index] == Constants.TILE.FLOOR
+        then
+          set_color(COLORS.powered)
+          love.graphics.rectangle(
+            "line",
+            draw_x + 1,
+            draw_y + 1,
+            tile_size - 2,
+            tile_size - 2
+          )
+        end
+        if world:is_gas_cell(index) and world:pressure_dkpa(index) < 500 then
+          set_color(COLORS.low_pressure)
+          love.graphics.rectangle(
+            "line",
+            draw_x + 3,
+            draw_y + 3,
+            tile_size - 6,
+            tile_size - 6
+          )
+        end
       end
       if world.blueprint[index] then
         set_color(COLORS.blueprint)
@@ -782,15 +1023,129 @@ function Renderer:_draw_overlays(world, min_x, min_y, max_x, max_y, zoom)
           tile_size - 4,
           tile_size - 4
         )
-        love.graphics.line(draw_x + 4, draw_y + 4, draw_x + tile_size - 4, draw_y + tile_size - 4)
-        love.graphics.line(draw_x + tile_size - 4, draw_y + 4, draw_x + 4, draw_y + tile_size - 4)
-      end
-      if zoom >= 0.75 and world.tile[index] == Constants.TILE.FLOOR then
-        set_color(COLORS.grid)
-        love.graphics.rectangle("line", draw_x, draw_y, tile_size, tile_size)
+        love.graphics.line(
+          draw_x + 4,
+          draw_y + 4,
+          draw_x + tile_size - 4,
+          draw_y + tile_size - 4
+        )
+        love.graphics.line(
+          draw_x + tile_size - 4,
+          draw_y + 4,
+          draw_x + 4,
+          draw_y + tile_size - 4
+        )
       end
     end
   end
+end
+
+function Renderer:_draw_light_glows(world, min_x, min_y, max_x, max_y)
+  local tile_size = Constants.TILE_SIZE
+  local count = 0
+  self.light_batch:clear()
+  for y = min_y, max_y do
+    for x = min_x, max_x do
+      local index = world:index(x, y)
+      if world.powered[index]
+        and world:has_feature(index, Constants.FEATURE.LIGHT)
+      then
+        local state = world:peek_interaction_state(index, "light")
+        local active = not state
+          or (
+            state.installed ~= false
+              and state.broken ~= true
+              and state.on ~= false
+          )
+        if active then
+          self.light_batch:add(
+            (x - 1) * tile_size - 16,
+            (y - 1) * tile_size - 16
+          )
+          count = count + 1
+        end
+      end
+    end
+  end
+  if count > 0 then
+    self.light_batch:flush()
+    love.graphics.setBlendMode("add", "alphamultiply")
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.draw(self.light_batch)
+    love.graphics.setBlendMode("alpha", "alphamultiply")
+  end
+end
+
+function Renderer:_draw_foreground_effects(
+  world,
+  min_x,
+  min_y,
+  max_x,
+  max_y
+)
+  local tile_size = Constants.TILE_SIZE
+  for y = min_y, max_y do
+    for x = min_x, max_x do
+      local index = world:index(x, y)
+      if world.fire[index] > 0 then
+        local draw_x = (x - 1) * tile_size
+        local draw_y = (y - 1) * tile_size
+        set_color(COLORS.fire)
+        local inset = math.max(2, 8 - world.fire[index])
+        love.graphics.rectangle(
+          "fill",
+          draw_x + inset,
+          draw_y + inset,
+          tile_size - inset * 2,
+          tile_size - inset * 2
+        )
+      end
+    end
+  end
+end
+
+local function machine_direction(machine)
+  local overrides = machine.source_overrides or {}
+  local raw_direction = overrides.dir or overrides.direction
+  local numeric_direction = tonumber(raw_direction)
+  if numeric_direction and BYOND_DIRECTIONS[numeric_direction] then
+    return BYOND_DIRECTIONS[numeric_direction]
+  end
+  if type(raw_direction) == "string" then
+    for direction_index = 1, #DIRECTIONS do
+      if raw_direction == DIRECTIONS[direction_index] then
+        return raw_direction
+      end
+    end
+  end
+  local source_path = type(machine.source_path) == "string"
+      and machine.source_path:lower()
+    or ""
+  local path_directions = {
+    "northeast",
+    "northwest",
+    "southeast",
+    "southwest",
+    "north",
+    "south",
+    "east",
+    "west",
+  }
+  for direction_index = 1, #path_directions do
+    local direction = path_directions[direction_index]
+    if source_path:find(direction, 1, true) then
+      return direction
+    end
+  end
+  return "south"
+end
+
+local function source_pixel_offset(machine, key)
+  local value = tonumber((machine.source_overrides or {})[key])
+  if not value or value ~= value or math.abs(value) > 4096 then
+    return 0
+  end
+  return math.floor(value)
 end
 
 function Renderer:_draw_machines(world, machines, min_x, min_y, max_x, max_y)
@@ -810,45 +1165,71 @@ function Renderer:_draw_machines(world, machines, min_x, min_y, max_x, max_y)
     local x, y = world:coordinates(machine.index)
     if x >= min_x and x <= max_x and y >= min_y and y <= max_y then
       local draw_x = (x - 1) * tile_size
+        + source_pixel_offset(machine, "pixel_x")
       local draw_y = (y - 1) * tile_size
+        - source_pixel_offset(machine, "pixel_y")
       local alias = MACHINE_SPRITES[machine.kind]
       local sprite = self.machine_media_enabled
         and alias
-        and self.atlas:sprite(alias, "south", 1)
-      if sprite then
-        love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.draw(
-          sprite.image,
-          sprite.quad,
-          draw_x,
-          draw_y,
-          0,
-          tile_size / sprite.width,
-          tile_size / sprite.height
-        )
-      else
-        set_color(COLORS.machine)
-        love.graphics.rectangle(
-          "fill",
-          draw_x + 7,
-          draw_y + 7,
-          tile_size - 14,
-          tile_size - 14,
-          2,
-          2
-        )
+        and self.atlas:sprite(alias, machine_direction(machine), 1)
+      if not self.map_appearance:covers_machine(machine) then
+        if sprite then
+          love.graphics.setColor(1, 1, 1, 1)
+          love.graphics.draw(
+            sprite.image,
+            sprite.quad,
+            draw_x,
+            draw_y,
+            0,
+            tile_size / sprite.width,
+            tile_size / sprite.height
+          )
+        else
+          set_color(COLORS.machine)
+          love.graphics.rectangle(
+            "fill",
+            draw_x + 7,
+            draw_y + 7,
+            tile_size - 14,
+            tile_size - 14,
+            2,
+            2
+          )
+        end
       end
-      set_color(
-        machine.powered
-            and COLORS.machine_powered
-          or COLORS.machine_unpowered
-      )
-      love.graphics.rectangle("fill", draw_x + 24, draw_y + 3, 5, 5)
+      local status = machine.status or {}
+      if machine.destroyed
+        or machine.powered == false
+        or status.broken
+        or status.no_power
+      then
+        set_color(COLORS.machine_unpowered)
+        love.graphics.rectangle("fill", draw_x + 28, draw_y + 2, 2, 2)
+      end
     end
   end
 end
 
-function Renderer:_draw_crew(world, crew)
+local function crew_direction(world, person)
+  local next_index = person.path and person.path[1]
+  if not next_index then
+    return "south"
+  end
+  local x, y = world:coordinates(person.index)
+  local next_x, next_y = world:coordinates(next_index)
+  if next_y < y then
+    return "north"
+  elseif next_y > y then
+    return "south"
+  elseif next_x > x then
+    return "east"
+  elseif next_x < x then
+    return "west"
+  end
+  return "south"
+end
+
+function Renderer:_draw_crew(world, crew, zoom)
   local tile_size = Constants.TILE_SIZE
   local ordered = {}
   for i = 1, #crew do
@@ -861,11 +1242,9 @@ function Renderer:_draw_crew(world, crew)
     return a.id < b.id
   end)
 
-  local male
-  local female
   if self.crew_media_enabled then
-    male = self.atlas:sprite("crew_male", "south", 1)
-    female = self.atlas:sprite("crew_female", "south", 1)
+    local male = self.atlas:sprite("crew_male", "south", 1)
+    local female = self.atlas:sprite("crew_female", "south", 1)
     if not male or not female then
       self.crew_media_enabled = false
     end
@@ -875,7 +1254,12 @@ function Renderer:_draw_crew(world, crew)
     local x, y = world:coordinates(person.index)
     local color = Constants.JOB_COLORS[person.job] or Constants.JOB_COLORS.assistant
     if self.crew_media_enabled then
-      local sprite = person.id % 2 == 0 and female or male
+      local alias = person.id % 2 == 0 and "crew_female" or "crew_male"
+      local sprite = self.atlas:sprite(
+        alias,
+        crew_direction(world, person),
+        1
+      )
       if person.alive then
         love.graphics.setColor(1, 1, 1, 1)
       else
@@ -890,14 +1274,16 @@ function Renderer:_draw_crew(world, crew)
         tile_size / sprite.width,
         tile_size / sprite.height
       )
-      love.graphics.setColor(color[1], color[2], color[3], 1)
-      love.graphics.rectangle(
-        "fill",
-        (x - 1) * tile_size + 24,
-        (y - 1) * tile_size + 25,
-        5,
-        5
-      )
+      if zoom < 1 then
+        love.graphics.setColor(color[1], color[2], color[3], 1)
+        love.graphics.rectangle(
+          "fill",
+          (x - 1) * tile_size + 27,
+          (y - 1) * tile_size + 27,
+          3,
+          3
+        )
+      end
     else
       if not person.alive then
         love.graphics.setColor(0.25, 0.08, 0.08, 1)
@@ -956,7 +1342,10 @@ function Renderer:draw(snapshot, camera)
     COLORS.space[3],
     COLORS.space[4]
   )
-  local min_x, min_y, max_x, max_y = camera:visible_tile_bounds(world, 1)
+  -- Goon's native icon bounds are not limited to one 32 px cell.  The
+  -- selected map catalog contains trees and machinery reaching four cells
+  -- above their anchor, so retain those source cells at every viewport edge.
+  local min_x, min_y, max_x, max_y = camera:visible_tile_bounds(world, 4)
   local viewport_x, viewport_y, viewport_width, viewport_height =
     camera:viewport_rect()
   love.graphics.setScissor(
@@ -966,8 +1355,20 @@ function Renderer:draw(snapshot, camera)
     viewport_height
   )
   camera:apply()
-  self:_draw_static(world, min_x, min_y, max_x, max_y)
-  self:_draw_overlays(world, min_x, min_y, max_x, max_y, camera.zoom)
+  local native_map, native_draw_calls = self.map_appearance:draw(
+    world,
+    min_x,
+    min_y,
+    max_x,
+    max_y
+  )
+  if native_map then
+    self.visible_chunks = self.map_appearance.visible_chunks
+    self.rebuilt_chunks = self.map_appearance.rebuilt_chunks
+  else
+    self:_draw_static(world, min_x, min_y, max_x, max_y)
+  end
+  self:_draw_overlays(world, min_x, min_y, max_x, max_y)
   self:_draw_machines(
     world,
     snapshot.machines or {},
@@ -976,12 +1377,15 @@ function Renderer:draw(snapshot, camera)
     max_x,
     max_y
   )
-  self:_draw_crew(world, snapshot.crew)
+  self:_draw_crew(world, snapshot.crew, camera.zoom)
+  self:_draw_light_glows(world, min_x, min_y, max_x, max_y)
+  self:_draw_foreground_effects(world, min_x, min_y, max_x, max_y)
   self:_draw_cursor()
   camera:finish()
   love.graphics.setScissor()
   love.graphics.setColor(1, 1, 1, 1)
   self.last_draw_calls = love.graphics.getStats().drawcalls
+  self.native_map_draw_calls = native_draw_calls or 0
 end
 
 return Renderer

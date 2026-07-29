@@ -36,6 +36,10 @@ GOON_COMMIT = "1b2b250abb5be747d55e274de0203a59cfc8da78"
 PAGE_SIZE = 2048
 GUTTER = 1
 PACK_ID = "org.simstation.goon"
+DM_APPEARANCE_PROFILE = SOURCE / "dm-appearance-profile.json"
+DM_APPEARANCE_RUNTIME = RUNTIME / "graphics" / "dm-appearances.json"
+DM_APPEARANCE_BUNDLE = "dm_appearances"
+DM_APPEARANCE_ATLAS = RUNTIME / "graphics" / DM_APPEARANCE_BUNDLE
 
 FOUNDATION_SPRITES = {
     "apc": (
@@ -1173,6 +1177,7 @@ def build_foundation_media(_: argparse.Namespace) -> None:
     }
     graphics_path = atlas_path.parent / "foundation.json"
     json_dump(graphics_path, graphics_output)
+    build_dm_appearances(_)
 
     audio = json.loads(audio_path.read_text(encoding="utf-8"))
     selected_audio: dict[str, Any] = {}
@@ -1413,6 +1418,1202 @@ def verify_audio(_: argparse.Namespace) -> None:
     )
 
 
+def _path_matches(path: str, root: str, match: str) -> bool:
+    if match == "exact":
+        return path == root
+    if match == "subtree":
+        return path == root or path.startswith(root + "/")
+    raise ValueError(f"unknown DM appearance match mode: {match}")
+
+
+def _git_dm_sources() -> list[tuple[str, str]]:
+    """Read only DM files containing appearance defaults from the pinned tree."""
+
+    expression = (
+        r"(^|[[:space:]])"
+        r"(icon|icon_state|dir|pixel_x|pixel_y|layer|parent_type)"
+        r"[[:space:]]*="
+    )
+    result = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(CACHE),
+            "grep",
+            "-Il",
+            "-E",
+            expression,
+            GOON_COMMIT,
+            "--",
+            "code",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    prefix = GOON_COMMIT + ":"
+    paths = sorted(
+        line.removeprefix(prefix)
+        for line in result.stdout.splitlines()
+        if line.endswith(".dm")
+    )
+    process = subprocess.Popen(
+        ["git", "-C", str(CACHE), "cat-file", "--batch"],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    assert process.stdin is not None
+    assert process.stdout is not None
+    sources: list[tuple[str, str]] = []
+    try:
+        for path in paths:
+            process.stdin.write(f"{GOON_COMMIT}:{path}\n".encode("utf-8"))
+            process.stdin.flush()
+            header = process.stdout.readline().decode("ascii").split()
+            if len(header) != 3 or header[1] != "blob":
+                raise ValueError(f"cannot read pinned DM source: {path}")
+            size = int(header[2])
+            data = process.stdout.read(size)
+            if len(data) != size or process.stdout.read(1) != b"\n":
+                raise ValueError(f"truncated pinned DM source: {path}")
+            sources.append((path, data.decode("utf-8", "replace")))
+    finally:
+        process.stdin.close()
+        process.wait(timeout=10)
+        process.stdout.close()
+        if process.stderr is not None:
+            process.stderr.close()
+    return sources
+
+
+def _dm_indent(line: str) -> int:
+    prefix = line[: len(line) - len(line.lstrip(" \t"))]
+    return prefix.count("\t") + (len(prefix.replace("\t", "")) // 4)
+
+
+def _dm_define_floors_calls(
+    lines: list[tuple[int, int, str]],
+) -> Iterable[tuple[int, str, str]]:
+    """Yield bounded ``DEFINE_FLOORS(path, vars)`` invocations.
+
+    Goon uses this macro to mirror data-only floor declarations across four
+    turf roots.  This is intentionally not a general DM preprocessor: only the
+    exact macro, a literal relative path, and its balanced argument text are
+    accepted.
+    """
+
+    for line_index, (line_number, _, code) in enumerate(lines):
+        if not re.match(r"^DEFINE_FLOORS\s*\(", code):
+            continue
+        chunks: list[str] = []
+        depth = 0
+        quote: str | None = None
+        escaped = False
+        complete = False
+        for _, _, continuation in lines[line_index:]:
+            chunks.append(continuation)
+            for character in continuation:
+                if escaped:
+                    escaped = False
+                    continue
+                if character == "\\" and quote is not None:
+                    escaped = True
+                    continue
+                if quote is not None:
+                    if character == quote:
+                        quote = None
+                    continue
+                if character in {'"', "'"}:
+                    quote = character
+                elif character == "(":
+                    depth += 1
+                elif character == ")":
+                    depth -= 1
+                    if depth == 0:
+                        complete = True
+                        break
+            if complete:
+                break
+        if not complete:
+            continue
+        invocation = " ".join(chunks).replace("\\", "")
+        match = re.fullmatch(
+            r"DEFINE_FLOORS\s*\(\s*([A-Za-z0-9_/]+)\s*,(.*)\)\s*",
+            invocation,
+        )
+        if match:
+            yield line_number, match.group(1).strip("/"), match.group(2)
+
+
+def _dm_macro_appearance_values(body: str) -> dict[str, str | int]:
+    """Parse only literal initial-appearance assignments from macro vars."""
+
+    result: dict[str, str | int] = {}
+    for statement in body.split(";"):
+        match = re.fullmatch(
+            r"\s*(icon|icon_state|dir|pixel_x|pixel_y|layer|parent_type)"
+            r"\s*=\s*(.*?)\s*",
+            statement,
+        )
+        if not match:
+            continue
+        name, raw_value = match.groups()
+        value: str | int | None = None
+        if name == "icon":
+            matched_value = re.fullmatch(
+                r"'((?:assets/)?icons/[^']+\.dmi)'",
+                raw_value,
+            )
+            value = matched_value.group(1) if matched_value else None
+        elif name == "icon_state":
+            matched_value = re.fullmatch(r'"([^"]*)"', raw_value)
+            value = matched_value.group(1) if matched_value else None
+        elif name == "parent_type":
+            matched_value = re.fullmatch(r"(/[-A-Za-z0-9_/]+)", raw_value)
+            value = (
+                matched_value.group(1).rstrip("/")
+                if matched_value
+                else None
+            )
+        elif name == "dir":
+            value = (
+                raw_value
+                if re.fullmatch(
+                    r"(?:NORTH|SOUTH|EAST|WEST|"
+                    r"NORTHEAST|NORTHWEST|SOUTHEAST|SOUTHWEST|"
+                    r"[1245689]|10)",
+                    raw_value,
+                )
+                else None
+            )
+        elif re.fullmatch(r"[+-]?\d+(?:\.\d+)?", raw_value):
+            value = raw_value
+        if value is not None:
+            result[name] = value
+    return result
+
+
+def _dm_static_appearance_index() -> dict[str, dict[str, dict[str, Any]]]:
+    """Index literal initial appearance values without executing upstream DM."""
+
+    assignment = re.compile(
+        r"(icon|icon_state|dir|pixel_x|pixel_y|layer|parent_type)"
+        r"\s*=\s*(.*?)\s*$"
+    )
+    absolute_type = re.compile(r"(/[-A-Za-z0-9_/]+)\s*$")
+    relative_type = re.compile(r"([A-Za-z_][A-Za-z0-9_/]*)\s*$")
+    ignored_relative = {
+        "do",
+        "else",
+        "for",
+        "if",
+        "proc",
+        "set",
+        "spawn",
+        "switch",
+        "var",
+        "verb",
+        "while",
+    }
+    values: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
+
+    for source_file, text in _git_dm_sources():
+        lines: list[tuple[int, int, str]] = []
+        block_comment = False
+        for line_number, raw_line in enumerate(text.splitlines(), 1):
+            line = raw_line
+            if block_comment:
+                end = line.find("*/")
+                if end < 0:
+                    continue
+                line = line[end + 2 :]
+                block_comment = False
+            while "/*" in line:
+                start = line.find("/*")
+                end = line.find("*/", start + 2)
+                if end < 0:
+                    line = line[:start]
+                    block_comment = True
+                    break
+                line = line[:start] + line[end + 2 :]
+            line = line.split("//", 1)[0].rstrip()
+            if not line.strip() or line.lstrip().startswith("#"):
+                continue
+            lines.append((line_number, _dm_indent(line), line.strip()))
+
+        for line_number, subtype, body in _dm_define_floors_calls(lines):
+            macro_values = _dm_macro_appearance_values(body)
+            for root in (
+                "/turf/simulated/floor",
+                "/turf/unsimulated/floor",
+                "/turf/simulated/floor/airless",
+                "/turf/unsimulated/floor/airless",
+            ):
+                path = root + "/" + subtype
+                for name, value in macro_values.items():
+                    values[path][name] = {
+                        "value": value,
+                        "file": source_file,
+                        "line": line_number,
+                    }
+
+        stack: list[tuple[int, str, str | None]] = []
+        for line_index, (line_number, indent, code) in enumerate(lines):
+            while stack and stack[-1][0] >= indent:
+                stack.pop()
+            next_indent = (
+                lines[line_index + 1][1]
+                if line_index + 1 < len(lines)
+                else -1
+            )
+            opens_block = next_indent > indent
+
+            absolute = absolute_type.fullmatch(code)
+            if absolute and "(" not in code:
+                path = absolute.group(1).rstrip("/")
+                if not any(
+                    segment in {"proc", "var", "verb"}
+                    for segment in path.strip("/").split("/")
+                ):
+                    stack.append((indent, "type", path))
+                    continue
+
+            context = stack[-1] if stack else None
+            if context and context[1] == "type" and indent == context[0] + 1:
+                matched_assignment = assignment.fullmatch(code)
+                if matched_assignment:
+                    name, raw_value = matched_assignment.groups()
+                    value: str | int | None = None
+                    if name == "icon":
+                        match_value = re.fullmatch(
+                            r"'((?:assets/)?icons/[^']+\.dmi)'",
+                            raw_value,
+                        )
+                        value = match_value.group(1) if match_value else None
+                    elif name == "icon_state":
+                        match_value = re.fullmatch(r'"([^"]*)"', raw_value)
+                        value = match_value.group(1) if match_value else None
+                    elif name == "parent_type":
+                        match_value = re.fullmatch(
+                            r"(/[-A-Za-z0-9_/]+)",
+                            raw_value,
+                        )
+                        value = (
+                            match_value.group(1).rstrip("/")
+                            if match_value
+                            else None
+                        )
+                    elif name == "dir":
+                        value = (
+                            raw_value
+                            if re.fullmatch(
+                                r"(?:NORTH|SOUTH|EAST|WEST|"
+                                r"NORTHEAST|NORTHWEST|SOUTHEAST|SOUTHWEST|"
+                                r"[1245689]|10)",
+                                raw_value,
+                            )
+                            else None
+                        )
+                    elif re.fullmatch(r"[+-]?\d+(?:\.\d+)?", raw_value):
+                        value = raw_value
+                    if value is not None:
+                        assert context[2] is not None
+                        values[context[2]][name] = {
+                            "value": value,
+                            "file": source_file,
+                            "line": line_number,
+                        }
+                    if opens_block:
+                        stack.append((indent, "block", None))
+                    continue
+
+                relative = relative_type.fullmatch(code)
+                if (
+                    opens_block
+                    and relative
+                    and relative.group(1).lower() not in ignored_relative
+                ):
+                    assert context[2] is not None
+                    subtype = relative.group(1).strip("/")
+                    stack.append(
+                        (
+                            indent,
+                            "type",
+                            context[2] + "/" + subtype,
+                        )
+                    )
+                    continue
+
+            if opens_block:
+                stack.append((indent, "block", None))
+    return {
+        path: dict(sorted(properties.items()))
+        for path, properties in sorted(values.items())
+    }
+
+
+def _dm_resolve_static(
+    index: dict[str, dict[str, dict[str, Any]]],
+    path: str,
+    property_name: str,
+) -> dict[str, Any] | None:
+    visited: set[str] = set()
+    current = path
+    while current and current not in visited:
+        visited.add(current)
+        properties = index.get(current, {})
+        if property_name in properties:
+            return properties[property_name]
+        parent = properties.get("parent_type")
+        if parent is not None:
+            current = str(parent["value"])
+        elif "/" in current[1:]:
+            current = current.rsplit("/", 1)[0]
+        else:
+            current = ""
+    return None
+
+
+def _dm_direction(value: str) -> str | None:
+    return {
+        "1": "north",
+        "2": "south",
+        "4": "east",
+        "5": "northeast",
+        "6": "southeast",
+        "8": "west",
+        "9": "northwest",
+        "10": "southwest",
+        "NORTH": "north",
+        "SOUTH": "south",
+        "EAST": "east",
+        "WEST": "west",
+        "NORTHEAST": "northeast",
+        "NORTHWEST": "northwest",
+        "SOUTHEAST": "southeast",
+        "SOUTHWEST": "southwest",
+    }.get(value)
+
+
+def _appearance_map_data(
+    profile: dict[str, Any],
+) -> tuple[Any, dict[str, Any], list[dict[str, int | str]]]:
+    try:
+        from tools import map_import
+    except ModuleNotFoundError:
+        import map_import  # type: ignore[no-redef]
+
+    source_map = profile["source_map"]
+    map_path = UPSTREAM / source_map["path"]
+    map_bytes = map_path.read_bytes()
+    parsed = map_import.parse_map(map_bytes, source_map["path"])
+    crop_data = source_map["crop"]
+    crop = (
+        int(crop_data["min_x"]),
+        int(crop_data["min_y"]),
+        int(crop_data["max_x"]),
+        int(crop_data["max_y"]),
+    )
+    z_level = int(crop_data["z"])
+    cells, overlaps = map_import._cells(parsed)
+    if overlaps:
+        raise ValueError("appearance source map contains overlapping writes")
+    selected = {
+        coordinate: key
+        for coordinate, key in cells.items()
+        if coordinate[2] == z_level
+        and crop[0] <= coordinate[0] <= crop[2]
+        and crop[1] <= coordinate[1] <= crop[3]
+    }
+    appearances = map_import.collect_appearances(parsed, selected, crop)
+    map_record = {
+        "path": source_map["path"],
+        "git_blob": git_blob_oid(map_path),
+        "sha256": hashlib.sha256(map_bytes).hexdigest(),
+        "crop": {
+            "z": z_level,
+            "min_x": crop[0],
+            "min_y": crop[1],
+            "max_x": crop[2],
+            "max_y": crop[3],
+        },
+    }
+    return parsed, map_record, appearances
+
+
+def _compact_dm_appearance_sprites(
+    atlas_path: Path,
+    atlas: dict[str, Any],
+    selected_sprites: dict[str, dict[str, Any]],
+) -> tuple[dict[str, dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
+    """Repack selected full-catalog frames into a small native atlas.
+
+    The exhaustive atlas remains the canonical provenance catalog.  Each
+    selected frame is cropped from its verified runtime page, packed without
+    scaling or color conversion, and then referenced by rewritten copies of
+    the original sprite records.
+    """
+
+    safe_clean(DM_APPEARANCE_ATLAS)
+    source_rectangles: set[tuple[str, int, int, int, int, int]] = set()
+    source_pages: set[tuple[str, int]] = set()
+    frame_references = 0
+    for identifier in sorted(selected_sprites):
+        entry = selected_sprites[identifier]
+        bundle = str(entry["bundle"])
+        if bundle == DM_APPEARANCE_BUNDLE:
+            raise SystemExit(
+                f"full catalog unexpectedly uses compact bundle: {identifier}"
+            )
+        for direction in sorted(entry["directions"]):
+            for frame in entry["directions"][direction]:
+                rectangle = (
+                    bundle,
+                    int(frame["page"]),
+                    int(frame["x"]),
+                    int(frame["y"]),
+                    int(frame["w"]),
+                    int(frame["h"]),
+                )
+                source_rectangles.add(rectangle)
+                source_pages.add((bundle, int(frame["page"])))
+                frame_references += 1
+
+    compact_page = AtlasPage(
+        DM_APPEARANCE_BUNDLE,
+        0,
+        DM_APPEARANCE_ATLAS,
+    )
+    compact_page_records: list[dict[str, Any]] = []
+    locations_by_source: dict[
+        tuple[str, int, int, int, int, int],
+        dict[str, int],
+    ] = {}
+    locations_by_digest: dict[tuple[int, int, str], dict[str, int]] = {}
+    source_image: Image.Image | None = None
+    current_source_page: tuple[str, int] | None = None
+
+    try:
+        for rectangle in sorted(source_rectangles):
+            bundle, page_number, x, y, width, height = rectangle
+            page_key = (bundle, page_number)
+            if page_key != current_source_page:
+                if source_image is not None:
+                    source_image.close()
+                pages = atlas["bundles"].get(bundle, {}).get("pages", [])
+                if page_number < 0 or page_number >= len(pages):
+                    raise SystemExit(
+                        f"invalid source page {bundle}:{page_number}"
+                    )
+                source_record = pages[page_number]
+                source_path = (
+                    atlas_path.parent / bundle / source_record["file"]
+                )
+                if (
+                    not source_path.exists()
+                    or sha256_file(source_path) != source_record["sha256"]
+                ):
+                    raise SystemExit(
+                        f"invalid DM appearance source page: {source_path}"
+                    )
+                source_image = Image.open(source_path).convert("RGBA")
+                if source_image.size != (
+                    int(source_record["width"]),
+                    int(source_record["height"]),
+                ):
+                    raise SystemExit(
+                        f"DM appearance source page size mismatch: "
+                        f"{source_path}"
+                    )
+                current_source_page = page_key
+            assert source_image is not None
+            if (
+                width <= 0
+                or height <= 0
+                or x < 0
+                or y < 0
+                or x + width > source_image.width
+                or y + height > source_image.height
+            ):
+                raise SystemExit(
+                    "DM appearance source frame is outside its page: "
+                    f"{rectangle}"
+                )
+
+            source_frame = source_image.crop(
+                (x, y, x + width, y + height)
+            )
+            pixel_digest = hashlib.sha256(source_frame.tobytes()).hexdigest()
+            digest_key = (width, height, pixel_digest)
+            location = locations_by_digest.get(digest_key)
+            if location is None:
+                placed = compact_page.place(source_frame)
+                if placed is None:
+                    saved = compact_page.save()
+                    assert saved is not None
+                    compact_page_records.append({
+                        "bundle": DM_APPEARANCE_BUNDLE,
+                        "page": compact_page.number,
+                        "runtime_path": (
+                            f"{DM_APPEARANCE_BUNDLE}/{saved['file']}"
+                        ),
+                        "width": saved["width"],
+                        "height": saved["height"],
+                        "sha256": saved["sha256"],
+                    })
+                    compact_page = AtlasPage(
+                        DM_APPEARANCE_BUNDLE,
+                        compact_page.number + 1,
+                        DM_APPEARANCE_ATLAS,
+                    )
+                    placed = compact_page.place(source_frame)
+                    assert placed is not None
+                location = {
+                    "page": compact_page.number,
+                    "x": placed[0],
+                    "y": placed[1],
+                    "w": width,
+                    "h": height,
+                }
+                locations_by_digest[digest_key] = location
+            locations_by_source[rectangle] = location
+            source_frame.close()
+    finally:
+        if source_image is not None:
+            source_image.close()
+
+    saved = compact_page.save()
+    if saved is not None:
+        compact_page_records.append({
+            "bundle": DM_APPEARANCE_BUNDLE,
+            "page": compact_page.number,
+            "runtime_path": f"{DM_APPEARANCE_BUNDLE}/{saved['file']}",
+            "width": saved["width"],
+            "height": saved["height"],
+            "sha256": saved["sha256"],
+        })
+
+    compact_sprites: dict[str, dict[str, Any]] = {}
+    for identifier in sorted(selected_sprites):
+        source_entry = selected_sprites[identifier]
+        source_bundle = str(source_entry["bundle"])
+        entry = json.loads(json.dumps(source_entry))
+        entry["bundle"] = DM_APPEARANCE_BUNDLE
+        for direction in sorted(entry["directions"]):
+            source_frames = source_entry["directions"][direction]
+            compact_frames = entry["directions"][direction]
+            for source_frame, compact_frame in zip(
+                source_frames,
+                compact_frames,
+                strict=True,
+            ):
+                rectangle = (
+                    source_bundle,
+                    int(source_frame["page"]),
+                    int(source_frame["x"]),
+                    int(source_frame["y"]),
+                    int(source_frame["w"]),
+                    int(source_frame["h"]),
+                )
+                compact_frame.update(locations_by_source[rectangle])
+        compact_sprites[identifier] = entry
+
+    summary = {
+        "bundle": DM_APPEARANCE_BUNDLE,
+        "page_size": PAGE_SIZE,
+        "gutter": GUTTER,
+        "source_pages": len(source_pages),
+        "source_rectangles": len(source_rectangles),
+        "frame_references": frame_references,
+        "unique_frames": len(locations_by_digest),
+    }
+    return compact_sprites, compact_page_records, summary
+
+
+def build_dm_appearances(_: argparse.Namespace) -> None:
+    """Compile Atlas-referenced DM defaults into a startup-safe selection."""
+
+    atlas_path = RUNTIME / "graphics" / "atlas.json"
+    if not atlas_path.exists():
+        raise SystemExit("run build-graphics first")
+    if not DM_APPEARANCE_PROFILE.exists():
+        raise SystemExit(f"missing {DM_APPEARANCE_PROFILE.relative_to(ROOT)}")
+    profile = json.loads(DM_APPEARANCE_PROFILE.read_text(encoding="utf-8"))
+    if (
+        profile.get("format_version") != 1
+        or profile.get("kind") != "goon-dm-appearance-profile"
+        or profile.get("source_commit") != GOON_COMMIT
+    ):
+        raise SystemExit("invalid or stale DM appearance profile")
+
+    atlas = json.loads(atlas_path.read_text(encoding="utf-8"))
+    by_icon_state: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    by_icon: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for entry in atlas["sprites"].values():
+        key = (entry["source_path"], entry["source_state"])
+        by_icon_state[key].append(entry)
+        by_icon[entry["source_path"]].append(entry)
+    for entries in by_icon_state.values():
+        entries.sort(
+            key=lambda entry: (
+                entry["source_state_occurrence"],
+                entry["id"],
+            )
+        )
+    for entries in by_icon.values():
+        entries.sort(
+            key=lambda entry: (
+                entry["source_state"],
+                entry["source_state_occurrence"],
+                entry["id"],
+            )
+        )
+
+    _, map_record, appearances = _appearance_map_data(profile)
+    static_index = _dm_static_appearance_index()
+    unique_paths = sorted(
+        {(str(row["role"]), str(row["source_path"])) for row in appearances}
+    )
+    rules_by_key: dict[tuple[str, str], dict[str, Any]] = {}
+    unresolved_reason: dict[tuple[str, str], str] = {}
+
+    for source_rule in profile["explicit_rules"]:
+        rule = json.loads(json.dumps(source_rule))
+        rule.setdefault("match", "exact")
+        for part in rule["parts"]:
+            entries = by_icon_state.get(
+                (part["source_icon"], part["source_state"]),
+                [],
+            )
+            if not entries:
+                raise SystemExit(
+                    "explicit DM appearance sprite is missing: "
+                    f"{part['source_icon']}:{part['source_state']}"
+                )
+            part["sprite_id"] = entries[0]["id"]
+        rules_by_key[(rule["role"], rule["type_path"])] = rule
+
+    connected_families = sorted(
+        profile["connected_state_families"],
+        key=lambda row: (-len(row["type_path"]), row["type_path"]),
+    )
+    dynamic_families = sorted(
+        profile["dynamic_state_families"],
+        key=lambda row: (-len(row["type_path"]), row["type_path"]),
+    )
+
+    for role, source_path in unique_paths:
+        key = (role, source_path)
+        if key in rules_by_key:
+            continue
+        icon = _dm_resolve_static(static_index, source_path, "icon")
+        state = _dm_resolve_static(static_index, source_path, "icon_state")
+        if icon is None or state is None:
+            unresolved_reason[key] = "static DM icon/icon_state was not resolved"
+            continue
+        icon_value = str(icon["value"])
+        state_value = str(state["value"])
+        entries = by_icon_state.get((icon_value, state_value), [])
+        if not entries:
+            unresolved_reason[key] = (
+                f"compiled atlas has no {icon_value}:{state_value}"
+            )
+            continue
+        part: dict[str, Any] = {
+            "sprite_id": entries[0]["id"],
+            "source_icon": icon_value,
+            "source_state": state_value,
+            "direction_policy": "map",
+        }
+        direction = _dm_resolve_static(static_index, source_path, "dir")
+        if direction is not None:
+            fixed_direction = _dm_direction(str(direction["value"]))
+            if fixed_direction:
+                part["direction_policy"] = "fixed"
+                part["fixed_direction"] = fixed_direction
+        for offset_name in ("pixel_x", "pixel_y"):
+            offset = _dm_resolve_static(
+                static_index,
+                source_path,
+                offset_name,
+            )
+            if offset and re.fullmatch(r"[+-]?\d+", str(offset["value"])):
+                part[offset_name] = int(str(offset["value"]))
+
+        selectors = [
+            row
+            for row in [*connected_families, *dynamic_families]
+            if _path_matches(
+                source_path,
+                row["type_path"],
+                row["match"],
+            )
+        ]
+        if selectors:
+            patterns = sorted({str(row["state_regex"]) for row in selectors})
+            part["include_state_regex"] = "|".join(
+                f"(?:{pattern})" for pattern in patterns
+            )
+        connected = next(
+            (
+                row
+                for row in connected_families
+                if _path_matches(
+                    source_path,
+                    row["type_path"],
+                    row["match"],
+                )
+            ),
+            None,
+        )
+        if connected:
+            fidelity = connected["fidelity"]
+        elif "/random" in source_path:
+            fidelity = "runtime-random-deferred"
+        elif any(
+            _path_matches(source_path, row["type_path"], row["match"])
+            for row in dynamic_families
+        ):
+            fidelity = "runtime-state-deferred"
+        else:
+            fidelity = "exact-static"
+        rules_by_key[key] = {
+            "type_path": source_path,
+            "match": "exact",
+            "role": role,
+            "parts": [part],
+            "source": {
+                "file": state["file"],
+                "line": state["line"],
+            },
+            "fidelity": fidelity,
+        }
+
+    rules = sorted(
+        rules_by_key.values(),
+        key=lambda rule: (rule["role"], rule["type_path"], rule["match"]),
+    )
+    exact_rules = {
+        (rule["role"], rule["type_path"]): rule
+        for rule in rules
+        if rule["match"] == "exact"
+    }
+    subtree_rules = sorted(
+        (rule for rule in rules if rule["match"] == "subtree"),
+        key=lambda rule: (
+            -len(rule["type_path"]),
+            rule["role"],
+            rule["type_path"],
+        ),
+    )
+
+    def find_rule(role: str, source_path: str) -> dict[str, Any] | None:
+        exact = exact_rules.get((role, source_path))
+        if exact:
+            return exact
+        return next(
+            (
+                rule
+                for rule in subtree_rules
+                if rule["role"] == role
+                and _path_matches(source_path, rule["type_path"], "subtree")
+            ),
+            None,
+        )
+
+    selected_sprites: dict[str, dict[str, Any]] = {}
+
+    def select_entry(entry: dict[str, Any]) -> None:
+        selected_sprites[entry["id"]] = entry
+
+    for rule in rules:
+        for part in rule["parts"]:
+            select_entry(atlas["sprites"][part["sprite_id"]])
+            pattern = part.get("include_state_regex")
+            if pattern:
+                compiled_pattern = re.compile(pattern)
+                for entry in by_icon[part["source_icon"]]:
+                    if (
+                        entry["source_state_occurrence"] == 1
+                        and compiled_pattern.search(entry["source_state"])
+                    ):
+                        select_entry(entry)
+
+    mapped_counts: Counter[tuple[str, str]] = Counter()
+    fallback_counts: Counter[tuple[str, str, str]] = Counter()
+    for appearance in appearances:
+        role = str(appearance["role"])
+        source_path = str(appearance["source_path"])
+        rule = find_rule(role, source_path)
+        if rule is None:
+            fallback_counts[
+                (
+                    role,
+                    source_path,
+                    unresolved_reason.get(
+                        (role, source_path),
+                        "no reviewed appearance rule",
+                    ),
+                )
+            ] += 1
+            continue
+        state = appearance.get(
+            "resolved_icon_state",
+            appearance.get("icon_state_override"),
+        )
+        failed = ""
+        if state is not None:
+            for part in rule["parts"]:
+                icon_override = appearance.get("icon_override")
+                icon = str(icon_override or part["source_icon"])
+                entries = by_icon_state.get((icon, str(state)), [])
+                if not entries:
+                    failed = f"compiled atlas has no {icon}:{state}"
+                    break
+                select_entry(entries[0])
+        if failed:
+            fallback_counts[(role, source_path, failed)] += 1
+        else:
+            mapped_counts[(role, source_path)] += 1
+
+    compact_sprites, pages, compact_atlas = (
+        _compact_dm_appearance_sprites(
+            atlas_path,
+            atlas,
+            selected_sprites,
+        )
+    )
+
+    unresolved = [
+        {
+            "role": role,
+            "source_path": source_path,
+            "instances": instances,
+            "reason": reason,
+        }
+        for (role, source_path, reason), instances in sorted(
+            fallback_counts.items(),
+            key=lambda item: (
+                -item[1],
+                item[0][0],
+                item[0][1],
+                item[0][2],
+            ),
+        )
+    ]
+    output = {
+        "format_version": 1,
+        "kind": "goon-dm-appearance-selection",
+        "pack_id": atlas["pack_id"],
+        "source_commit": atlas["source_commit"],
+        "source_map": map_record,
+        "profile_sha256": sha256_file(DM_APPEARANCE_PROFILE),
+        "full_catalog_sha256": sha256_file(atlas_path),
+        "compact_atlas": compact_atlas,
+        "pages": pages,
+        "sprites": compact_sprites,
+        "rules": rules,
+        "coverage": {
+            "appearance_instances": len(appearances),
+            "mapped_instances": sum(mapped_counts.values()),
+            "mapped_source_paths": len(mapped_counts),
+            "fallback_instances": sum(fallback_counts.values()),
+            "fallback_source_paths": len(
+                {(role, path) for role, path, _ in fallback_counts}
+            ),
+            "unresolved": unresolved,
+        },
+    }
+    json_dump(DM_APPEARANCE_RUNTIME, output)
+    print(
+        "DM appearances complete: "
+        f"{len(rules):,} rules, {len(selected_sprites):,} sprites, "
+        f"{len(pages):,} compact pages "
+        f"(from {compact_atlas['source_pages']:,} source pages), "
+        f"{output['coverage']['mapped_instances']:,}/"
+        f"{len(appearances):,} instances mapped"
+    )
+
+
+def _audit_dm_appearance_compact_atlas(
+    atlas_path: Path,
+    atlas: dict[str, Any],
+    appearances: dict[str, Any],
+) -> None:
+    """Validate compact packing and compare every selected source frame."""
+
+    compact = appearances.get("compact_atlas", {})
+    expected_compact_fields = {
+        "bundle",
+        "page_size",
+        "gutter",
+        "source_pages",
+        "source_rectangles",
+        "frame_references",
+        "unique_frames",
+    }
+    if (
+        set(compact) != expected_compact_fields
+        or compact.get("bundle") != DM_APPEARANCE_BUNDLE
+        or compact.get("page_size") != PAGE_SIZE
+        or compact.get("gutter") != GUTTER
+    ):
+        raise SystemExit("invalid DM appearance compact atlas metadata")
+
+    declared_pages: dict[tuple[str, int], dict[str, Any]] = {}
+    expected_paths: set[Path] = set()
+    for expected_number, page in enumerate(appearances.get("pages", [])):
+        if (
+            set(page)
+            != {
+                "bundle",
+                "page",
+                "runtime_path",
+                "width",
+                "height",
+                "sha256",
+            }
+            or page["bundle"] != DM_APPEARANCE_BUNDLE
+            or int(page["page"]) != expected_number
+            or page["runtime_path"]
+            != f"{DM_APPEARANCE_BUNDLE}/atlas-{expected_number:03d}.png"
+            or int(page["width"]) != PAGE_SIZE
+            or int(page["height"]) != PAGE_SIZE
+        ):
+            raise SystemExit("DM appearance selection references sparse pages")
+        page_path = atlas_path.parent / page["runtime_path"]
+        if (
+            not page_path.exists()
+            or sha256_file(page_path) != page["sha256"]
+        ):
+            raise SystemExit(
+                f"invalid DM appearance compact page: {page_path}"
+            )
+        with Image.open(page_path) as image:
+            if image.mode != "RGBA" or image.size != (PAGE_SIZE, PAGE_SIZE):
+                raise SystemExit(
+                    f"invalid DM appearance compact page format: {page_path}"
+                )
+        key = (str(page["bundle"]), int(page["page"]))
+        if key in declared_pages:
+            raise SystemExit("duplicate DM appearance compact page")
+        declared_pages[key] = page
+        expected_paths.add(page_path.resolve())
+
+    actual_paths = {
+        path.resolve()
+        for path in DM_APPEARANCE_ATLAS.glob("atlas-*.png")
+        if path.is_file()
+    }
+    if actual_paths != expected_paths:
+        raise SystemExit("DM appearance compact page set is stale")
+
+    source_pages: set[tuple[str, int]] = set()
+    source_rectangles: set[tuple[str, int, int, int, int, int]] = set()
+    compact_locations: set[tuple[int, int, int, int, int]] = set()
+    comparisons: set[
+        tuple[
+            str,
+            int,
+            int,
+            int,
+            int,
+            int,
+            int,
+            int,
+            int,
+        ]
+    ] = set()
+    frame_references = 0
+
+    for identifier, entry in sorted(
+        appearances.get("sprites", {}).items()
+    ):
+        source_entry = atlas["sprites"].get(identifier)
+        if source_entry is None:
+            raise SystemExit(f"unknown DM appearance sprite: {identifier}")
+        if entry.get("bundle") != DM_APPEARANCE_BUNDLE:
+            raise SystemExit(
+                f"DM appearance sprite references sparse bundle: {identifier}"
+            )
+        if set(entry) != set(source_entry):
+            raise SystemExit(
+                f"DM appearance sprite schema mismatch: {identifier}"
+            )
+        for field, value in source_entry.items():
+            if field not in {"bundle", "directions"} and entry[field] != value:
+                raise SystemExit(
+                    f"DM appearance sprite provenance mismatch: "
+                    f"{identifier}:{field}"
+                )
+        if set(entry["directions"]) != set(source_entry["directions"]):
+            raise SystemExit(
+                f"DM appearance direction mismatch: {identifier}"
+            )
+
+        source_bundle = str(source_entry["bundle"])
+        for direction in sorted(source_entry["directions"]):
+            source_frames = source_entry["directions"][direction]
+            compact_frames = entry["directions"][direction]
+            if len(source_frames) != len(compact_frames):
+                raise SystemExit(
+                    f"DM appearance frame count mismatch: "
+                    f"{identifier}:{direction}"
+                )
+            for source_frame, compact_frame in zip(
+                source_frames,
+                compact_frames,
+                strict=True,
+            ):
+                if set(source_frame) != set(compact_frame):
+                    raise SystemExit(
+                        f"DM appearance frame schema mismatch: "
+                        f"{identifier}:{direction}"
+                    )
+                for field, value in source_frame.items():
+                    if (
+                        field not in {"page", "x", "y"}
+                        and compact_frame[field] != value
+                    ):
+                        raise SystemExit(
+                            f"DM appearance frame metadata mismatch: "
+                            f"{identifier}:{direction}:{field}"
+                        )
+                compact_page = int(compact_frame["page"])
+                compact_x = int(compact_frame["x"])
+                compact_y = int(compact_frame["y"])
+                width = int(compact_frame["w"])
+                height = int(compact_frame["h"])
+                if (
+                    (DM_APPEARANCE_BUNDLE, compact_page)
+                    not in declared_pages
+                    or compact_x < GUTTER
+                    or compact_y < GUTTER
+                    or compact_x + width + GUTTER > PAGE_SIZE
+                    or compact_y + height + GUTTER > PAGE_SIZE
+                ):
+                    raise SystemExit(
+                        f"DM appearance frame is outside compact pages: "
+                        f"{identifier}:{direction}"
+                    )
+
+                source_page = int(source_frame["page"])
+                source_x = int(source_frame["x"])
+                source_y = int(source_frame["y"])
+                source_pages.add((source_bundle, source_page))
+                source_rectangles.add(
+                    (
+                        source_bundle,
+                        source_page,
+                        source_x,
+                        source_y,
+                        width,
+                        height,
+                    )
+                )
+                compact_locations.add(
+                    (
+                        compact_page,
+                        compact_x,
+                        compact_y,
+                        width,
+                        height,
+                    )
+                )
+                comparisons.add(
+                    (
+                        source_bundle,
+                        source_page,
+                        source_x,
+                        source_y,
+                        width,
+                        height,
+                        compact_page,
+                        compact_x,
+                        compact_y,
+                    )
+                )
+                frame_references += 1
+
+    if compact != {
+        "bundle": DM_APPEARANCE_BUNDLE,
+        "page_size": PAGE_SIZE,
+        "gutter": GUTTER,
+        "source_pages": len(source_pages),
+        "source_rectangles": len(source_rectangles),
+        "frame_references": frame_references,
+        "unique_frames": len(compact_locations),
+    }:
+        raise SystemExit("DM appearance compact atlas totals are stale")
+
+    compact_images = {
+        int(page["page"]): Image.open(
+            atlas_path.parent / page["runtime_path"]
+        ).convert("RGBA")
+        for page in appearances["pages"]
+    }
+    source_image: Image.Image | None = None
+    current_source_page: tuple[str, int] | None = None
+    try:
+        for comparison in sorted(comparisons):
+            (
+                source_bundle,
+                source_page,
+                source_x,
+                source_y,
+                width,
+                height,
+                compact_page,
+                compact_x,
+                compact_y,
+            ) = comparison
+            page_key = (source_bundle, source_page)
+            if page_key != current_source_page:
+                if source_image is not None:
+                    source_image.close()
+                source_record = (
+                    atlas["bundles"][source_bundle]["pages"][source_page]
+                )
+                source_image = Image.open(
+                    atlas_path.parent
+                    / source_bundle
+                    / source_record["file"]
+                ).convert("RGBA")
+                current_source_page = page_key
+            assert source_image is not None
+            source_pixels = source_image.crop(
+                (
+                    source_x,
+                    source_y,
+                    source_x + width,
+                    source_y + height,
+                )
+            )
+            compact_pixels = compact_images[compact_page].crop(
+                (
+                    compact_x,
+                    compact_y,
+                    compact_x + width,
+                    compact_y + height,
+                )
+            )
+            try:
+                if source_pixels.tobytes() != compact_pixels.tobytes():
+                    raise SystemExit(
+                        "DM appearance compact frame pixels differ from "
+                        f"source: {comparison}"
+                    )
+            finally:
+                source_pixels.close()
+                compact_pixels.close()
+    finally:
+        if source_image is not None:
+            source_image.close()
+        for image in compact_images.values():
+            image.close()
+
+
 def audit(_: argparse.Namespace) -> None:
     upstream_inventory = UPSTREAM / "upstream-files.json"
     if not upstream_inventory.exists():
@@ -1510,6 +2711,83 @@ def audit(_: argparse.Namespace) -> None:
                 f"{len(foundation['sprites']):,} sprites, "
                 f"{len(foundation['pages']):,} pages"
             )
+        if DM_APPEARANCE_RUNTIME.exists():
+            appearances = json.loads(
+                DM_APPEARANCE_RUNTIME.read_text(encoding="utf-8")
+            )
+            if (
+                appearances.get("kind") != "goon-dm-appearance-selection"
+                or appearances.get("source_commit") != GOON_COMMIT
+                or appearances.get("full_catalog_sha256")
+                != sha256_file(atlas_path)
+                or appearances.get("profile_sha256")
+                != sha256_file(DM_APPEARANCE_PROFILE)
+            ):
+                raise SystemExit("DM appearance selection is stale")
+            selected_ids = set(appearances.get("sprites", {}))
+            for rule in appearances.get("rules", []):
+                for part in rule.get("parts", []):
+                    if part.get("sprite_id") not in selected_ids:
+                        raise SystemExit(
+                            "DM appearance rule references an unselected sprite"
+                        )
+            _audit_dm_appearance_compact_atlas(
+                atlas_path,
+                atlas,
+                appearances,
+            )
+            coverage = appearances.get("coverage", {})
+            if coverage.get("appearance_instances") != (
+                coverage.get("mapped_instances", 0)
+                + coverage.get("fallback_instances", 0)
+            ):
+                raise SystemExit("invalid DM appearance coverage totals")
+
+            profile = json.loads(
+                DM_APPEARANCE_PROFILE.read_text(encoding="utf-8")
+            )
+            _, _, map_appearances = _appearance_map_data(profile)
+            appearance_counts = Counter(
+                (
+                    str(row["role"]),
+                    str(row["source_path"]),
+                )
+                for row in map_appearances
+            )
+            rules_by_key = {
+                (str(rule["role"]), str(rule["type_path"])): rule
+                for rule in appearances["rules"]
+                if rule.get("match") == "exact"
+            }
+            macro_floor_expectations = {
+                "/turf/simulated/floor/twotone/black": (
+                    34,
+                    "twotone_black",
+                ),
+                "/turf/simulated/floor/twotone/darkblue": (
+                    18,
+                    "twotone_dblue",
+                ),
+            }
+            for path, (instances, source_state) in (
+                macro_floor_expectations.items()
+            ):
+                rule = rules_by_key.get(("turf", path))
+                if (
+                    appearance_counts[("turf", path)] != instances
+                    or rule is None
+                    or len(rule.get("parts", [])) != 1
+                    or rule["parts"][0].get("source_state") != source_state
+                ):
+                    raise SystemExit(
+                        f"invalid DEFINE_FLOORS appearance mapping: {path}"
+                    )
+            print(
+                "DM appearances ok: "
+                f"{len(appearances['rules']):,} rules, "
+                f"{len(appearances['sprites']):,} sprites, "
+                f"{len(appearances['pages']):,} compact pages"
+            )
 
     audio_path = RUNTIME / "audio" / "audio.json"
     if audio_path.exists():
@@ -1546,6 +2824,7 @@ def parser() -> argparse.ArgumentParser:
         "import-graphics-source": import_graphics_source,
         "build-graphics": build_graphics,
         "build-audio": build_audio,
+        "build-dm-appearances": build_dm_appearances,
         "build-foundation-media": build_foundation_media,
         "verify-graphics": verify_graphics,
         "verify-audio": verify_audio,

@@ -40,6 +40,14 @@ records are:
   `machine_docs_renderer`
 - [`tile-interaction-docs.md`](tile-interaction-docs.md) —
   resumed `machine_docs_renderer` world-interaction fidelity episode
+- [`tile-visual-regression.md`](tile-visual-regression.md) —
+  resumed `machine_docs_renderer` visual-fidelity regression episode
+- [`compact-map-atlas.md`](compact-map-atlas.md) —
+  `compact_map_atlas`
+- [`dm-appearance-import-audit.md`](dm-appearance-import-audit.md) —
+  resumed `machine_fidelity_tests` DM appearance/import episode
+- [`visual-runtime-review.md`](visual-runtime-review.md) —
+  `visual_runtime_review`
 - [`pixel-viewport-audit.md`](pixel-viewport-audit.md) —
   `pixel_viewport_audit`
 - [`goon-graphics-pipeline.md`](goon-graphics-pipeline.md) — Harvey /

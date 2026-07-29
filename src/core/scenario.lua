@@ -8,6 +8,7 @@ local Scenario = {}
 local MAX_DIMENSION = 256
 local MAX_PALETTE = 2048
 local MAX_RUNS = 200000
+local MAX_APPEARANCES = 1000000
 local MAX_AREAS = 1024
 local MAX_FIXTURES = 8192
 local MAX_SPAWNS = 1024
@@ -107,12 +108,27 @@ local DEFINITION_KEYS = {
 }
 
 local MAP_KEYS = {
+  appearances = true,
   default_palette = true,
   format = true,
   height = true,
   palette = true,
   runs = true,
   width = true,
+}
+
+local APPEARANCE_KEYS = {
+  direction = true,
+  icon_override = true,
+  icon_state_override = true,
+  index = true,
+  layer_milli = true,
+  order = true,
+  pixel_x = true,
+  pixel_y = true,
+  resolved_icon_state = true,
+  role = true,
+  source_path = true,
 }
 
 local AREA_KEYS = {
@@ -380,6 +396,133 @@ local function validate_runs(map, width, height, palette_count, default_palette)
   return runs
 end
 
+local APPEARANCE_DIRECTIONS = {
+  east = true,
+  north = true,
+  northeast = true,
+  northwest = true,
+  south = true,
+  southeast = true,
+  southwest = true,
+  west = true,
+}
+
+local function safe_dm_type_path(path, root)
+  return type(path) == "string"
+    and (
+      path == root
+      or path:sub(1, #root + 1) == root .. "/"
+    )
+    and path:match("^/[-A-Za-z0-9_/]+$") ~= nil
+    and not path:find("//", 1, true)
+end
+
+local function safe_dmi_path(path)
+  if type(path) ~= "string"
+    or path:sub(1, 6) ~= "icons/"
+    or path:sub(-4):lower() ~= ".dmi"
+    or path:find("\\", 1, true)
+    or path:find("//", 1, true)
+  then
+    return false
+  end
+  for component in path:gmatch("[^/]+") do
+    if component == "." or component == ".." then
+      return false
+    end
+  end
+  return true
+end
+
+local function validate_appearances(map, width, height)
+  local appearances = map.appearances or {}
+  assert(type(appearances) == "table", "map.appearances must be an array")
+  assert(#appearances <= MAX_APPEARANCES,
+    "scenario map has too many appearances")
+  local previous_index = 0
+  local previous_order = 0
+  for appearance_index = 1, #appearances do
+    local appearance = appearances[appearance_index]
+    assert(type(appearance) == "table", "map appearance must be an object")
+    closed_keys(appearance, APPEARANCE_KEYS, "map appearance")
+    local index = integer(
+      appearance.index,
+      "map appearance.index",
+      1,
+      width * height
+    )
+    local order = integer(
+      appearance.order,
+      "map appearance.order",
+      1,
+      4096
+    )
+    assert(
+      index > previous_index
+        or (index == previous_index and order > previous_order),
+      "map appearances must be sorted by index and unique order"
+    )
+    previous_index = index
+    previous_order = order
+    assert(
+      appearance.role == "turf" or appearance.role == "object",
+      "map appearance role must be turf or object"
+    )
+    local source_path = nonempty_string(
+      appearance.source_path,
+      "map appearance.source_path",
+      1024
+    )
+    local source_root = appearance.role == "turf" and "/turf" or "/obj"
+    assert(safe_dm_type_path(source_path, source_root),
+      "map appearance role and source path must match")
+    if appearance.direction ~= nil then
+      assert(APPEARANCE_DIRECTIONS[appearance.direction],
+        "unknown map appearance direction")
+    end
+    if appearance.icon_override ~= nil then
+      local icon = nonempty_string(
+        appearance.icon_override,
+        "map appearance.icon_override",
+        1024
+      )
+      assert(
+        safe_dmi_path(icon),
+        "map appearance icon override must name an icons/*.dmi source"
+      )
+    end
+    if appearance.icon_state_override ~= nil then
+      nonempty_string(
+        appearance.icon_state_override,
+        "map appearance.icon_state_override",
+        256
+      )
+    end
+    if appearance.resolved_icon_state ~= nil then
+      nonempty_string(
+        appearance.resolved_icon_state,
+        "map appearance.resolved_icon_state",
+        256
+      )
+    end
+    if appearance.pixel_x ~= nil then
+      integer(appearance.pixel_x, "map appearance.pixel_x", -4096, 4096)
+    end
+    if appearance.pixel_y ~= nil then
+      integer(appearance.pixel_y, "map appearance.pixel_y", -4096, 4096)
+    end
+    if appearance.layer_milli ~= nil then
+      integer(
+        appearance.layer_milli,
+        "map appearance.layer_milli",
+        -1000000000,
+        1000000000
+      )
+    end
+  end
+  return appearances
+end
+
 local function validate_fixtures(definition, width, height, scenario_id)
   local fixtures = definition.fixtures or {}
   assert(type(fixtures) == "table", "scenario fixtures must be an array")
@@ -518,6 +661,7 @@ function Scenario.validate(definition, content)
     #palette
   )
   validate_runs(map, width, height, #palette, default_palette)
+  validate_appearances(map, width, height)
   validate_fixtures(definition, width, height, scenario_id)
   validate_spawns(definition, width, height, scenario_id)
   validate_targets(definition, width, height)

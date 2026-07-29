@@ -310,6 +310,7 @@ def validate_scenario(definition: dict, path: str, index: int) -> None:
     unknown = sorted(
         set(map_data)
         - {
+            "appearances",
             "format",
             "width",
             "height",
@@ -525,6 +526,115 @@ def validate_scenario(definition: dict, path: str, index: int) -> None:
     previous_end = 0
     previous_palette = 0
     size = width * height
+    appearances = map_data.get("appearances", [])
+    if not isinstance(appearances, list) or len(appearances) > 1_000_000:
+        raise ModError(f"{prefix}: invalid map appearances")
+    previous_appearance = (0, 0)
+    appearance_directions = {
+        "south",
+        "north",
+        "east",
+        "west",
+        "southeast",
+        "southwest",
+        "northeast",
+        "northwest",
+    }
+    for appearance_index, appearance in enumerate(appearances, 1):
+        if not isinstance(appearance, dict) or set(appearance) - {
+            "direction",
+            "icon_override",
+            "icon_state_override",
+            "index",
+            "layer_milli",
+            "order",
+            "pixel_x",
+            "pixel_y",
+            "resolved_icon_state",
+            "role",
+            "source_path",
+        }:
+            raise ModError(
+                f"{prefix}: invalid map appearance {appearance_index}"
+            )
+        cell_index = appearance.get("index")
+        order = appearance.get("order")
+        role = appearance.get("role")
+        source_path = appearance.get("source_path")
+        if (
+            not exact_integer(cell_index)
+            or not 1 <= cell_index <= size
+            or not exact_integer(order)
+            or not 1 <= order <= 4096
+            or (cell_index, order) <= previous_appearance
+            or role not in {"turf", "object"}
+            or not isinstance(source_path, str)
+            or not (
+                source_path == ("/turf" if role == "turf" else "/obj")
+                or source_path.startswith(
+                    ("/turf/" if role == "turf" else "/obj/")
+                )
+            )
+            or not re.fullmatch(r"/[-A-Za-z0-9_/]+", source_path)
+            or "//" in source_path
+            or len(source_path) > 1024
+        ):
+            raise ModError(
+                f"{prefix}: invalid/unsorted map appearance {appearance_index}"
+            )
+        previous_appearance = (cell_index, order)
+        direction = appearance.get("direction")
+        if direction is not None and direction not in appearance_directions:
+            raise ModError(
+                f"{prefix}: invalid map appearance direction {appearance_index}"
+            )
+        icon_override = appearance.get("icon_override")
+        if icon_override is not None and (
+            not isinstance(icon_override, str)
+            or not icon_override.startswith("icons/")
+            or not icon_override.lower().endswith(".dmi")
+            or "\\" in icon_override
+            or "//" in icon_override
+            or ".." in PurePosixPath(icon_override).parts
+            or len(icon_override) > 1024
+        ):
+            raise ModError(
+                f"{prefix}: invalid map appearance icon {appearance_index}"
+            )
+        icon_state = appearance.get("icon_state_override")
+        if icon_state is not None and (
+            not isinstance(icon_state, str)
+            or not icon_state
+            or len(icon_state) > 256
+        ):
+            raise ModError(
+                f"{prefix}: invalid map appearance state {appearance_index}"
+            )
+        resolved_icon_state = appearance.get("resolved_icon_state")
+        if resolved_icon_state is not None and (
+            not isinstance(resolved_icon_state, str)
+            or not resolved_icon_state
+            or len(resolved_icon_state) > 256
+        ):
+            raise ModError(
+                f"{prefix}: invalid resolved map state {appearance_index}"
+            )
+        for offset_key in ("pixel_x", "pixel_y"):
+            offset = appearance.get(offset_key)
+            if offset is not None and (
+                not exact_integer(offset) or not -4096 <= offset <= 4096
+            ):
+                raise ModError(
+                    f"{prefix}: invalid map appearance offset {appearance_index}"
+                )
+        layer_milli = appearance.get("layer_milli")
+        if layer_milli is not None and (
+            not exact_integer(layer_milli)
+            or not -1_000_000_000 <= layer_milli <= 1_000_000_000
+        ):
+            raise ModError(
+                f"{prefix}: invalid map appearance layer {appearance_index}"
+            )
     dense = [default_palette] * size
     for run_index, run in enumerate(runs, 1):
         if (

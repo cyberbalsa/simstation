@@ -138,6 +138,7 @@ The implemented canonical entry points are:
 python3 tools/assets.py fetch-goon
 python3 tools/assets.py import-graphics-source
 python3 tools/assets.py build-graphics
+python3 tools/assets.py build-dm-appearances
 python3 tools/assets.py audit
 ```
 
@@ -315,17 +316,48 @@ collisions, and decompression bombs.
 - Compare representative animated fixtures against BYOND capture/reference
   output before accepting the importer.
 
-## Implemented foundation
+## Implemented native-map path
 
 `tools/assets.py` has fetched and compiled the complete pinned snapshot into
-eight bundles and 134 atlas pages with source/runtime catalogs. A generated
-foundation selection resolves 29 logical sprites without parsing the
-exhaustive catalog. Its 14 referenced pages cover native turfs, walls,
-windows, grilles, furniture, infrastructure, signage, crew, APC, generator,
-vent, scrubber, fabricator, and refinery art. The presentation renderer
-lazy-loads pages, uses revisioned per-chunk SpriteBatches for imported static
-structure, and draws authored Atlas machines with generated shapes as the
-missing-media fallback.
+eight bundles and 134 atlas pages with source/runtime catalogs. The small
+29-sprite foundation selection remains the portable fallback vocabulary. It is
+not used as a substitute for an imported map's authored tile identity.
+
+For the pinned Atlas crop, `tools/assets.py build-dm-appearances` compiles the
+43,813 ordered turf/object appearance instances emitted by
+`tools/map_import.py` into a map-specific, data-only selection:
+
+- 1,173 reviewed exact type rules;
+- 2,104 selected Goon sprite states;
+- 10,597 frame references and 5,969 unique source rectangles;
+- two compact 2,048×2,048 runtime pages instead of 30 sparsely used full-atlas
+  pages; and
+- 43,802 mapped instances, with 11 explicitly reported decorative/item
+  fallbacks.
+
+The compact compiler keeps the canonical sprite IDs and compares every compact
+frame byte-for-byte with the corresponding full-atlas rectangle during audit.
+The LÖVE runtime lazy-loads only the two compact pages, resolves exact source
+type/icon-state/direction records, bottom-anchors oversized BYOND icons,
+honors map and inherited pixel offsets, and submits contiguous page runs in
+stable painter order. Native appearance activation is gated by the scenario's
+pinned source commit, map path, Git blob, SHA-256, crop, and dimensions.
+
+Editor-only and deferred states are projected at runtime rather than displayed
+as placeholder art. This includes random plating, Supernorn walls, auto
+catwalks, tables, windows/grilles, and the Atlas door families. Door
+open/closed projection covers suffix-based airlocks, poddoors, blast doors,
+wood doors, and stall doors. A semantic replacement layer supplies genuine
+Goon floor, plating, engine-floor, Supernorn wall, reinforced Supernorn wall,
+and Atlas Pyro airlock sprites when construction or dismantling replaces an
+authored map atom.
+
+Native chunks are invalidated by both their local revision and the global
+topology revision so connected sprites also update across chunk boundaries.
+The renderer retains a four-cell source margin because the selected catalog
+contains icons extending up to four tiles beyond their anchor. Underfloor
+utilities and decals remain below turf walls; normal objects remain on the
+object plane.
 
 The runtime keeps Goon's 32×32 source cells square and unscaled at 1×. A
 centered, scissored 7:5 world viewport is built in whole 7×5-tile blocks:
@@ -336,9 +368,12 @@ and a shared snapped camera transform keep rendering and hit testing aligned.
 
 `verify-graphics` compares every one of the 164,558 compiled
 frame-direction cells to its pinned source pixels, and a clean rebuild produces
-identical page/catalog hashes. General page-residency eviction, full
-appearance-layer composition, contact-sheet review, and broader BYOND capture
-fixtures remain M2 work.
+identical page/catalog hashes. The current native catalog deliberately belongs
+to the pinned core Atlas scenario. Pack-owned appearance-catalog registration,
+authoritative constructed-door orientation/appearance identity, full inherited
+DM plane/layer evaluation, animation scheduling, lighting composition, and
+broader BYOND capture fixtures remain follow-up work rather than silent parity
+claims.
 
 The upstream inventory, source license, modification records, and broad
 contributor credit are governed by the

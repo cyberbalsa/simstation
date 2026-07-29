@@ -14,6 +14,33 @@ from tools import map_import, mods as mod_tools
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "fixtures" / "maps"
+VISUAL_ROOM_FIXTURE = ROOT / "tests" / "fixtures" / "visual-room.json"
+FOUNDATION_GRAPHICS = (
+    ROOT / "assets" / "runtime" / "goon" / "graphics" / "foundation.json"
+)
+LFS_POINTER_PREFIX = b"version https://git-lfs.github.com/spec/v1"
+EXPECTED_STATIC_ROOM_ALIASES = {
+    "catwalk",
+    "chair",
+    "crate",
+    "decal",
+    "disposal",
+    "door_closed",
+    "door_open",
+    "floor",
+    "grille",
+    "lattice",
+    "light",
+    "pipe",
+    "plating",
+    "reinforced_floor",
+    "reinforced_wall",
+    "sign",
+    "storage",
+    "table",
+    "wall",
+    "window",
+}
 
 
 def _decoded_scenario_cells(scenario: dict) -> dict[tuple[int, int], dict]:
@@ -77,6 +104,213 @@ class MapImportTests(unittest.TestCase):
             path.read_bytes(),
             path.relative_to(ROOT).as_posix(),
         )
+
+    def test_visual_room_pins_native_alias_states_and_directions(self) -> None:
+        fixture = json.loads(VISUAL_ROOM_FIXTURE.read_text(encoding="utf-8"))
+        foundation = json.loads(FOUNDATION_GRAPHICS.read_text(encoding="utf-8"))
+        expected_aliases = fixture["aliases"]
+
+        self.assertEqual(fixture["schema_version"], 1)
+        self.assertEqual(foundation["format_version"], 1)
+        self.assertEqual(
+            foundation["kind"],
+            "foundation-graphics-selection",
+        )
+        self.assertEqual(foundation["source_commit"], fixture["source_commit"])
+        self.assertEqual(
+            len(foundation["sprites"]),
+            fixture["catalog"]["sprite_aliases"],
+        )
+        self.assertEqual(
+            len(foundation["pages"]),
+            fixture["catalog"]["referenced_pages"],
+        )
+        self.assertEqual(set(expected_aliases), EXPECTED_STATIC_ROOM_ALIASES)
+        self.assertEqual(
+            set(fixture["room"]["expected_drawn_aliases"]) - {"cable"},
+            EXPECTED_STATIC_ROOM_ALIASES,
+        )
+
+        sprite_ids: set[str] = set()
+        for alias in sorted(expected_aliases):
+            with self.subTest(alias=alias):
+                expected = expected_aliases[alias]
+                entry = foundation["sprites"][alias]
+                self.assertEqual(entry["id"], expected["id"])
+                self.assertNotIn(entry["id"], sprite_ids)
+                sprite_ids.add(entry["id"])
+                self.assertEqual(entry["source_path"], expected["source_path"])
+                self.assertEqual(
+                    entry["source_state"],
+                    expected["source_state"],
+                )
+                self.assertEqual(
+                    entry["source_state_occurrence"],
+                    expected["source_state_occurrence"],
+                )
+                self.assertEqual(
+                    entry["cell_width"],
+                    fixture["catalog"]["cell_size"],
+                )
+                self.assertEqual(
+                    entry["cell_height"],
+                    fixture["catalog"]["cell_size"],
+                )
+                self.assertEqual(
+                    entry["dirs"],
+                    len(expected["directions"]),
+                )
+                self.assertEqual(
+                    set(entry["directions"]),
+                    set(expected["directions"]),
+                )
+                self.assertEqual(
+                    len(expected["directions"]),
+                    len(set(expected["directions"])),
+                )
+                self.assertRegex(expected["pixel_sha256"], r"^[0-9a-f]{64}$")
+                for direction in expected["directions"]:
+                    frames = entry["directions"][direction]
+                    self.assertEqual(len(frames), entry["frames"])
+                    for frame in frames:
+                        self.assertEqual(frame["w"], entry["cell_width"])
+                        self.assertEqual(frame["h"], entry["cell_height"])
+
+    def test_hydrated_visual_room_pixels_match_upstream_dmis(self) -> None:
+        try:
+            from PIL import Image
+            from tools import assets as asset_tools
+        except ImportError as error:
+            self.skipTest(f"Pillow is required for hydrated pixel checks: {error}")
+
+        fixture = json.loads(VISUAL_ROOM_FIXTURE.read_text(encoding="utf-8"))
+        foundation = json.loads(FOUNDATION_GRAPHICS.read_text(encoding="utf-8"))
+        page_records = {
+            (page["bundle"], page["page"]): page
+            for page in foundation["pages"]
+        }
+        upstream_root = ROOT / "assets" / "upstream" / "goon"
+        runtime_root = ROOT / "assets" / "runtime" / "goon" / "graphics"
+
+        required_paths: set[Path] = set()
+        for alias, expected in fixture["aliases"].items():
+            entry = foundation["sprites"][alias]
+            required_paths.add(upstream_root / expected["source_path"])
+            for direction in expected["directions"]:
+                for frame in entry["directions"][direction]:
+                    page = page_records[(entry["bundle"], frame["page"])]
+                    required_paths.add(runtime_root / page["runtime_path"])
+
+        for path in sorted(required_paths):
+            self.assertTrue(path.is_file(), f"missing visual source: {path}")
+        lfs_pointers = [
+            path
+            for path in sorted(required_paths)
+            if path.read_bytes().startswith(LFS_POINTER_PREFIX)
+        ]
+        if lfs_pointers:
+            self.skipTest(
+                "visual pixel payloads are Git LFS pointers; hydrate assets "
+                "before running pixel-level regression checks"
+            )
+
+        source_cache: dict[Path, tuple[Image.Image, object]] = {}
+        page_cache: dict[tuple[str, int], Image.Image] = {}
+        try:
+            for alias in sorted(fixture["aliases"]):
+                with self.subTest(alias=alias):
+                    expected = fixture["aliases"][alias]
+                    entry = foundation["sprites"][alias]
+                    source_path = upstream_root / expected["source_path"]
+                    if source_path not in source_cache:
+                        source_cache[source_path] = asset_tools.read_dmi(
+                            source_path
+                        )
+                    source_image, metadata = source_cache[source_path]
+                    self.assertEqual(
+                        hashlib.sha256(source_path.read_bytes()).hexdigest(),
+                        entry["source_sha256"],
+                    )
+                    self.assertEqual(metadata.width, entry["cell_width"])
+                    self.assertEqual(metadata.height, entry["cell_height"])
+
+                    occurrence = 0
+                    source_state = None
+                    source_state_index = None
+                    source_cell_offset = 0
+                    for state_index, state in enumerate(metadata.states, 1):
+                        if state.name == expected["source_state"]:
+                            occurrence += 1
+                            if occurrence == expected["source_state_occurrence"]:
+                                source_state = state
+                                source_state_index = state_index
+                                break
+                        source_cell_offset += state.dirs * state.frames
+                    self.assertIsNotNone(source_state)
+                    assert source_state is not None
+                    self.assertEqual(
+                        source_state_index,
+                        entry["source_state_index"],
+                    )
+                    self.assertEqual(source_state.dirs, entry["dirs"])
+                    self.assertEqual(source_state.frames, entry["frames"])
+                    self.assertEqual(
+                        asset_tools.DIRECTIONS[: source_state.dirs],
+                        expected["directions"],
+                    )
+
+                    columns = source_image.width // metadata.width
+                    for direction_index, direction in enumerate(
+                        expected["directions"]
+                    ):
+                        source_cell = source_cell_offset + direction_index
+                        source_left = (source_cell % columns) * metadata.width
+                        source_top = (source_cell // columns) * metadata.height
+                        source_frame = source_image.crop(
+                            (
+                                source_left,
+                                source_top,
+                                source_left + metadata.width,
+                                source_top + metadata.height,
+                            )
+                        )
+                        frame = entry["directions"][direction][0]
+                        page_key = (entry["bundle"], frame["page"])
+                        if page_key not in page_cache:
+                            page = page_records[page_key]
+                            with Image.open(
+                                runtime_root / page["runtime_path"]
+                            ) as packed:
+                                page_cache[page_key] = packed.convert("RGBA")
+                        atlas_frame = page_cache[page_key].crop(
+                            (
+                                frame["x"],
+                                frame["y"],
+                                frame["x"] + frame["w"],
+                                frame["y"] + frame["h"],
+                            )
+                        )
+                        try:
+                            self.assertEqual(
+                                atlas_frame.tobytes(),
+                                source_frame.tobytes(),
+                                f"{alias}/{direction} differs from its DMI cell",
+                            )
+                            if direction == "south":
+                                self.assertEqual(
+                                    hashlib.sha256(
+                                        atlas_frame.tobytes()
+                                    ).hexdigest(),
+                                    expected["pixel_sha256"],
+                                )
+                        finally:
+                            source_frame.close()
+                            atlas_frame.close()
+        finally:
+            for source_image, _ in source_cache.values():
+                source_image.close()
+            for page_image in page_cache.values():
+                page_image.close()
 
     def test_tgm_dictionary_coordinates_and_overrides(self) -> None:
         parsed = self.parse_fixture("tgm_minimal.dmm")

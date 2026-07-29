@@ -122,6 +122,26 @@
       ]
     },
     {
+      "canonical_task": "/root/machine_fidelity_tests",
+      "display_name": null,
+      "archive": "dm-appearance-import-audit.md",
+      "last_observed_status": "appearance import, compact-manifest, and dynamic native visual regressions completed; focused and standard tests passed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "observable work record with upstream evidence, implementation contract, coordination, generated-output counts, two focused regression follow-ups, and validation results",
+      "topics": [
+        "DMM appearance overrides",
+        "pinned DM static appearance index",
+        "compact Goon appearance selection",
+        "map-editor placeholder projection",
+        "catwalk connection masks",
+        "wingrille helper expansion",
+        "twotone macro floor states",
+        "bidirectional native door states",
+        "simulation-created native map states",
+        "renderer camera overscan"
+      ]
+    },
+    {
       "canonical_task": "/root/machine_docs_renderer",
       "display_name": null,
       "archive": "machine-docs-renderer.md",
@@ -395,6 +415,53 @@
         "Atlas source coverage",
         "scenario palette validation",
         "lattice and catwalk traversal"
+      ]
+    },
+    {
+      "canonical_task": "/root/machine_docs_renderer",
+      "display_name": null,
+      "archive": "tile-visual-regression.md",
+      "last_observed_status": "implementation and full repository audit completed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible work report with fixture contract, validation results, and externally visible progress updates",
+      "topics": [
+        "Goon tile visual regression",
+        "fallback and placeholder detection",
+        "DMI state and direction fidelity",
+        "atlas pixel provenance",
+        "static painter ordering",
+        "Git LFS-tolerant tests"
+      ]
+    },
+    {
+      "canonical_task": "/root/compact_map_atlas",
+      "display_name": null,
+      "archive": "compact-map-atlas.md",
+      "last_observed_status": "compact compiler, generated output, audit, and archive completed; one stale test expectation reported to parent",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible work report with generated hashes, validation results, and externally visible coordination messages",
+      "topics": [
+        "compact Goon map appearance atlas",
+        "deterministic sprite repacking",
+        "pixel-exact provenance validation",
+        "DEFINE_FLOORS static appearance expansion",
+        "Git LFS runtime pages"
+      ]
+    },
+    {
+      "canonical_task": "/root/visual_runtime_review",
+      "display_name": null,
+      "archive": "visual-runtime-review.md",
+      "last_observed_status": "read-only production review completed; focused runtime, catalog, importer, generated-data, and upstream checks reported",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible work report with runtime smoke evidence and externally visible coordination messages",
+      "topics": [
+        "native Goon map runtime review",
+        "dynamic appearance state projection",
+        "painter ordering and culling",
+        "connected tile parity",
+        "catalog mod extensibility",
+        "compact atlas runtime performance"
       ]
     }
   ]

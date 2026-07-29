@@ -24,7 +24,7 @@ end
 
 function Ui.new()
   return setmetatable({
-    help_visible = true,
+    help_visible = false,
     notification = "Foundation loaded",
     notification_until = 6,
     selected_tool = "inspect",

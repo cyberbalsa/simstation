@@ -103,7 +103,14 @@ def command_test(_: argparse.Namespace) -> int:
     if lua_result.returncode:
         return lua_result.returncode
     return run(
-        [sys.executable, "-m", "unittest", "-v", "tests.test_map_import"]
+        [
+            sys.executable,
+            "-m",
+            "unittest",
+            "-v",
+            "tests.test_map_import",
+            "tests.test_dm_appearances",
+        ]
     ).returncode
 
 

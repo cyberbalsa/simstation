@@ -6,8 +6,9 @@
 - Display name: not available
 - Parent task: `/root`
 - Assigned date: 2026-07-28
-- Last observable status: audit completed; parent implementation reviewed and
-  targeted validation passed
+- Last observable status: follow-up visual-compositing fixes completed,
+  captured, validated, and released to the parent for exact-appearance
+  integration
 - Report availability: observable work record
 - Assignment availability: verbatim
 
@@ -334,7 +335,7 @@ The agent sent this validation and terminology note:
 
 ## Files and ownership
 
-This agent added or updated only:
+During the initial audit, this agent added or updated only:
 
 - `docs/agents/pixel-viewport-audit.md`
 - `docs/agents/README.md`
@@ -362,3 +363,168 @@ technical documentation, and executable-test edits.
 - Generated `assets/runtime/goon/graphics/foundation.json`.
 - Sim Station camera, renderer, UI, app, configuration, and tests as observed
   on 2026-07-28.
+
+## Follow-up: official-screenshot compositing audit
+
+### Follow-up assignment
+
+> New task: audit current LÖVE renderer and game screenshot/output against user
+> supplied official Goonstation screenshot. Focus visual compositing: 32x32
+> fidelity, viewport, z/layer ordering, directional/connected states,
+> lighting/space/background, why tiles look wrong. Inspect production and
+> capture if possible. Implement scoped renderer fixes only in
+> renderer/camera/display files (avoid importer/tests/docs except docs/agents
+> archive). Report files/findings/validation. Preserve npm untracked.
+
+The parent supplied the official reference at
+`/tmp/codex-clipboard-ID7C3f.png` and explicitly called out
+`Renderer:_draw_overlays`: the powered yellow wash, low-pressure wash, and
+always-on grid were suspected of destroying source colors. The parent asked
+that diagnostics be off by default or subtle and toggleable while fire,
+blueprints, and the cursor remain visible.
+
+The parent separately owned per-cell DM appearance import and consumption.
+This agent therefore stayed out of importer, scenario, asset-profile, fixture,
+and appearance-catalog files and released `renderer.lua` before the parent
+integrated `MapAppearance`.
+
+### Captured evidence
+
+The official reference and reproducible before/after game captures are retained
+in the ignored build directory:
+
+- `/home/fffics/Projects/simstation/build/visual-audit/goon-reference.png`
+  (997×997 official supplied image)
+- `/home/fffics/Projects/simstation/build/visual-audit/simstation-before.png`
+  (1280×720 pre-fix game output)
+- `/home/fffics/Projects/simstation/build/visual-audit/simstation-after.png`
+  (1280×720 post-fix game output with help hidden for inspection)
+
+The capture hook was temporary and was removed from `main.lua` immediately
+after each image was written. `main.lua` had no residual diff.
+
+The post-fix output still uses the audited exact native viewport:
+
+```text
+viewport origin: 192,64
+viewport size:   896×640
+native cells:    28×20
+source cell:     32×32
+camera zoom:     1
+```
+
+### Findings
+
+The first capture established several independent causes for the visual gap:
+
+1. Every powered floor received a translucent yellow fill and every native
+   floor got a line grid. Together they shifted the source palette toward
+   beige and outlined every cell, including otherwise clean Goon art.
+2. Low-pressure cells received another full-cell fill in the normal render
+   pass.
+3. Fire rendered before machines and crew, putting a foreground hazard behind
+   the objects it should cover.
+4. The static catalog exposed directional art, but the renderer requested
+   `south`, frame 1 for every alias.
+5. Pipe and catwalk neighbors were not used to select straight and elbow
+   states. Chairs, lights, machines, and moving crew also ignored available
+   direction.
+6. Space was a uniform clear color, while the supplied Goon reference uses a
+   dense colored starfield and nebular background.
+7. Every machine received a large green/red status square and every crew
+   sprite a large job-color square, adding non-Goon visual noise.
+8. Lights had source sprites but no presentation illumination.
+9. The foundation renderer reduces the Atlas map to a small shared set of
+   aliases. In particular, many distinct floors and machines became the same
+   repeated sprite. Exact per-cell source path, icon state, layer, direction,
+   and pixel-offset consumption was required to close that remaining gap; the
+   parent handled that separate slice.
+10. All inspected foundation cells were exact 32×32 images, and the snapped
+    viewport/camera transform was still correct. Scaling was not the source of
+    the wrong colors or repetitive art.
+
+### Renderer changes
+
+Only `src/presentation/renderer.lua` was changed by this follow-up:
+
+- powered and low-pressure diagnostics are disabled by default and exposed via
+  `Renderer:set_diagnostics(enabled)` as thin outlines;
+- the always-on native-view grid was removed;
+- deterministic one- and two-pixel fallback stars now distinguish map space
+  from empty letterbox bars;
+- all eight catalog directions are retained per static alias;
+- pipe and catwalk direction is selected from cardinal connectivity;
+- chair interaction state/table adjacency and wall-adjacent light placement
+  select directional art;
+- BYOND machine `dir`, path-derived direction, `pixel_x`, and inverted
+  `pixel_y` are applied when the generic machine fallback remains in use;
+- crew faces the next path cell;
+- large always-on machine and crew status squares were removed at native zoom,
+  retaining only a two-pixel fault warning and a small overview job marker;
+- active powered lights use one streamed SpriteBatch for a subtle local
+  additive glow;
+- fire moved to a foreground-effects pass after machines and crew;
+- blueprints and the cursor retain their intended visibility.
+
+Direction and star selection use only stable coordinates, ordered neighbor
+lists, and fixed lookup tables. No nondeterministic table traversal was added
+to authoritative code, and presentation changes do not mutate simulation
+state.
+
+### Follow-up validation
+
+```text
+luac -p src/presentation/renderer.lua
+result: passed
+
+git diff --check
+result: passed
+
+xvfb-run -a love . --self-test
+result: ok=true
+tick: 240
+state_hash: 1518078160
+atlas_pages_loaded: 2
+audio_prototypes_loaded: 1
+```
+
+Running `lua tests/run.lua` directly with the host Lua binary was not a valid
+project test in this environment: that interpreter rejected the vendored TOML
+module's existing `<const>` usage. The LÖVE/LuaJIT self-test passed and is the
+relevant renderer/runtime check. The parent retained responsibility for the
+full final `python3 tools/dev.py audit` after integrating concurrent importer
+and appearance work.
+
+The regenerated after capture visibly preserves the native gray source palette
+instead of the prior beige/yellow wash, removes the universal grid and green
+status dots, shows map-space stars, uses mixed light orientations and connected
+infrastructure states, and leaves the 32px cells and 7:5 scissored viewport
+unchanged.
+
+### Follow-up coordination
+
+The parent warned that BYOND positive `pixel_y` moves north/up while LÖVE Y
+grows down. The renderer was corrected from addition to subtraction and the
+final capture was regenerated.
+
+The release message sent to the parent was:
+
+> Renderer slice is released; I will not touch
+> `src/presentation/renderer.lua` again. Implemented: normal-play
+> powered/pressure/grid overlays removed (diagnostics now off-by-default via
+> `Renderer:set_diagnostics`), deterministic fallback stars, 8-direction
+> static media selection with connected pipe/catwalk plus chair/light
+> orientation, BYOND machine dir and pixel offsets (`pixel_y` corrected to
+> subtract), crew facing from paths, status-dot noise reduction, batched subtle
+> powered-light glow, and fire moved above machines/crew. Validation:
+> `luac -p`, `git diff --check`, and
+> `xvfb-run -a love . --self-test` pass (`ok=true`, tick 240, hash
+> 1518078160). Before/reference/after captures:
+> `/home/fffics/Projects/simstation/build/visual-audit/simstation-before.png`,
+> `/home/fffics/Projects/simstation/build/visual-audit/goon-reference.png`,
+> `/home/fffics/Projects/simstation/build/visual-audit/simstation-after.png`.
+> After is 1280×720; viewport remains exact 896×640 = 28×20 native 32px
+> cells. I’m only appending my docs/agents record now.
+
+The unrelated untracked `node_modules/`, `package-lock.json`, and
+`package.json` were preserved without modification.
