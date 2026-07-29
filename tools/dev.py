@@ -110,6 +110,7 @@ def command_test(_: argparse.Namespace) -> int:
             "-v",
             "tests.test_map_import",
             "tests.test_dm_appearances",
+            "tests.test_mods",
         ]
     ).returncode
 

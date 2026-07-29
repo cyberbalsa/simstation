@@ -2,6 +2,7 @@ local Json = require("src.vendor.json")
 local Manifest = require("src.mods.manifest")
 local Resolver = require("src.mods.resolver")
 local Registry = require("src.content.registry")
+local LightingContent = require("src.content.lighting")
 local Hooks = require("src.mods.hooks")
 local Stable = require("src.core.stable")
 
@@ -186,6 +187,17 @@ function Loader.load(records, options)
         }
       end
     end
+  end
+  local lighting_ok, lighting_error =
+    LightingContent.validate_registry(registry)
+  if not lighting_ok then
+    return nil, {
+      stage = "content-validation",
+      pack = lighting_error.owner,
+      source = lighting_error.source,
+      definition = lighting_error.id,
+      message = lighting_error.message,
+    }
   end
   registry:seal()
   local mounts = {}

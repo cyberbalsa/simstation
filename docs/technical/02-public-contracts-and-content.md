@@ -36,8 +36,11 @@ Registered core kinds include `item`, `material`, `machine`, `recipe`, `job`,
 `department`, `task`, `policy`, `gas`, `reagent`, `reaction`, `disease`,
 `plant`, `animal`, `room`, `zone`, `incident`, `scenario`, `research`,
 `access`, `sprite`, `audio`, `sound-set`, `music`, `ui`, `command`, `event`,
-and `hook`. Mods may register a new kind only through a future API revision;
-schema 1 rejects unknown kinds.
+`hook`, `light-profile`, `light-binding`, and `lighting-settings`. The
+implemented lighting kinds are presentation-only closed schemas documented in
+[rendering and graphics](04-rendering-and-graphics.md#dynamic-lighting). Mods
+may register a new kind only through a future API revision; schema 1 rejects
+unknown kinds.
 
 Runtime domains use monotonic IDs serialized as decimal strings:
 

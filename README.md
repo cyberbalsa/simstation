@@ -52,6 +52,9 @@ orders, manufacturing, and incidents. Layered machines are retained instead of
 flattened by coordinate, and safe literal map overrides survive import without
 executing DM. Source-pinned machine definitions carry their cadence, state,
 power, wires, typed NPC actions, and an explicit per-feature fidelity ledger.
+Powered fixtures and fires feed a cached, wall-occluded RGB light field. One
+portable shader composites true-black Goon-style station darkness while
+preserving full-bright space, with a direct-image fallback for older GPUs.
 The complete product contract and implementation roadmap live in
 [docs](docs/README.md).
 

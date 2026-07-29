@@ -463,6 +463,57 @@
         "catalog mod extensibility",
         "compact atlas runtime performance"
       ]
+    },
+    {
+      "canonical_task": "/root/lighting_runtime_review",
+      "display_name": null,
+      "archive": "lighting-runtime-review.md",
+      "last_observed_status": "read-only dynamic-lighting design and landed-implementation reviews completed; desktop and GLES checks passed; invalidation, ordering, offset, fallback-test, and aggregate-budget findings reported",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "observable read-only audit and implementation-review addendum with focused reproductions, desktop/GLES self-tests, exact integration points, invalidation rules, fallback ladder, and acceptance findings",
+      "topics": [
+        "dynamic station lighting",
+        "CPU occlusion field",
+        "LÖVE shader and multiply composition",
+        "chunk and power invalidation",
+        "camera DPI and zoom alignment",
+        "portable non-Canvas fallback",
+        "lighting tests and performance limits"
+      ]
+    },
+    {
+      "canonical_task": "/root/lighting_mod_contract",
+      "display_name": null,
+      "archive": "lighting-mod-contract.md",
+      "last_observed_status": "architecture audit and archive completed; no production code or generated assets changed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible report with current-state census, smallest shippable schema, APC integration decision, target contract, budgets, and tests",
+      "topics": [
+        "dynamic lighting mod contract",
+        "light profiles and bindings",
+        "APC lighting channel service",
+        "emergency lights and fire",
+        "deterministic flicker and occlusion",
+        "content validation and runtime budgets",
+        "typed lighting hooks"
+      ]
+    },
+    {
+      "canonical_task": "/root/goon_lighting_research",
+      "display_name": null,
+      "archive": "goon-lighting-research.md",
+      "last_observed_status": "pinned-source dynamic-lighting research and implementation handoff completed; no production code changed",
+      "assignment_evidence": "verbatim",
+      "report_evidence": "normalized visible work report with source constants, Atlas census, v1 defaults, implementation recommendations, and externally visible follow-up",
+      "topics": [
+        "Goonstation robust lighting",
+        "fixture colors and falloff",
+        "opacity and light occlusion",
+        "power and emergency lighting",
+        "fire and simple lights",
+        "space starlight and ambient darkness",
+        "portable LÖVE lighting implementation"
+      ]
     }
   ]
 }

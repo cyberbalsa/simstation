@@ -1,6 +1,7 @@
 local Constants = require("src.core.constants")
 local AtlasCatalog = require("src.assets.atlas_catalog")
 local MapAppearance = require("src.presentation.map_appearance")
+local Lighting = require("src.presentation.lighting")
 
 local Renderer = {}
 Renderer.__index = Renderer
@@ -182,29 +183,6 @@ local function make_white_image()
   return image
 end
 
-local function make_light_image()
-  local size = 65
-  local radius = (size - 1) / 2
-  local data = love.image.newImageData(size, size, "rgba8")
-  for y = 0, size - 1 do
-    for x = 0, size - 1 do
-      local dx = x - radius
-      local dy = y - radius
-      local distance = math.sqrt(dx * dx + dy * dy) / radius
-      local alpha = math.max(0, 1 - distance)
-      data:setPixel(x, y, 1.00, 0.88, 0.50, alpha * alpha * 0.075)
-    end
-  end
-  local image = love.graphics.newImage(data, {
-    mipmaps = false,
-    linear = false,
-    dpiscale = 1,
-  })
-  image:setFilter("nearest", "nearest", 1)
-  image:setWrap("clamp", "clamp")
-  return image
-end
-
 local function resolve_media_aliases(content)
   local aliases = {}
   for key, alias in pairs(DEFAULT_MEDIA_ALIASES) do
@@ -246,19 +224,11 @@ function Renderer.new(world, content)
   local atlas = AtlasCatalog.new()
   local map_appearance = MapAppearance.new(world, content)
   local media_aliases = resolve_media_aliases(content)
-  local light_image = make_light_image()
-  local light_batch = love.graphics.newSpriteBatch(
-    light_image,
-    math.max(64, math.min(world.size, 4096)),
-    "stream"
-  )
-  light_batch:setColor(1, 1, 1, 1)
   return setmetatable({
     image = make_white_image(),
-    light_image = light_image,
-    light_batch = light_batch,
     atlas = atlas,
     map_appearance = map_appearance,
+    lighting = Lighting.new(world, content),
     media_aliases = media_aliases,
     media_enabled = atlas:has_all(required_media_aliases(media_aliases)),
     crew_media_enabled = atlas:has_all({ "crew_male", "crew_female" }),
@@ -1040,40 +1010,16 @@ function Renderer:_draw_overlays(world, min_x, min_y, max_x, max_y)
   end
 end
 
-function Renderer:_draw_light_glows(world, min_x, min_y, max_x, max_y)
-  local tile_size = Constants.TILE_SIZE
-  local count = 0
-  self.light_batch:clear()
-  for y = min_y, max_y do
-    for x = min_x, max_x do
-      local index = world:index(x, y)
-      if world.powered[index]
-        and world:has_feature(index, Constants.FEATURE.LIGHT)
-      then
-        local state = world:peek_interaction_state(index, "light")
-        local active = not state
-          or (
-            state.installed ~= false
-              and state.broken ~= true
-              and state.on ~= false
-          )
-        if active then
-          self.light_batch:add(
-            (x - 1) * tile_size - 16,
-            (y - 1) * tile_size - 16
-          )
-          count = count + 1
-        end
-      end
-    end
-  end
-  if count > 0 then
-    self.light_batch:flush()
-    love.graphics.setBlendMode("add", "alphamultiply")
-    love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.draw(self.light_batch)
-    love.graphics.setBlendMode("alpha", "alphamultiply")
-  end
+function Renderer:_update_lighting(world, machines, tick)
+  self.lighting:update(world, machines, tick)
+end
+
+function Renderer:_draw_light_field()
+  self.lighting:draw_field()
+end
+
+function Renderer:_draw_light_glows(_, min_x, min_y, max_x, max_y)
+  self.lighting:draw_bloom(min_x, min_y, max_x, max_y)
 end
 
 function Renderer:_draw_foreground_effects(
@@ -1335,6 +1281,11 @@ end
 
 function Renderer:draw(snapshot, camera)
   local world = snapshot.world
+  self:_update_lighting(
+    world,
+    snapshot.machines or {},
+    snapshot.tick or 0
+  )
   love.graphics.setScissor()
   love.graphics.clear(
     COLORS.space[1],
@@ -1368,7 +1319,6 @@ function Renderer:draw(snapshot, camera)
   else
     self:_draw_static(world, min_x, min_y, max_x, max_y)
   end
-  self:_draw_overlays(world, min_x, min_y, max_x, max_y)
   self:_draw_machines(
     world,
     snapshot.machines or {},
@@ -1378,8 +1328,10 @@ function Renderer:draw(snapshot, camera)
     max_y
   )
   self:_draw_crew(world, snapshot.crew, camera.zoom)
+  self:_draw_light_field()
   self:_draw_light_glows(world, min_x, min_y, max_x, max_y)
   self:_draw_foreground_effects(world, min_x, min_y, max_x, max_y)
+  self:_draw_overlays(world, min_x, min_y, max_x, max_y)
   self:_draw_cursor()
   camera:finish()
   love.graphics.setScissor()

@@ -19,6 +19,9 @@ local RuntimeContent = require("src.content.runtime")
 local Camera = require("src.presentation.camera")
 local Ui = require("src.presentation.ui")
 local World = require("src.core.world")
+local LightField = require("src.presentation.light_field")
+local LightSources = require("src.presentation.light_sources")
+local LightingContent = require("src.content.lighting")
 
 local tests = {}
 
@@ -206,6 +209,8 @@ test("renderer requests four tiles of camera overscan", function()
       _draw_overlays = function() end,
       _draw_machines = function() end,
       _draw_crew = function() end,
+      _update_lighting = function() end,
+      _draw_light_field = function() end,
       _draw_light_glows = function() end,
       _draw_foreground_effects = function() end,
       _draw_cursor = function() end,
@@ -228,6 +233,203 @@ test("renderer requests four tiles of camera overscan", function()
   if not ok then
     error(test_error, 0)
   end
+end)
+
+local function lit_test_world(width, height)
+  local world = World.new(width, height)
+  world.areas = {
+    { id = "test:scenario-area/test/room", name = "Room" },
+  }
+  world.area_powered[1] = true
+  for index = 1, world.size do
+    world.tile[index] = Constants.TILE.FLOOR
+    world.turf_kind[index] = Constants.TURF.FLOOR
+    world.area[index] = 1
+    world.powered[index] = true
+  end
+  return world
+end
+
+test("tile light field blocks walls, doors, and closed diagonal corners", function()
+  local contract = LightingContent.resolve(nil)
+  local profile = contract.profiles[
+    "org.simstation.core:light-profile/goon-tube"
+  ]
+  local world = lit_test_world(7, 5)
+  local source = {
+    id = "test-source",
+    index = assert(world:index(2, 3)),
+    tile_x = 2,
+    tile_y = 3,
+    x_256 = (2 - 1) * 256 + 128,
+    y_256 = (3 - 1) * 256 + 128,
+    radius_256 = profile.radius_256,
+    level_ppm = 1000000,
+    profile = profile,
+  }
+  local wall = assert(world:index(4, 3))
+  world.structure[wall] = Constants.STRUCTURE.WALL
+  local field = LightField.build(world, contract.settings, { source })
+  local height = profile.height_256 / 256
+  local attenuation =
+    1.6 * 2.2 / (height * height) - 0.11
+  local expected_source_red = math.floor(
+    profile.color_srgb8[1]
+      * (1.6 * attenuation)
+      * LightField.UNITS
+      / 255
+      + 0.5
+  )
+  equal(field.red[source.index], expected_source_red,
+    "Goon robust-light attenuation constants drifted")
+  truthy(field:channel(wall, 1) > 0, "opaque target should receive edge light")
+  equal(field:channel(assert(world:index(5, 3)), 1), 0)
+
+  world.structure[wall] = Constants.STRUCTURE.DOOR_OPEN
+  field = LightField.build(world, contract.settings, { source })
+  truthy(field:channel(assert(world:index(5, 3)), 1) > 0)
+  world.structure[wall] = Constants.STRUCTURE.DOOR_CLOSED
+  field = LightField.build(world, contract.settings, { source })
+  equal(field:channel(assert(world:index(5, 3)), 1), 0)
+
+  world.structure[wall] = Constants.STRUCTURE.EMPTY
+  world:set_feature(wall, Constants.FEATURE.WINDOW, true)
+  field = LightField.build(world, contract.settings, { source })
+  truthy(field:channel(assert(world:index(5, 3)), 1) > 0,
+    "transparent window should transmit light")
+
+  local corner_world = lit_test_world(4, 4)
+  corner_world.structure[assert(corner_world:index(3, 2))] =
+    Constants.STRUCTURE.WALL
+  corner_world.structure[assert(corner_world:index(2, 3))] =
+    Constants.STRUCTURE.WALL
+  truthy(not LightField.line_visible(corner_world, 2, 2, 3, 3),
+    "two opaque cardinal neighbors must close a diagonal corner")
+  corner_world.structure[assert(corner_world:index(2, 3))] =
+    Constants.STRUCTURE.EMPTY
+  truthy(LightField.line_visible(corner_world, 2, 2, 3, 3),
+    "one open side should transmit a diagonal ray")
+
+  local footprint_world = lit_test_world(7, 7)
+  local footprint_source = {
+    id = "footprint-source",
+    index = assert(footprint_world:index(4, 4)),
+    tile_x = 4,
+    tile_y = 4,
+    x_256 = (4 - 1) * 256 + 128,
+    y_256 = (4 - 1) * 256 + 128,
+    radius_256 = profile.radius_256,
+    level_ppm = 1000000,
+    profile = profile,
+  }
+  field = LightField.build(
+    footprint_world,
+    contract.settings,
+    { footprint_source }
+  )
+  equal(field.candidate_cells, 49,
+    "Goon view(3) should project a square 7x7 candidate footprint")
+  truthy(field:channel(assert(footprint_world:index(1, 1)), 1) > 0,
+    "Goon robust attenuation should retain admitted corner samples")
+end)
+
+test("light sources follow fixture state, APC lighting, fire, and budgets", function()
+  local contract = LightingContent.resolve(nil)
+  local world = lit_test_world(3, 3)
+  local fixture = assert(world:index(2, 2))
+  world:set_feature(fixture, Constants.FEATURE.LIGHT, true)
+  local apc = {
+    id = 1,
+    kind = "apc",
+    index = assert(world:index(1, 1)),
+    status = { broken = false },
+    data = {
+      lighting = 3,
+      equipment = 3,
+      environ = 3,
+      operating = true,
+      do_not_operate = false,
+      shorted = false,
+    },
+  }
+  local fixture_binding
+  for binding_index = 1, #contract.bindings do
+    local binding = contract.bindings[binding_index]
+    if binding.id ==
+      "org.simstation.core:light-binding/station-fixtures"
+    then
+      fixture_binding = binding
+    end
+  end
+  truthy(fixture_binding, "missing fixture light binding")
+  fixture_binding.offset_x_256 = 256
+  local emitters, first_signature =
+    LightSources.collect(world, { apc }, nil, contract, 20)
+  equal(#emitters, 1)
+  equal(emitters[1].index, fixture)
+  equal(emitters[1].tile_x, 3,
+    "cross-tile binding offsets must move the LOS origin")
+  local shifted_field = LightField.build(world, contract.settings, emitters)
+  truthy(
+    shifted_field:channel(assert(world:index(3, 2)), 1)
+      > shifted_field:channel(fixture, 1),
+    "cross-tile binding offsets must move the projected light center"
+  )
+
+  local repeated, repeated_signature =
+    LightSources.collect(world, { apc }, nil, contract, 20)
+  equal(repeated_signature, first_signature)
+  equal(repeated[1].level_ppm, emitters[1].level_ppm)
+
+  apc.data.lighting = 1
+  emitters = LightSources.collect(world, { apc }, nil, contract, 20)
+  equal(#emitters, 0, "APC auto-off must disable normal area fixtures")
+  apc.data.lighting = 3
+  apc.data.shorted = true
+  emitters = LightSources.collect(world, { apc }, nil, contract, 20)
+  equal(#emitters, 0, "shorted APC must not serve its lighting channel")
+  apc.data.shorted = false
+
+  local state = world:ensure_interaction_state(fixture, "light", {})
+  state.broken = true
+  emitters = LightSources.collect(world, { apc }, nil, contract, 20)
+  equal(#emitters, 0)
+  state.broken = false
+  world.fire[fixture] = 4
+  local dropped, work_units
+  emitters, _, dropped, work_units =
+    LightSources.collect(world, { apc }, nil, contract, 20)
+  equal(#emitters, 2, "fixture and fire providers should compose")
+  truthy(emitters[1].id < emitters[2].id, "emitters must have stable ordering")
+  equal(dropped, 0)
+  equal(work_units, 294)
+
+  contract.settings.max_work_units = 147
+  emitters, _, dropped, work_units =
+    LightSources.collect(world, { apc }, nil, contract, 20)
+  equal(#emitters, 1, "aggregate light work budget must truncate emitters")
+  truthy(emitters[1].id:find("/fire#", 1, true),
+    "higher-priority fire light should survive the work budget")
+  equal(dropped, 1)
+  equal(work_units, 147)
+
+  local space = assert(world:index(3, 3))
+  local projection_before = LightField.projection_signature(world)
+  world.tile[space] = Constants.TILE.SPACE
+  truthy(
+    LightField.projection_signature(world) ~= projection_before,
+    "space/floor ambient class must enter the projection signature"
+  )
+  local field = LightField.build(world, contract.settings, {})
+  equal(field:channel(space, 1), LightField.UNITS)
+  equal(field:channel(assert(world:index(1, 3)), 1), 0)
+
+  local machine_before = LightSources.machine_signature({ apc })
+  apc.data.lighting = 1
+  truthy(
+    LightSources.machine_signature({ apc }) ~= machine_before,
+    "APC lighting channel must enter the machine signature"
+  )
 end)
 
 test("representative Goon room resolves native sprites in painter order", function()
@@ -1161,12 +1363,95 @@ local function load_core_runtime_content()
     "content/materials.json",
     "content/recipes.json",
     "content/structures.json",
+    "content/lighting.json",
   })
   local session = assert(ModLoader.load({
     { root = root, files = files },
   }, { api_version = "0.1.0" }))
   return RuntimeContent.from_registry(session.registry), session
 end
+
+test("shipped lighting profiles and bindings resolve through the mod registry",
+function()
+  local content, session = load_core_runtime_content()
+  equal(session.registry:report().definition_count, 41)
+  local contract = LightingContent.resolve(content)
+  equal(#contract.errors, 0)
+  equal(#contract.bindings, 2)
+  truthy(contract.settings.shader)
+  truthy(
+    contract.profiles["org.simstation.core:light-profile/goon-tube"]
+  )
+  local defaults = LightingContent.default_definitions()
+  for index = 1, #defaults do
+    equal(
+      Stable.hash(content.by_id[defaults[index].id]),
+      Stable.hash(defaults[index]),
+      "runtime lighting fallback drifted from core mod data"
+    )
+  end
+
+  local invalid = defaults[2]
+  invalid.radius_256 = 9000
+  local profile, profile_error =
+    LightingContent.validate_profile(invalid)
+  equal(profile, nil)
+  truthy(profile_error:find("radius_256", 1, true))
+
+  local schema_one_settings = LightingContent.default_definitions()[1]
+  schema_one_settings.max_work_units = nil
+  local normalized_settings =
+    assert(LightingContent.validate_settings(schema_one_settings))
+  equal(
+    normalized_settings.max_work_units,
+    LightingContent.DEFAULT_MAX_WORK_UNITS,
+    "schema-1 settings must retain the documented work-budget default"
+  )
+end)
+
+test("runtime mod loading rejects invalid lighting before registry seal",
+function()
+  local manifest = [[
+schema = 1
+id = "org.example.invalid-lights"
+version = "0.1.0"
+name = "Invalid lights"
+description = "Runtime lighting validation fixture."
+authors = ["Sim Station tests"]
+license = "CC0-1.0"
+api = "^0.1.0"
+class = "data"
+load_priority = 0
+content = ["content/*.json"]
+localization = []
+scenario_maps = []
+dependencies = []
+optional_dependencies = []
+conflicts = []
+load_after = []
+load_before = []
+replaces = []
+]]
+  local invalid_profile = LightingContent.default_definitions()[2]
+  invalid_profile.id =
+    "org.example.invalid-lights:light-profile/too-large"
+  invalid_profile.radius_256 = 9000
+  local session, load_error = ModLoader.load({
+    {
+      root = "invalid-lights",
+      files = {
+        ["mod.toml"] = manifest,
+        ["content/lights.json"] = Json.encode({
+          schema = 1,
+          definitions = { invalid_profile },
+        }),
+      },
+    },
+  }, { api_version = "0.1.0" })
+  equal(session, nil)
+  equal(load_error.stage, "content-validation")
+  truthy(load_error.message:find("radius_256", 1, true))
+end)
 
 local function add_test_machine(
   sim,
@@ -1259,6 +1544,7 @@ test("base content and trusted-code example load through one mod path", function
     "content/materials.json",
     "content/recipes.json",
     "content/structures.json",
+    "content/lighting.json",
     "scenarios/goon-atlas.json",
     "locales/en.json",
   })
@@ -1276,7 +1562,7 @@ test("base content and trusted-code example load through one mod path", function
     api_version = "0.1.0",
     trusted_code = { ["org.simstation.example.smart-grid"] = true },
   }))
-  equal(session.registry:report().definition_count, 37)
+  equal(session.registry:report().definition_count, 42)
   local allowed, reason = session.hooks:validate(
     "org.simstation.core:hook/command/validate",
     { kind = "disconnect_network", payload = { essential = true } },

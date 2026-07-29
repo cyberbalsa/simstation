@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "definitions": [
+    {
+      "id": "org.simstation.core:lighting-settings/station",
+      "kind": "lighting-settings",
+      "schema": 1,
+      "station_ambient_srgb8": [
+        0,
+        0,
+        0
+      ],
+      "space_ambient_srgb8": [
+        255,
+        255,
+        255
+      ],
+      "max_emitters": 2048,
+      "max_radius_256": 3072,
+      "max_work_units": 4000000,
+      "shader": true,
+      "linear_filter": true
+    },
+    {
+      "id": "org.simstation.core:light-profile/goon-fire",
+      "kind": "light-profile",
+      "schema": 1,
+      "name_key": "light_profile.goon_fire",
+      "color_srgb8": [
+        255,
+        105,
+        35
+      ],
+      "radius_256": 768,
+      "intensity_ppm": 900000,
+      "height_256": 256,
+      "falloff": "smoothstep",
+      "occlusion": "tile-transmission",
+      "flicker": {
+        "mode": "hash-step",
+        "amplitude_ppm": 140000,
+        "period_ticks": 2
+      },
+      "priority": 200,
+      "bloom_ppm": 320000,
+      "bloom_radius_256": 448
+    },
+    {
+      "id": "org.simstation.core:light-profile/goon-tube",
+      "kind": "light-profile",
+      "schema": 1,
+      "name_key": "light_profile.goon_tube",
+      "color_srgb8": [
+        242,
+        242,
+        255
+      ],
+      "radius_256": 768,
+      "intensity_ppm": 1600000,
+      "height_256": 614,
+      "falloff": "goon-robust",
+      "occlusion": "tile-transmission",
+      "flicker": {
+        "mode": "none"
+      },
+      "priority": 100,
+      "bloom_ppm": 0,
+      "bloom_radius_256": 0
+    },
+    {
+      "id": "org.simstation.core:light-binding/fire",
+      "kind": "light-binding",
+      "schema": 1,
+      "profile_id": "org.simstation.core:light-profile/goon-fire",
+      "selector": {
+        "kind": "provider",
+        "provider_id": "org.simstation.core:light-provider/fire-tile-v1"
+      },
+      "activation": {
+        "mode": "always",
+        "power_channel": "none"
+      },
+      "offset_x_256": 0,
+      "offset_y_256": 0,
+      "level_ppm": 1000000,
+      "level_curve": [
+        {
+          "input": 0,
+          "output_ppm": 0
+        },
+        {
+          "input": 250000,
+          "output_ppm": 650000
+        },
+        {
+          "input": 500000,
+          "output_ppm": 900000
+        },
+        {
+          "input": 750000,
+          "output_ppm": 1150000
+        },
+        {
+          "input": 1000000,
+          "output_ppm": 1400000
+        }
+      ]
+    },
+    {
+      "id": "org.simstation.core:light-binding/station-fixtures",
+      "kind": "light-binding",
+      "schema": 1,
+      "profile_id": "org.simstation.core:light-profile/goon-tube",
+      "selector": {
+        "kind": "provider",
+        "provider_id": "org.simstation.core:light-provider/light-feature-v1"
+      },
+      "activation": {
+        "mode": "normal",
+        "power_channel": "lighting"
+      },
+      "offset_x_256": 0,
+      "offset_y_256": 0,
+      "level_ppm": 1000000
+    }
+  ]
+}

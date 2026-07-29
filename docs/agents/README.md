@@ -48,6 +48,12 @@ records are:
   resumed `machine_fidelity_tests` DM appearance/import episode
 - [`visual-runtime-review.md`](visual-runtime-review.md) —
   `visual_runtime_review`
+- [`lighting-runtime-review.md`](lighting-runtime-review.md) —
+  `lighting_runtime_review`
+- [`lighting-mod-contract.md`](lighting-mod-contract.md) —
+  `lighting_mod_contract`
+- [`goon-lighting-research.md`](goon-lighting-research.md) —
+  `goon_lighting_research`
 - [`pixel-viewport-audit.md`](pixel-viewport-audit.md) —
   `pixel_viewport_audit`
 - [`goon-graphics-pipeline.md`](goon-graphics-pipeline.md) — Harvey /
